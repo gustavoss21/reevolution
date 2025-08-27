@@ -1,0 +1,54 @@
+<?php
+
+namespace Database\Migrations;
+
+class CreateTableTopic
+{
+    public function teste(){
+        echo "Teste de migração";
+    }
+
+    public function up()
+    {
+        $pdo = conectarBanco();
+        if (!$pdo) {
+            return;
+        }
+
+        $sql = "
+            CREATE TABLE IF NOT EXISTS topics (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                theme_id INT NOT NULL,
+                slug VARCHAR(255) NOT NULL UNIQUE,
+                description TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ";
+
+        try {
+            $pdo->exec($sql);
+            echo "✅ Tabela 'topics' criada com sucesso!";
+        } catch (\PDOException $e) {
+            echo "❌ Erro ao criar tabela 'topics': " . $e->getMessage();
+        }
+    }
+    public function down()
+    {
+        $pdo = conectarBanco();
+        if (!$pdo) {
+            return;
+        }
+
+        $sql = "DROP TABLE IF EXISTS topics;";
+
+        try {
+            $pdo->exec($sql);
+            echo "✅ Tabela 'topics' removida com sucesso!";
+        } catch (\PDOException $e) {
+            echo "❌ Erro ao remover tabela 'topics': " . $e->getMessage();
+        }
+    }
+}

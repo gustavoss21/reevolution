@@ -1,0 +1,32 @@
+<?php
+require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/database/mixinsdb.php';
+require dirname(__DIR__) . '/database/conectiondb.php';
+
+$path = dirname(__DIR__) . '/database/migrations/';
+
+$migrationNames = $argv[1] ?[$argv[1]]: null;// obtem o nome da migração a ser executada
+$migrationMetode = !is_null($argv[2]) && $argv[2] == 'down' ? 'down' : 'up'; // verifica se o metodo é down
+$listmigrations = scandir($path); // obtem a lista de arquivos no diretório de migrações
+$listmigrations = array_filter($listmigrations, function ($file) {
+    return preg_match('/\.php$/', $file);
+}); // filtra apenas arquivos PHP
+
+$optionFormigration = array_map(function ($file) use ($path) {
+    $className = getClassNameFromFile($path . $file);
+    return $className;
+}, $listmigrations);// obtem o nome da classe a partir do arquivo
+
+// filtra a lista de migrações para encontrar a migração especificada
+if (!empty($migrationNames)) {
+        $optionFormigration = array_filter(
+        $optionFormigration,
+        function ($file) use ($migrationNames) {
+            if ($file['classname'] == $migrationNames[0]) {
+                return $file;
+            }
+        }
+    );
+}
+
+exeMigration($optionFormigration, $migrationMetode);

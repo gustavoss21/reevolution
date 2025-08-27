@@ -1,0 +1,17 @@
+{
+    "name": "santo/reevolution",
+    "autoload": {
+        "psr-4": {
+            "Santo\\Reevolution\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "gustavo souza",
+            "email": "gustavosantossouza65@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
