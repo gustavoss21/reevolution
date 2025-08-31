@@ -28,6 +28,7 @@ class CreateTableTheme
         ";
 
         try {
+            // 
             $pdo->exec($sql);
             echo "✅ Tabela 'themes' criada com sucesso!";
         } catch (\PDOException $e) {
