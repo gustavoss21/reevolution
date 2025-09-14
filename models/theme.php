@@ -20,11 +20,3 @@ class Theme extends  ModelMixin
         print_r(get_object_vars($this));
     }
 }
-
-$tema = new Theme([
-    // 'id' => 1,
-    'name' => 'Tema teste',
-    'slug' => 'tema-real',
-    'description' => 'Descrição do tema teste',
-    'created_at' => date('Y-m-d H:i:s'),
-]);
