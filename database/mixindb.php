@@ -1,19 +1,19 @@
 <?php
-
-require dirname(__DIR__) . '/vendor/autoload.php';
-
+namespace Database;
 /**
  * Class to build SQL queries dynamically.
  */
 class MixinQuerybuild{
 
-    protected $table, $columns, $where, $data;
+    protected $table, $columns, $expressions;
+    const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
 
-    public function __construct(string $table, array $where, array $data = [],) {
-        $this->where = $where;
-        $this->data = $data;
-        $this->columns = array_keys($data);
+    public function __construct(string $table,$columns = [], $where = 'id') {
+        $this->expressions = $this->whereData($where);
+        $this->columns = $columns;
         $this->table = $table;
+        
     }
 
     /**
@@ -52,6 +52,7 @@ class MixinQuerybuild{
         $lastIndex = count($columns) - 1;
 
         foreach($columns as $key => $value){
+            
             $column = $hascolumns ? $value. '= :' : ':';
             $parameterFormated.= $column. $value;
             if(!($lastIndex === $key)){
@@ -62,39 +63,77 @@ class MixinQuerybuild{
         return $parameterFormated;
     }
  
-    function formatParamtsForWhere(array $data)
+    function formatParamtsForWhere(array $expWhere)
     {
-        if (empty($data) || isset($columns['clasure'])) return '';
+        if (empty($expWhere['expression'])) return '';
 
-        // Object to manage the state of the WHERE clause construction
-        $whereobject = new class {
-            public $whereobServationIndex = null;
-            public $columns = null;
-            public $whereVerification = [];
-            public $where = '';
-        };
+        $whereFormated = 'WHERE ' . $expWhere['expression']['column'] . ' ' . $expWhere['operator'] . ' :' . $expWhere['expression']['column'] ;
         
-        $whereobject->columns = array_keys($data['clasure']);
-        $count = 0;
-
-        foreach ($whereobject->columns as $whereItem) {
-            if($count > 0 and $whereobject->whereVerification[$count -1]['requireNext']){
-                $whereobject->whereVerification[$count -1]['status'] = true;
-                $whereobject->where .=  $whereobject->whereVerification[$count -1]['arg'];
-            }
-
-            $whereobject->whereVerification[$count] = ['arg' => $whereItem . '= :' . $whereItem . ' ', 'status' => true, 'requireNext' => false];;
-            $whereobject->where .=  $whereobject->whereVerification[$count]['arg'];
-            
-            if (isset($data['operator'])){
-                $whereobject->whereVerification[$count] = ['arg' => ' ' . $data['operator'] . ' ', 'status' => false, 'requireNext' => true];
-            }
-
-            $count++;
-
+        if(isset($expWhere['expression']['next'])){
+            $nextWhere = $expWhere['expression']['next'];
+            $whereFormated .= " {$expWhere['expression']['operator']} {$nextWhere['expression']['column']} {$nextWhere['operator']} :{$nextWhere['expression']['column']}";
         }
-    
-        return 'WHERE ' . $whereobject->where;
+
+        return $whereFormated;
     }
+
+    function whereData($data){
+        $where = ['expression' => [], 'operator' => self::OPERADORES['EQ']];
+        if(empty($data)) return $where;
+
+        if(!is_array($data)){
+            // Caso seja uma string, converte para o formato esperado
+            $where['expression']['column'] = $data;
+            return $where;
+
+        }else {
+            // Caso seja um array com operador definido, converte para o formato esperado
+            $whereResult = $this->unpackWhere($data);
+           
+         
+           return $whereResult;
+        }
+    }
+
+    private function unpackWhere($data) {
+        $where = ['expression' => [], 'operator' => $data['operator'] ?? self::OPERADORES['EQ']];
+
+        foreach ($data as $key => $item) {
+            if ($key === 'operator') {
+                continue;
+            }
+
+            if (!empty($where['expression'])) {
+
+                $nexWhere = ['expression' => [], 'operator' =>  self::OPERADORES['EQ']];
+
+                $nexWhere['expression']['column'] = $item;
+
+
+                if(is_array($item)){
+                    $nexWhere = $this->unpackWhere($item);
+                }
+
+                if (!isset($data['operator'])) {
+                    $where['expression']['operator'] = self::OPERADORES_LOGICOS['AND'];
+                } else {
+                    $where['expression']['operator'] = in_array($data['operator'], self::OPERADORES_LOGICOS) ? $data['operator'] : self::OPERADORES_LOGICOS['AND'];
+                }
+
+                $where['expression']['next'] = $nexWhere;
+                continue;
+            };
+
+
+            if (is_array($item)) {
+                $where = $this->unpackWhere($item);
+                continue;
+            }
+
+            $where['expression']['column'] = $item;
+            //expressoin=>[0-:'titulo',next=>['expression'=>[0-:'id'],operator=>'AND']
+        }
+
+        return $where;}
     
 }

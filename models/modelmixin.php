@@ -1,6 +1,33 @@
 <?php
+require dirname(__DIR__) . '/database/querybuild.php';
+require dirname(__DIR__) . '/database/conectiondb.php';
 
-class ModelMixin{
+use Database\Querybuild;
+use Dotenv\Parser\Value;
+
+/**
+ * Mixin class providing getter and setter methods for model properties.
+ */
+class ModelMixin
+    
+{
+
+    protected $table, $assignedColumns, $query, $columns;
+    const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
+    const DATASEARCH = 'id';
+    private $dbconection = null;
+    private $queryValues = [];
+    private $columnsForQuery = [];
+    function __construct($data = [])
+    {
+        $this->dbconection = conectarBanco();
+
+        foreach ($data as $key => $value) {
+            $this->set($key, $value);
+        }
+    }
+
     function get($paramether)
     {
         if (property_exists($this, $paramether)) {
@@ -11,10 +38,87 @@ class ModelMixin{
     function set($paramether, $value)
     {
         if (!property_exists($this, $paramether)) return;
-        if (empty($paramether)) return;
-
+        if($paramether !== 'id') $this->assignedColumns[] = $paramether;
         $this->{$paramether} = $value;
+        $this->queryValues[':' . $paramether] = $value;
+        $this->columnsForQuery[$paramether] = $paramether;
     }
 
-    
+    function all($columns = [])
+    {
+        $querycomponets = new Querybuild($this->table, $this->columns,'');
+        $query = $querycomponets->select();
+
+        return $this->executeQuery($query);
+    }
+
+    function find(array $dataSearch = [self::DATASEARCH])
+    {   
+        ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
+        $componentQuery = new Querybuild($this->table, $this->columns, $whereColumns);
+        $query = $componentQuery->select();
+
+        return $this->executeQuery($query, $whereData);
+    }
+    function delete($dataSearch = [self::DATASEARCH])
+    {
+        $componentQuery = new Querybuild($this->table, $this->columns, $dataSearch);
+        $query = $componentQuery->delete();
+        return $this->executeQuery($query, $this->queryValues);;
+    }
+    function update($dataSearch = [self::DATASEARCH])
+    {
+        ['columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
+        $whereData = $this->queryValues;
+
+        $componentQuery = new Querybuild($this->table, $this->assignedColumns, $whereColumns);
+        $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
+        $query = $componentQuery->update();
+
+        return $this->executeQuery($query, $whereData);
+    }
+    function insert()
+    {
+        $componentQuery = new Querybuild($this->table, $this->assignedColumns,'');
+        ['data'=>$whereData] = $this->filterDataForquery($this->assignedColumns);
+        $query = $componentQuery->insert();
+        return $this->executeQuery($query, $whereData);;
+    }
+
+    /**
+     * Executa uma consulta SQL usando a conexão do banco
+     * @param string $scriptSql Consulta SQL
+     * @param array $params Parâmetros para consulta preparada
+     * @return array|false Resultado da consulta ou false em caso de erro
+     */
+    public function executeQuery($scriptSql, $params = [])
+    {
+        if (!$this->dbconection) {
+            throw new \Exception('Conexão com banco não estabelecida.');
+        }
+        try {
+            $stmt = $this->dbconection->prepare($scriptSql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Filtra os dados para a consulta SQL
+     * @param array $columns Colunas para filtrar
+     * @return array array [dados para consulta, colunas para consulta]
+     */
+    public function filterDataForquery(array $columns){
+        $dataQuery = ['data'=>[],'columns'=>[]];
+
+        foreach($columns as $paramether){
+           $dataQuery['data'][':'.$paramether] = $this->get($paramether);
+            $dataQuery['columns'][] = $paramether;
+        }
+
+        return $dataQuery;
+    }
 }

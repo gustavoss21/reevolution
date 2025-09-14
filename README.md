@@ -1,2 +1,2 @@
 ## next
-modular e adicionar a querybuild a os models
+ajustar o time da aplicação 
