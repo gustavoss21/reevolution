@@ -2,19 +2,20 @@
 
 namespace Controllers;
 
-require dirname(__DIR__) . '/models/thema.php';
-require dirname(__DIR__) . '/controllers/controller.php';
-
-use Models\Theme;
+use Models\ThemeModel;
 use Controllers\Controller;
 
-class ThemaController extends Controller
+class ThemeController extends Controller
 {
     private $themaModel;
 
     public function __construct()
     {
-        $this->themaModel = new Theme();
+        $this->themaModel = new ThemeModel();
+    }
+    public function home($data)
+    {
+        return $this->respond('Welcome to the Theme Management System');
     }
 
     public function createThema($data)

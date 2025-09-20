@@ -2,8 +2,12 @@
 
 namespace Controllers;
 
-class Controller
+require dirname(__DIR__) . '/config/response.php';
+
+class Controller 
 {
+    use \Config\Response;
+
     // Common functionalities for all controllers can be added here
     protected function respond($data, $status = 200)
     {

@@ -1,16 +1,16 @@
 <?php
-require dirname(__DIR__) . '/database/querybuild.php';
-require dirname(__DIR__) . '/database/conectiondb.php';
+namespace Models;
 
 use Database\Querybuild;
 use Dotenv\Parser\Value;
+use Models\ValidateMixin;
 
 /**
  * Mixin class providing getter and setter methods for model properties.
  */
 class ModelMixin
-    
 {
+    use ValidateMixin;
 
     protected $table, $assignedColumns, $query, $columns;
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
@@ -19,14 +19,18 @@ class ModelMixin
     private $dbconection = null;
     private $queryValues = [];
     private $columnsForQuery = [];
+    protected $columnsRequired = [];
+
     function __construct($data = [])
     {
-        $this->dbconection = conectarBanco();
-
+        $this->dbconection = require dirname(__FILE__,2). '/database/conectiondb.php';
+        
         foreach ($data as $key => $value) {
             $this->set($key, $value);
         }
     }
+
+
 
     function get($paramether)
     {
@@ -54,25 +58,29 @@ class ModelMixin
 
     function find(array $dataSearch = [self::DATASEARCH])
     {   
+
         ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
+        $this->validateRequiredFields([...$whereColumns]);
         $componentQuery = new Querybuild($this->table, $this->columns, $whereColumns);
         $query = $componentQuery->select();
 
         return $this->executeQuery($query, $whereData);
     }
+
     function delete($dataSearch = [self::DATASEARCH])
     {
         $componentQuery = new Querybuild($this->table, $this->columns, $dataSearch);
+        $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
         $query = $componentQuery->delete();
-        return $this->executeQuery($query, $this->queryValues);;
+        return $this->executeQuery($query, $this->queryValues);
     }
     function update($dataSearch = [self::DATASEARCH])
     {
         ['columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
         $whereData = $this->queryValues;
-
+        $this->validateRequiredFields($this->columnsRequiredForMethods['update']);
         $componentQuery = new Querybuild($this->table, $this->assignedColumns, $whereColumns);
-        $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
+        // $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
         $query = $componentQuery->update();
 
         return $this->executeQuery($query, $whereData);
@@ -81,6 +89,7 @@ class ModelMixin
     {
         $componentQuery = new Querybuild($this->table, $this->assignedColumns,'');
         ['data'=>$whereData] = $this->filterDataForquery($this->assignedColumns);
+        $this->validateRequiredFields($this->columnsRequiredForMethods['create']);
         $query = $componentQuery->insert();
         return $this->executeQuery($query, $whereData);;
     }
@@ -99,8 +108,8 @@ class ModelMixin
         try {
             $stmt = $this->dbconection->prepare($scriptSql);
             $stmt->execute($params);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
             error_log($e->getMessage());
             return false;
         }

@@ -4,7 +4,7 @@ namespace Controllers;
 
 require dirname(__DIR__) . '/models/thema.php';
 
-use Models\Topic;
+use Models\TopicModel;
 
 class TopicController
 {
@@ -12,7 +12,7 @@ class TopicController
 
     public function __construct()
     {
-        $this->TopicModel = new Topic();
+        $this->TopicModel = new TopicModel();
     }
 
     public function createThema($data)

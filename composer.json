@@ -2,7 +2,11 @@
     "name": "santo/reevolution",
     "autoload": {
         "psr-4": {
-            "Santo\\Reevolution\\": "src/"
+            "Controllers\\": "controllers/",
+            "Models\\": "models/",
+            "Views\\": "views/",
+            "Config\\": "config/",
+            "Routes\\": "routes/"
         }
     },
     "authors": [

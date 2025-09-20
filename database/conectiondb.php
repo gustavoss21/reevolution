@@ -1,7 +1,5 @@
 <?php
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
@@ -14,6 +12,8 @@ foreach ($required as $var) {
         die("❌ Variável de ambiente '$var' não definida.");
     }
 }
+
+return conectarBanco();
 
 function conectarBanco()
 {

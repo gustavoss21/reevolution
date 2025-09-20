@@ -2,17 +2,19 @@
 
 namespace Models;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-require dirname(__DIR__) . '/models/modelmixin.php';
-
-use ModelMixin;
+use Models\ModelMixin;
 // 
-class Theme extends  ModelMixin
+class ThemeModel extends ModelMixin
 {
     protected $table = 'themes';
 
     protected $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
 
+    protected $columnsRequiredForMethods = [
+        'create'=>['name'],
+        'update'=>['id'],
+        'delete'=>['id']
+    ];
     protected $id, $name, $slug, $description, $created_at, $updated_at;
 
     function showAtribuits()

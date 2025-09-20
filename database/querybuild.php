@@ -1,6 +1,6 @@
 <?php
 namespace Database;
-require dirname(__DIR__) . '/database/mixindb.php';
+
 /**
  * Class to build SQL queries dynamically.
  */

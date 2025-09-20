@@ -1,5 +1,6 @@
 ## next
 ### controles
+   tratamento de erros
  - tema
     + criar
     + atualizar
@@ -20,3 +21,4 @@
 ### views
 ajustar o time da aplicação 
 validaçao
+adinar um servidor (ngix|xampper) docker
