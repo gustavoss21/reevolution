@@ -22,3 +22,5 @@
 ajustar o time da aplicação 
 validaçao
 adinar um servidor (ngix|xampper) docker
+
+restrigir acesso a arquivos sensiveis

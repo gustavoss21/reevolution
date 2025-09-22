@@ -8,7 +8,7 @@ class Route extends RouterBase
 {
     public $routes = [
         'GET' => [
-            '/' => 'ThemeController@home',
+            '/' => 'AppController@home',
             '/topics' => 'TopicController@index',
             '/topics/{id}' => 'TopicController@show',
             '/temas' => 'ThemaController@getAllThemas'

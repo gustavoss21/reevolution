@@ -27,11 +27,11 @@ function conectarBanco()
         $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
         $pdo = new PDO($dsn, $user, $pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "✅ Conexão bem-sucedida!";
+        // echo "✅ Conexão bem-sucedida!";
         return $pdo;
     } catch (PDOException $e) {
         // Em produção, logue o erro ao invés de exibir
-        echo "❌ Erro na conexão.";
+        // echo "❌ Erro na conexão.";
         error_log($e->getMessage());
         return null;
     }

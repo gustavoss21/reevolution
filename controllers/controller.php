@@ -109,5 +109,11 @@ class Controller
         }
     }
 
+    protected function view($template, $data = [])
+    {
+        extract(['data'=>$data, 'template'=>$template]);
+        include __DIR__ . '/../views/ConstruitView.php';
+    }
+
 
 }
