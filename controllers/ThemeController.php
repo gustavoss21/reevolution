@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Models\ThemeModel;
 use Controllers\Controller;
+use Services\ServiceTimeline;
 
 class ThemeController extends Controller
 {
@@ -76,6 +77,7 @@ class ThemeController extends Controller
     }
 
     public function timeline(){
+        $service = new ServiceTimeline;
         $this->themaModel;
     }
 }

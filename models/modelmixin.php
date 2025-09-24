@@ -48,6 +48,11 @@ class ModelMixin
         $this->columnsForQuery[$paramether] = $paramether;
     }
 
+    function showAtribuits()
+    {
+        print_r(get_object_vars($this));
+    }
+
     function all($limit=null, $columns = [])
     {
         $querycomponets = new QueryBuild($this->table, $this->columns,'', $limit);

@@ -6,7 +6,8 @@
             "Models\\": "models/",
             "Views\\": "views/",
             "Config\\": "config/",
-            "Routes\\": "routes/"
+            "Routes\\": "routes/",
+            "Services\\":"services/"
         }
     },
     "authors": [
