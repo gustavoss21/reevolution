@@ -74,4 +74,8 @@ class ThemeController extends Controller
         $this->themaModel->set('id', $id);
         return $this->themaModel->delete();
     }
+
+    public function timeline(){
+        $this->themaModel;
+    }
 }

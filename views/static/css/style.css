@@ -1,13 +1,22 @@
 
 /* Reset some default browser styles */
-html, body {
+:root {
+    --block-header: aliceblue;
+    --background-primary: #00a8e37d;
+    --font-color-primary: #676262fc;
+    --font-color-secondary: #ffffff;  ;
+    --background-color: #f9f9f9;
+}
+
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
-    background-color: #fff;
-    color: #222;
+    min-height: 100vh;
+    color: var(--font-color-primary);
+    background-color: var(--background-primary);
 }
 
 *, *::before, *::after {
@@ -15,6 +24,7 @@ html, body {
     transition: 0.1s;
 
 }
+
 
 a {
     color: inherit;
@@ -47,8 +57,8 @@ ul {
 }
 
 /* heafer */
-.navbar {
-       background-color: aliceblue;
+header {
+    background-color: var(--block-header);
     text-align: center;
 }
 .navbar  li {
@@ -56,11 +66,22 @@ ul {
     padding: 20px;
     font-weight: bold;
     font-size: 1.2em;
-    color: #676262fc;
+    /* color: var(--font-color-primary); */
 }
 
 .navbar  li:hover {
    border-radius: 9px 9px;
     background: coral;
-    color: white;
+    color: var(--font-color-secondary);
+}
+
+/* container */
+.container, .navbar, footer {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.navbar{
+    padding: 0;
 }

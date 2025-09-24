@@ -18,6 +18,7 @@ class AppController extends Controller
     }
     public function home($data)
     {
+        $this->themaModel->all();
         return $this->view('home', ['message' => 'Welcome to the Theme Management System']);
     }
 

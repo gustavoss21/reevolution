@@ -1,4 +1,5 @@
 <?php
+require_once 'request.php';
 
 $content = '';
 $layout = '';
@@ -9,6 +10,8 @@ $static_links = [
 ],
     'end' => []
 ];
+
+
 
 function construictStatic(array $static_links) {
     $links_formated = ['top' => [], 'end' => []];

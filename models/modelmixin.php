@@ -1,7 +1,7 @@
 <?php
 namespace Models;
-
-use Database\Querybuild;
+require dirname(__FILE__,2) . '/database/QueryBuild.php';
+use Database\QueryBuild;
 use Dotenv\Parser\Value;
 use Models\ValidateMixin;
 
@@ -48,9 +48,9 @@ class ModelMixin
         $this->columnsForQuery[$paramether] = $paramether;
     }
 
-    function all($columns = [])
+    function all($limit=null, $columns = [])
     {
-        $querycomponets = new Querybuild($this->table, $this->columns,'');
+        $querycomponets = new QueryBuild($this->table, $this->columns,'', $limit);
         $query = $querycomponets->select();
 
         return $this->executeQuery($query);
@@ -61,7 +61,7 @@ class ModelMixin
 
         ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
         $this->validateRequiredFields([...$whereColumns]);
-        $componentQuery = new Querybuild($this->table, $this->columns, $whereColumns);
+        $componentQuery = new QueryBuild($this->table, $this->columns, $whereColumns);
         $query = $componentQuery->select();
 
         return $this->executeQuery($query, $whereData);
@@ -69,7 +69,7 @@ class ModelMixin
 
     function delete($dataSearch = [self::DATASEARCH])
     {
-        $componentQuery = new Querybuild($this->table, $this->columns, $dataSearch);
+        $componentQuery = new QueryBuild($this->table, $this->columns, $dataSearch);
         $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
         $query = $componentQuery->delete();
         return $this->executeQuery($query, $this->queryValues);
@@ -79,7 +79,7 @@ class ModelMixin
         ['columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
         $whereData = $this->queryValues;
         $this->validateRequiredFields($this->columnsRequiredForMethods['update']);
-        $componentQuery = new Querybuild($this->table, $this->assignedColumns, $whereColumns);
+        $componentQuery = new QueryBuild($this->table, $this->assignedColumns, $whereColumns);
         // $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
         $query = $componentQuery->update();
 
@@ -87,7 +87,7 @@ class ModelMixin
     }
     function insert()
     {
-        $componentQuery = new Querybuild($this->table, $this->assignedColumns,'');
+        $componentQuery = new QueryBuild($this->table, $this->assignedColumns,'');
         ['data'=>$whereData] = $this->filterDataForquery($this->assignedColumns);
         $this->validateRequiredFields($this->columnsRequiredForMethods['create']);
         $query = $componentQuery->insert();

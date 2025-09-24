@@ -1,15 +1,18 @@
 <?php
 namespace Database;
 
+require dirname(__FILE__) . '/MixinQuerybuild.php';
+
+use  Database\MixinQuerybuild;
 /**
  * Class to build SQL queries dynamically.
  */
-class Querybuild extends MixinQuerybuild{
+class QueryBuild extends MixinQuerybuild{
 
     function select(){
         $columns = $this->formatParamts($this->columns,', ');
         $whereWith = $this->formatParamtsForWhere($this->expressions);
-        return "SELECT {$columns} FROM {$this->table} $whereWith";
+        return "SELECT {$columns} FROM {$this->table} $whereWith {$this->limit}";
     }
 
     function delete(){

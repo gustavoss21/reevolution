@@ -1,57 +1,45 @@
 <?php
 
-class request
+class Request
 {
-    public static function uri()
+    public $method, $body, $url, $headers;
+
+    public function __construct($url, $data)
     {
-        $uri = $_SERVER['REQUEST_URI'];
-        $uri = trim($uri, '/');
-        $uri = filter_var($uri, FILTER_SANITIZE_URL);
-        return explode('/', $uri);
+        $this->url = $url;
+        $this->setParams($data);
     }
 
-    public static function method()
+    public function run()
     {
-        return $_SERVER['REQUEST_METHOD'];
+        $ch = curl_init();
+
+        if ($this->method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->body));
+        } elseif ($this->method === 'GET' && !empty($this->body)) {
+            $this->url .= '?' . http_build_query($this->body);
+        }
+
+        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        if (!empty($this->headers)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+        }
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
     }
 
-    public static function body()
+    public function setParams(array $params)
     {
-        $body = [];
-        if (self::method() === 'GET') {
-            foreach ($_GET as $key => $value) {
-                $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+        foreach ($params as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
             }
         }
-        if (self::method() === 'POST') {
-            foreach ($_POST as $key => $value) {
-                $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-            }
-        }
-        return $body;
     }
-
-    public static
-function httpRequest($url, $method = 'GET', $data = [], $headers = []) {
-    $ch = curl_init();
-
-    if ($method === 'POST') {
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    } elseif ($method === 'GET' && !empty($data)) {
-        $url .= '?' . http_build_query($data);
-    }
-
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    if (!empty($headers)) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    }
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    return $response;
-}
 }
