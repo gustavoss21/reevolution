@@ -2,8 +2,6 @@
 
 namespace Models;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-require dirname(__DIR__) . '/models/modelmixin.php';
 
 use Models\ModelMixin;
 // 
@@ -11,14 +9,7 @@ class TopicModel extends  ModelMixin
 {
     protected $table = 'topics';
 
-    static $priorities = [
-        1 => 'Low',
-        2 => 'Medium',
-        3 => 'High',
-        4 => 'Critical'
-    ];
-
-    protected $columns = ['id', 'name', 'slug','priority', 'description', 'theme_id', 'created_at', 'updated_at'];
+    protected $columns = ['id', 'name', 'slug', 'description', 'theme_id', 'created_at', 'updated_at'];
 
     protected $columnsRequiredForMethods = [
         'create'=>['name', 'theme_id'],

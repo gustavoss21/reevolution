@@ -7,7 +7,8 @@
             "Views\\": "views/",
             "Config\\": "config/",
             "Routes\\": "routes/",
-            "Services\\":"services/"
+            "Services\\":"services/",
+            "Database\\":"database/"
         }
     },
     "authors": [
@@ -17,6 +18,7 @@
         }
     ],
     "require": {
-        "vlucas/phpdotenv": "^5.6"
+        "vlucas/phpdotenv": "^5.6",
+        "fakerphp/faker": "^1.24"
     }
 }

@@ -2,15 +2,18 @@
 
 namespace Database\Migrations;
 
+use Database\DB;
+
 class CreateTableStage
 {
-    public function teste(){
+    public function teste()
+    {
         echo "Teste de migração";
     }
 
     public function up()
     {
-        $pdo = conectarBanco();
+        $pdo = DB::conectarBanco();
         if (!$pdo) {
             return;
         }
@@ -37,7 +40,7 @@ class CreateTableStage
     }
     public function down()
     {
-        $pdo = conectarBanco();
+        $pdo = DB::conectarBanco();
         if (!$pdo) {
             return;
         }

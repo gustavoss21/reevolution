@@ -2,15 +2,18 @@
 
 namespace Database\Migrations;
 
+use Database\DB;
+
 class InsertColumnsInStage
 {
-    public function teste(){
+    public function teste()
+    {
         echo "Teste de migração";
     }
 
     public function up()
     {
-        $pdo = conectarBanco();
+        $pdo = DB::conectarBanco();
         if (!$pdo) {
             return;
         }
@@ -22,7 +25,8 @@ class InsertColumnsInStage
                 ADD status TINYINT(1) CHECK (status IN (1, 2, 3)),
                 ADD domain_level INT NOT NULL,
                 ADD attention text,
-                ADD learning_stage int NOT NULL
+                ADD learning_stage int NOT NULL,
+                ADD priority int NOT NULL
             ;
         ";
 
@@ -35,7 +39,7 @@ class InsertColumnsInStage
     }
     public function down()
     {
-        $pdo = conectarBanco();
+        $pdo = DB::conectarBanco();
         if (!$pdo) {
             return;
         }
@@ -46,6 +50,7 @@ class InsertColumnsInStage
                 DROP COLUMN status,
                 DROP COLUMN domain_level,
                 DROP COLUMN attention,
+                DROP COLUMN priority,
                 DROP COLUMN learning_stage;";
 
         try {

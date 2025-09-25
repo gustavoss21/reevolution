@@ -170,4 +170,20 @@ class MixinQuerybuild
 
         return " LIMIT $offset, $limit";
     }
+
+    public static function createQueryTimeline(){
+        return '        SELECT 
+            id,
+            name,
+            priority,
+            domain_level,
+            status,
+            (priority * 1.5) 
+              + (DATEDIFF(CURDATE(),updated_at) / 5.0) 
+              + ((3 - domain_level) * 2) 
+              + (2 + status) AS pontuacao
+        FROM reevolutiondb.stages
+        ORDER BY pontuacao DESC
+        LIMIT 3;';
+    }
 }

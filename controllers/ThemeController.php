@@ -77,7 +77,7 @@ class ThemeController extends Controller
     }
 
     public function timeline(){
-        $service = new ServiceTimeline;
-        $this->themaModel;
+        $service = ServiceTimeline::teste();
+        return $service;
     }
 }

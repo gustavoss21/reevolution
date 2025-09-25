@@ -1,7 +1,5 @@
 <?php
 require dirname(__DIR__) . '/vendor/autoload.php';
-require dirname(__DIR__) . '/database/migrationMixins.php';
-require dirname(__DIR__) . '/database/conectiondb.php';
 
 $path = dirname(__DIR__) . '/database/migrations/';
 

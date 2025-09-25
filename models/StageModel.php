@@ -2,11 +2,8 @@
 
 namespace Models;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-require dirname(__DIR__) . '/models/modelmixin.php';
-
 use Models\ModelMixin;
-// 
+ 
 class StageModel extends  ModelMixin
 {
     protected $table = 'stages';
@@ -14,13 +11,21 @@ class StageModel extends  ModelMixin
     protected $columns = [
         'id', 'name', 'topic_id', 'slug', 'description',
         'created_at', 'updated_at','summary','synthesis',
-        'status','domain_level','attention','learning_stage'
+        'status','domain_level','attention','learning_stage',
+        'priority'
+    ];
+
+    static $priorities = [
+        1 => 'Low',
+        2 => 'Medium',
+        3 => 'High',
+        4 => 'Critical'
     ];
 
     public static $STATUS_OPTIONS = [
+        'FINALIZADO',
         'NÂO INICIADO',
-        'EM ANDAMENTO',
-        'FINALIZADO'
+        'EM ANDAMENTO'
     ];
 
     public static $DOMAIN_LEVEL_OPTIONS = [
@@ -37,10 +42,11 @@ class StageModel extends  ModelMixin
     ];
 
     protected $columnsRequiredForMethods = [
-        'create'=>['name', 'topic_id', 'status', 'domain_level', 'learning_stage'],
+        'create'=>['name', 'topic_id', 'status', 'domain_level', 'learning_stage', 'priority'],
         'update'=>['id'],
         'delete'=>['id']
     ];
 
-    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage;
+    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority;
 }
+

@@ -1,9 +1,11 @@
 <?php
 namespace Models;
-require dirname(__FILE__,2) . '/database/QueryBuild.php';
+
 use Database\QueryBuild;
 use Dotenv\Parser\Value;
+use Error;
 use Models\ValidateMixin;
+use Database\DB;
 
 /**
  * Mixin class providing getter and setter methods for model properties.
@@ -23,8 +25,12 @@ class ModelMixin
 
     function __construct($data = [])
     {
-        $this->dbconection = require dirname(__FILE__,2). '/database/conectiondb.php';
-        
+        try{
+            $this->dbconection =  DB::conectarBanco();
+        }catch(ERROR $m){
+            error_log($m);
+        }
+
         foreach ($data as $key => $value) {
             $this->set($key, $value);
         }
@@ -53,9 +59,9 @@ class ModelMixin
         print_r(get_object_vars($this));
     }
 
-    function all($limit=null, $columns = [])
+    function all($limit=null, $columns = null)
     {
-        $querycomponets = new QueryBuild($this->table, $this->columns,'', $limit);
+        $querycomponets = new QueryBuild($this->table, $columns??$this->columns,'', $limit);
         $query = $querycomponets->select();
 
         return $this->executeQuery($query);
@@ -79,6 +85,7 @@ class ModelMixin
         $query = $componentQuery->delete();
         return $this->executeQuery($query, $this->queryValues);
     }
+
     function update($dataSearch = [self::DATASEARCH])
     {
         ['columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
@@ -90,13 +97,19 @@ class ModelMixin
 
         return $this->executeQuery($query, $whereData);
     }
+
     function insert()
     {
         $componentQuery = new QueryBuild($this->table, $this->assignedColumns,'');
         ['data'=>$whereData] = $this->filterDataForquery($this->assignedColumns);
         $this->validateRequiredFields($this->columnsRequiredForMethods['create']);
         $query = $componentQuery->insert();
-        return $this->executeQuery($query, $whereData);;
+        return $this->executeQuery($query, $whereData);
+    }
+
+    static function getTimeline(){
+        $query = QueryBuild::createQueryTimeline();
+        return (new ModelMixin())->executeQuery($query);
     }
 
     /**
@@ -135,4 +148,6 @@ class ModelMixin
 
         return $dataQuery;
     }
+
+
 }

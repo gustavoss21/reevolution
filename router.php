@@ -11,8 +11,8 @@ class Route extends RouterBase
             '/' => 'AppController@home',
             '/topics' => 'TopicController@index',
             '/topics/{id}' => 'TopicController@show',
-            '/temas' => 'ThemaController@getAllThemas',
-            '/timeline' => 'ThemaController@timeline'
+            '/temas' => 'ThemeController@getAllThemas',
+            '/timeline' => 'ThemeController@timeline'
         ],
         'POST' => [
             '/topics' => 'TopicController@create',

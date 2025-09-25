@@ -14,7 +14,7 @@ trait ValidateMixin
     public function validateRequiredFields($requiredFields)
     {
         foreach ($requiredFields as $field) {
-            if (empty($this->{$field})) {
+            if (empty($this->{$field}) && $this->{$field} !== 0) {
                 throw new \Exception("The field {$field} is required.");
             }
         }

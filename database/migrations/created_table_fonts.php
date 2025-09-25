@@ -2,6 +2,8 @@
 
 namespace Database\Migrations;
 
+use Database\DB;
+
 class CreateTableFonts
 {
     public function teste(){
@@ -10,7 +12,8 @@ class CreateTableFonts
 
     public function up()
     {
-        $pdo = conectarBanco();
+        $pdo = DB::conectarBanco();
+
         if (!$pdo) {
             return;
         }
@@ -36,7 +39,7 @@ class CreateTableFonts
     }
     public function down()
     {
-        $pdo = conectarBanco();
+        $pdo = DB::conectarBanco();
         if (!$pdo) {
             return;
         }

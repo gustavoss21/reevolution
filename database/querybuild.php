@@ -1,8 +1,6 @@
 <?php
 namespace Database;
 
-require dirname(__FILE__) . '/MixinQuerybuild.php';
-
 use  Database\MixinQuerybuild;
 /**
  * Class to build SQL queries dynamically.

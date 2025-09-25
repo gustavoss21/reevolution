@@ -2,8 +2,6 @@
 
 namespace Controllers;
 
-require dirname(__DIR__) . '/models/thema.php';
-
 use Models\ThemeModel;
 
 class ThemaController
