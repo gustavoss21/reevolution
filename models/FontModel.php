@@ -5,14 +5,14 @@ namespace Models;
 
 use Models\ModelMixin;
 // 
-class TopicModel extends  ModelMixin
+class FontModel extends  ModelMixin
 {
-    protected $table = 'topics';
+    protected $table = 'fonts';
 
-    protected $columns = ['id', 'name', 'slug', 'description', 'theme_id', 'created_at', 'updated_at'];
+    protected $columns = ['id', 'font', 'description', 'stage_id', 'created_at', 'updated_at'];
 
     protected $columnsRequiredForMethods = [
-        'create'=>['name','slug', 'theme_id'],
+        'create'=>['font', 'stage_id'],
         'update'=>['id'],
         'delete'=>['id']
     ];

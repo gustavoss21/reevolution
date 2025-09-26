@@ -11,7 +11,7 @@ class ThemeModel extends ModelMixin
     protected $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
 
     protected $columnsRequiredForMethods = [
-        'create'=>['name'],
+        'create'=>['name','slug'],
         'update'=>['id'],
         'delete'=>['id']
     ];

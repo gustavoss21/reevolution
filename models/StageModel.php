@@ -6,6 +6,8 @@ use Models\ModelMixin;
  
 class StageModel extends  ModelMixin
 {
+    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority;
+
     protected $table = 'stages';
 
     protected $columns = [
@@ -47,6 +49,5 @@ class StageModel extends  ModelMixin
         'delete'=>['id']
     ];
 
-    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority;
 }
 
