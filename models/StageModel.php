@@ -49,5 +49,12 @@ class StageModel extends  ModelMixin
         'delete'=>['id']
     ];
 
+    static function connect_one_to_many_topics($topic_id){
+        $topic = new TopicModel();
+        $topic->set('id', $topic_id);
+        $topic = (new StageModel)->relationship($topic);
+        return $topic;
+    }
+
 }
 

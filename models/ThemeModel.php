@@ -7,7 +7,7 @@ use Models\ModelMixin;
 class ThemeModel extends ModelMixin
 {
     protected $table = 'themes';
-
+    protected $id, $name, $slug, $description, $created_at, $updated_at;
     protected $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
 
     protected $columnsRequiredForMethods = [
@@ -15,6 +15,4 @@ class ThemeModel extends ModelMixin
         'update'=>['id'],
         'delete'=>['id']
     ];
-    protected $id, $name, $slug, $description, $created_at, $updated_at;
-
 }

@@ -8,6 +8,7 @@ use Models\ModelMixin;
 class FontModel extends  ModelMixin
 {
     protected $table = 'fonts';
+    protected $id, $font, $stage_id, $description, $created_at, $updated_at;
 
     protected $columns = ['id', 'font', 'description', 'stage_id', 'created_at', 'updated_at'];
 
@@ -17,5 +18,4 @@ class FontModel extends  ModelMixin
         'delete'=>['id']
     ];
 
-    protected $id, $name, $theme_id, $slug, $description, $created_at, $updated_at;
 }

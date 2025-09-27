@@ -1,3 +1,5 @@
+- commit
++ added FontMode propety font    
 ## next
 limit
 ### controles

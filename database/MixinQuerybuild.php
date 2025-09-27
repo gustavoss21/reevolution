@@ -178,6 +178,7 @@ class MixinQuerybuild
             priority,
             domain_level,
             status,
+            topic_id,
             (priority * 1.5) 
               + (DATEDIFF(CURDATE(),updated_at) / 5.0) 
               + ((3 - domain_level) * 2) 

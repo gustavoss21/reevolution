@@ -107,6 +107,14 @@ class ModelMixin
         return $this->executeQuery($query, $whereData);
     }
 
+    public function relationship(ModelMixin $classInstance){
+        $instance_columns = $classInstance->columns;
+        $query = (new QueryBuild($classInstance->table, $instance_columns,'id',[0,1]))->select();
+
+        ['data' => $whereData] = $classInstance->filterDataForquery(['id']);
+        return $this->executeQuery($query,$whereData);
+    }
+
     static function getTimeline(){
         $query = QueryBuild::createQueryTimeline();
         return (new ModelMixin())->executeQuery($query);
@@ -148,6 +156,4 @@ class ModelMixin
 
         return $dataQuery;
     }
-
-
 }
