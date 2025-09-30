@@ -3,6 +3,7 @@
 :root {
     --block-header: aliceblue;
     --background-primary: #00a8e37d;
+    --background-secondary:#5997ad;
     --font-color-primary: #676262fc;
     --font-color-secondary: #ffffff;  ;
     --background-color: #f9f9f9;
@@ -84,4 +85,32 @@ header {
 
 .navbar{
     padding: 0;
+}
+
+/* home */
+
+.block-container{
+    display: flex;
+    gap: 5px;
+}
+
+.theme-item{
+    padding: 15px;
+    background-color: var(--background-secondary);
+    color: var(--font-color-secondary);
+    border-radius: 13px;
+}
+
+.theme-title{
+    font-size: 2em;
+    font-family: cursive;
+    min-width: 350px;
+}
+
+.theme-topic{
+    font-size: 1.5em;
+}
+
+.title-item{
+    font-weight: 900;
 }

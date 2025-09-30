@@ -1,10 +1,8 @@
 <?php
 
-namespace Factore;
+namespace Database;
 
-require dirname(__FILE__) . '/vendor/autoload.php';
-
-echo dirname(__FILE__) . '/vendor/autoload.php';
+require dirname(__FILE__, 2) . '/vendor/autoload.php';
 
 use Faker\Factory;
 use Models\StageModel;
@@ -63,6 +61,13 @@ function factoreFont()
     $stage->insert();
 }
 
+function factoreDropAll(StageModel $model)
+{
+    $model->delete(false,true);
+}
+
+// factoreDropAll(new StageModel);
+
 // for( $x=0; $x < 5; $x++){
 //     factoreTheme();
 // }
@@ -71,9 +76,9 @@ function factoreFont()
 //     factoreTopic();
 // }
 
-// for ($x = 0; $x < 20; $x++) {
-//     factoreStage();
-// }
+for ($x = 0; $x < 20; $x++) {
+    factoreStage();
+}
 
 for ($x = 0; $x < 20; $x++) {
     factoreFont();

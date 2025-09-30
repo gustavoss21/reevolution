@@ -179,6 +179,8 @@ class MixinQuerybuild
             domain_level,
             status,
             topic_id,
+            updated_at,
+            COUNT(*) AS amount_event,
             (priority * 1.5) 
               + (DATEDIFF(CURDATE(),updated_at) / 5.0) 
               + ((3 - domain_level) * 2) 
@@ -186,5 +188,18 @@ class MixinQuerybuild
         FROM reevolutiondb.stages
         ORDER BY pontuacao DESC
         LIMIT 3;';
+    }
+
+    public static function createQueryGroupByStatus(){
+        return 'SELECT 
+                    status,
+                    COUNT(*) AS amount_event,
+                    AVG((priority * 1.5) 
+                        + (DATEDIFF(CURDATE(), updated_at) / 5.0) 
+                        + ((3 - domain_level) * 2) 
+                        + (2 + status)) AS point_average
+                FROM reevolutiondb.stages
+                GROUP BY status
+                "';
     }
 }

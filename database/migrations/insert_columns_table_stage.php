@@ -22,7 +22,7 @@ class InsertColumnsInStage
             ALTER TABLE stages
                 ADD summary TEXT,
                 ADD synthesis VARCHAR(255),
-                ADD status TINYINT(1) CHECK (status IN (1, 2, 3)),
+                ADD status TINYINT(1) CHECK (status IN (0, 1, 2)),
                 ADD domain_level INT NOT NULL,
                 ADD attention text,
                 ADD learning_stage int NOT NULL,

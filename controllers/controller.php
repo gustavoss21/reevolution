@@ -12,8 +12,7 @@ class Controller
     protected function respond($data, $status = 200)
     {
         http_response_code($status);
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        $this->json($data);
         exit;
     }
 
@@ -111,7 +110,7 @@ class Controller
 
     protected function view($template, $data = [])
     {
-        extract(['data'=>$data, 'template'=>$template]);
+        extract([$data, 'template'=>$template]);
         include __DIR__ . '/../views/ConstruitView.php';
     }
 

@@ -25,4 +25,27 @@ class ServiceTimeline
 
         return $themes;
     }
+
+    static function getThemefullData(array $theme)
+    {
+
+
+        $topic = new TopicModel(['theme_id'=>$theme['id']]);
+        $topics = $topic->find(['topic_id']);
+
+        foreach($topics as &$topic){
+            $stage = new StageModel(['topic_id'=>$topic['id']]);
+
+            $topic['stage'] = $stage->find(['topic_id']);
+            $theme['statusLabels'] = StageModel::$STATUS_OPTIONS;
+        }
+
+        $theme['topic'] = $topics;
+
+        return $theme;
+    }
+
+    static function getAverageStatus(){
+        return StageModel::getPointAverage();
+    }
 }

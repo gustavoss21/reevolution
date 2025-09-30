@@ -14,10 +14,6 @@ class ThemeController extends Controller
     {
         $this->themaModel = new ThemeModel();
     }
-    public function home($data)
-    {
-        return $this->respond('Welcome to the Theme Management System');
-    }
 
     public function createThema($data)
     {
@@ -45,7 +41,7 @@ class ThemeController extends Controller
         if (empty($result)) {
             throw new \Exception("Thema not found.");
         }
-        return $result[0];
+        return $this->respond($result[0]);
     }
 
     public function updateThema($id, $data)
@@ -78,6 +74,11 @@ class ThemeController extends Controller
 
     public function timeline(){
         $service = ServiceTimeline::timeline();
-        return $service;
+        $service['averange_status'] = ServiceTimeline::getAverageStatus();
+        return $this->respond($service);
+    }
+
+    public function statusAverage(){
+        return ServiceTimeline::getAverageStatus();
     }
 }

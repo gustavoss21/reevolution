@@ -70,18 +70,19 @@ class ModelMixin
     function find(array $dataSearch = [self::DATASEARCH])
     {   
 
-        ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
-        $this->validateRequiredFields([...$whereColumns]);
+        ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($this->columnsForQuery);
         $componentQuery = new QueryBuild($this->table, $this->columns, $whereColumns);
         $query = $componentQuery->select();
 
         return $this->executeQuery($query, $whereData);
     }
 
-    function delete($dataSearch = [self::DATASEARCH])
+    function delete($dataSearch = [self::DATASEARCH],$_dropAll=false)
     {
         $componentQuery = new QueryBuild($this->table, $this->columns, $dataSearch);
-        $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
+
+        if(!$_dropAll) $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
+        
         $query = $componentQuery->delete();
         return $this->executeQuery($query, $this->queryValues);
     }

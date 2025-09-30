@@ -12,7 +12,9 @@ class Route extends RouterBase
             '/topics' => 'TopicController@index',
             '/topics/{id}' => 'TopicController@show',
             '/temas' => 'ThemeController@getAllThemas',
-            '/timeline' => 'ThemeController@timeline'
+            '/temas/{id}' => 'AppController@themeItem',
+            '/timeline' => 'ThemeController@timeline',
+            '/media-de-status'=> 'ThemeController@statusAverage',
         ],
         'POST' => [
             '/topics' => 'TopicController@create',

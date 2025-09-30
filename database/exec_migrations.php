@@ -1,5 +1,9 @@
 <?php
-require dirname(__DIR__) . '/vendor/autoload.php';
+namespace Database;
+
+require dirname(__FILE__,2). '/vendor/autoload.php';
+
+use Database\MigrationMixins;
 
 $path = dirname(__DIR__) . '/database/migrations/';
 
@@ -13,7 +17,7 @@ $listmigrations = array_filter($listmigrations, function ($file) {
 }); 
 
 $optionFormigration = array_map(function ($file) use ($path) {
-    $className = getClassNameFromFile($path . $file);
+    $className = MigrationMixins::getClassNameFromFile($path . $file);
     return $className;
 }, $listmigrations);// obtem o nome da classe a partir do arquivo
 
@@ -29,4 +33,4 @@ if (!empty($migrationNames)) {
     );
 }
 
-exeMigration($optionFormigration, $migrationMetode);
+MigrationMixins::exeMigration($optionFormigration, $migrationMetode);

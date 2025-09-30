@@ -3,7 +3,8 @@
 namespace Models;
 
 use Models\ModelMixin;
- 
+use Database\QueryBuild;
+
 class StageModel extends  ModelMixin
 {
     protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority;
@@ -54,6 +55,11 @@ class StageModel extends  ModelMixin
         $topic->set('id', $topic_id);
         $topic = (new StageModel)->relationship($topic);
         return $topic;
+    }
+
+    static function getPointAverage()
+    {
+        return (new StageModel)->executeQuery(QueryBuild::createQueryGroupByStatus());
     }
 
 }

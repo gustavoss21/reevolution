@@ -4,11 +4,22 @@ namespace Controllers;
 
 use Controllers\Controller;
 
+use Models\ThemeModel;
+use Services\ServiceTimeline;
+
 class AppController extends Controller
 {
     
     public function home($data)
     {
-        return $this->view('home', ['message' => 'Welcome to the Theme Management System']);
+        return $this->view('home');
+    }
+
+    public function themeItem($data)
+    {
+        $tC = (new ThemeModel($data))->find($data);
+        $theme = ServiceTimeline::getThemefullData($tC[0]);
+        $theme['averange_status'] = ServiceTimeline::getAverageStatus();
+        return $this->view('theme_item', ['theme'=> $theme]);
     }
 }

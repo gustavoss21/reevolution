@@ -10,7 +10,7 @@
 
 <body>
     <?php include_once dirname(__FILE__,2).'/partials/head.php' ?>
-    <?php if (isset($content)) echo $content; ?>
+    <?php echo $content; ?>
     <?php echo implode('\n', $static_links['end']) ?>
 </body>
 
