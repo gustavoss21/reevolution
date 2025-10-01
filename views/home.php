@@ -19,7 +19,10 @@ $static_links = [
 $urlTimeline = $urlBase . '/timeline';
 
 $request = new Request($urlTimeline, ['method' => 'GET']);
-$timeline_data = json_decode($request->run());
+$data = json_decode($request->run());
+$timeline_data = $data->timeline;
+$averange_status_list = $data->averange_status;
+
 ?>
 
 <main class="container">
@@ -49,7 +52,7 @@ $timeline_data = json_decode($request->run());
                     </div>
                     <div>
                         <span class="title-item">Pontuação:</span>
-                        <?= $theme->topic->stage->pontuacao ?>
+                        <?= $theme->topic->stage->score ?>
                     </div>
                     <div>
                         <span class="title-item">Ultima atualização: </span>
@@ -59,4 +62,5 @@ $timeline_data = json_decode($request->run());
             </a>
         <?php } ?>
     </div>
+    
 </main>

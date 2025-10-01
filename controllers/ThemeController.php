@@ -73,7 +73,7 @@ class ThemeController extends Controller
     }
 
     public function timeline(){
-        $service = ServiceTimeline::timeline();
+        $service['timeline'] = ServiceTimeline::timeline();
         $service['averange_status'] = ServiceTimeline::getAverageStatus();
         return $this->respond($service);
     }

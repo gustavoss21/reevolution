@@ -11,7 +11,7 @@ class MixinQuerybuild
     protected $table, $columns, $expressions, $limit;
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
-    
+
     public function __construct(string $table, $columns = [], $where = 'id', array|null $limit = [])
     {
         $this->expressions = $this->buildWhere($where);
@@ -154,7 +154,7 @@ class MixinQuerybuild
         return $where;
     }
 
-  
+
     /**
      * Formata a cláusula LIMIT para consultas SQL.
      *
@@ -164,14 +164,15 @@ class MixinQuerybuild
      */
     private function buildLimit($limit)
     {
-        if(empty($limit))return'';
+        if (empty($limit)) return '';
 
         [$offset, $limit] = $limit;
 
         return " LIMIT $offset, $limit";
     }
 
-    public static function createQueryTimeline(){
+    public static function createQueryTimeline()
+    {
         return '        SELECT 
             id,
             name,
@@ -180,26 +181,23 @@ class MixinQuerybuild
             status,
             topic_id,
             updated_at,
-            COUNT(*) AS amount_event,
-            (priority * 1.5) 
-              + (DATEDIFF(CURDATE(),updated_at) / 5.0) 
-              + ((3 - domain_level) * 2) 
-              + (2 + status) AS pontuacao
+            partial_score
+              + (DATEDIFF(CURDATE(),updated_at) / 5.0)  AS score
         FROM reevolutiondb.stages
-        ORDER BY pontuacao DESC
+        ORDER BY score DESC
         LIMIT 3;';
     }
 
-    public static function createQueryGroupByStatus(){
+    public static function createQueryGroupByStatus()
+    {
         return 'SELECT 
                     status,
                     COUNT(*) AS amount_event,
-                    AVG((priority * 1.5) 
+                    AVG( partial_score
                         + (DATEDIFF(CURDATE(), updated_at) / 5.0) 
-                        + ((3 - domain_level) * 2) 
-                        + (2 + status)) AS point_average
+                       ) AS point_average
                 FROM reevolutiondb.stages
                 GROUP BY status
-                "';
+                ';
     }
 }

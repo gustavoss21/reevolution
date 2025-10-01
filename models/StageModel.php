@@ -4,18 +4,30 @@ namespace Models;
 
 use Models\ModelMixin;
 use Database\QueryBuild;
+use DateTime;
 
 class StageModel extends  ModelMixin
 {
-    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority;
+    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score;
 
     protected $table = 'stages';
 
     protected $columns = [
-        'id', 'name', 'topic_id', 'slug', 'description',
-        'created_at', 'updated_at','summary','synthesis',
-        'status','domain_level','attention','learning_stage',
-        'priority'
+        'id',
+        'name',
+        'topic_id',
+        'slug',
+        'description',
+        'created_at',
+        'updated_at',
+        'summary',
+        'synthesis',
+        'status',
+        'domain_level',
+        'attention',
+        'learning_stage',
+        'priority',
+        'partial_score'
     ];
 
     static $priorities = [
@@ -38,19 +50,20 @@ class StageModel extends  ModelMixin
     ];
 
     public static $LEARNING_STAGE_OPTIONS = [
-        1=>'APRENDER A FAZER',
+        1 => 'APRENDER A FAZER',
         'EXPERIÊNCIA CONCRETA',
         'PENSAR E CRIAR ABSTRAÇÃO',
         'FAZER EXERCICIOS'
     ];
 
     protected $columnsRequiredForMethods = [
-        'create'=>['name', 'topic_id', 'status', 'domain_level', 'learning_stage', 'priority'],
-        'update'=>['id'],
-        'delete'=>['id']
+        'create' => ['name', 'topic_id', 'status', 'domain_level', 'learning_stage', 'priority', 'partial_score'],
+        'update' => ['id'],
+        'delete' => ['id']
     ];
 
-    static function connect_one_to_many_topics($topic_id){
+    static function connect_one_to_many_topics($topic_id)
+    {
         $topic = new TopicModel();
         $topic->set('id', $topic_id);
         $topic = (new StageModel)->relationship($topic);
@@ -62,5 +75,21 @@ class StageModel extends  ModelMixin
         return (new StageModel)->executeQuery(QueryBuild::createQueryGroupByStatus());
     }
 
-}
+    public function insert()
+    {
 
+        $this->setScore();
+        parent::insert();
+    }
+
+    private function setScore()
+    {
+        $pointP = ($this->priority * 1.5);
+        // $PointDate = ((new DateTime($this->updated_at))->diff((new DateTime()))->format('%a')) / 5.0;
+        $pointD = (3 - $this->domain_level) * 2;
+        $pointS = 2 + $this->status;
+        $partial_score = $pointP + $pointD + $pointS;
+
+        $this->set('partial_score', $partial_score);
+    }
+}

@@ -26,7 +26,8 @@ class InsertColumnsInStage
                 ADD domain_level INT NOT NULL,
                 ADD attention text,
                 ADD learning_stage int NOT NULL,
-                ADD priority int NOT NULL
+                ADD priority int NOT NULL,
+                ADD partial_score int NOT NULL
             ;
         ";
 
@@ -51,7 +52,9 @@ class InsertColumnsInStage
                 DROP COLUMN domain_level,
                 DROP COLUMN attention,
                 DROP COLUMN priority,
-                DROP COLUMN learning_stage;";
+                DROP COLUMN learning_stage
+                DROP COLUMN partial_score
+                ;";
 
         try {
             $pdo->exec($sql);

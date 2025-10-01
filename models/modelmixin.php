@@ -99,9 +99,9 @@ class ModelMixin
         return $this->executeQuery($query, $whereData);
     }
 
-    function insert()
-    {
-        $componentQuery = new QueryBuild($this->table, $this->assignedColumns,'');
+    public function insert()
+    {   
+        $componentQuery = new QueryBuild($this->table, $this->assignedColumns);
         ['data'=>$whereData] = $this->filterDataForquery($this->assignedColumns);
         $this->validateRequiredFields($this->columnsRequiredForMethods['create']);
         $query = $componentQuery->insert();

@@ -1,5 +1,7 @@
 - commit
-+ template home   | method delete do mixin Model
++ template home   | method delete do mixin 
+Model
+<!-- #6440715c -->
 ## next
 limit
 ### controles

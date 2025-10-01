@@ -4,6 +4,7 @@ namespace Database;
 
 require dirname(__FILE__, 2) . '/vendor/autoload.php';
 
+use DateTime;
 use Faker\Factory;
 use Models\StageModel;
 use Models\ThemeModel;
@@ -80,6 +81,6 @@ for ($x = 0; $x < 20; $x++) {
     factoreStage();
 }
 
-for ($x = 0; $x < 20; $x++) {
-    factoreFont();
-}
+// for ($x = 0; $x < 20; $x++) {
+//     factoreFont();
+// }
