@@ -2,7 +2,7 @@
 // include layout file
 $layout = __DIR__ . '/layout/index.php';
 $title = "ANALISE";
-$static_links = [
+STATIC_LINKS = [
     'top' => [
         'style' => [
             'style.css'

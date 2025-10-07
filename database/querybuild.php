@@ -9,18 +9,18 @@ class QueryBuild extends MixinQuerybuild{
 
     function select(){
         $columns = $this->formatParamts($this->columns,', ');
-        $whereWith = $this->formatParamtsForWhere($this->expressions);
-        return "SELECT {$columns} FROM {$this->table} $whereWith {$this->limit}";
+        $whereWith = $this->formatParamtsForWhere($this->where);
+        return "SELECT {$columns} FROM {$this->table} $whereWith {$this->group_by} {$this->order_by} {$this->limit} ";
     }
 
     function delete(){
-        $whereWith = $this->formatParamtsForWhere($this->expressions);
+        $whereWith = $this->formatParamtsForWhere($this->where);
         return "DELETE FROM {$this->table} $whereWith";
 
     }
 
     function update(){
-        $whereWith = $this->formatParamtsForWhere($this->expressions);
+        $whereWith = $this->formatParamtsForWhere($this->where);
         $columns = $this->formatParamtsForValue($this->columns, true);
         return "UPDATE {$this->table} SET  $columns $whereWith";
     }

@@ -52,7 +52,7 @@ function factoreFont()
     $fakeMethod = $fontOptions[array_rand($fontOptions)];
     //get font
     $font = $faker->{$fakeMethod}();
-    $font = $fakeMethod== $fontOptions[1]? $faker->word() .'.'. $font : $font;
+    $font = $fakeMethod == $fontOptions[1] ? $faker->word() . '.' . $font : $font;
     //get stage_id
     $mS = (new StageModel())->all(null, ['id']);
     $range_id = array_map(fn($data) => $data['id'], $mS);
@@ -64,7 +64,7 @@ function factoreFont()
 
 function factoreDropAll(StageModel $model)
 {
-    $model->delete(false,true);
+    $model->delete(false, true);
 }
 
 // factoreDropAll(new StageModel);
@@ -77,10 +77,75 @@ function factoreDropAll(StageModel $model)
 //     factoreTopic();
 // }
 
-for ($x = 0; $x < 20; $x++) {
-    factoreStage();
-}
+// for ($x = 0; $x < 20; $x++) {
+//     factoreStage();
+// }
 
 // for ($x = 0; $x < 20; $x++) {
 //     factoreFont();
 // }
+
+echo '<pre>';
+$s = new StageModel();
+$s->columns = ['updated_at'];
+$r = $s->find(
+    [],
+    [
+        'columns'=>[
+            'max' => 'updated_at'
+        ],
+        'order' => 'updated_at',
+        'limit'=>1
+    ]
+);
+print_r($r);
+
+// GET TIMELINE
+echo '<pre>';
+$s = new StageModel();
+$s->columns = [
+    'id',
+    'name',
+    'priority',
+    'domain_level',
+    'status',
+    'topic_id',
+    'updated_at',
+    'partial_score'
+];
+$r = $s->find(
+    [],
+    [
+        'columns'=>[
+            'more' => [
+                'partial_score',
+                'updated_at_diff'
+            ]
+
+            ],
+        'order' => 'updated_at',
+        'limit'=>1
+    ]
+);
+
+// echo '<pre>';
+// $s = new StageModel();
+// $s->columns = [
+//     'status'
+// ];
+// $r = $s->find(
+//     [],
+//     [
+//         'columns'=>[
+//             'averange' => [
+//                 'partial_score',
+//                 'updated_at_diff',
+//                 'as'=> 'point_average'
+//             ],
+//             'count'=>['*','as'=>'amount_event']
+
+//             ],
+//         'order' => 'updated_at',
+//     ]
+// );
+print_r($r);

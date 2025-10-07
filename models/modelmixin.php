@@ -61,18 +61,23 @@ class ModelMixin
 
     function all($limit=null, $columns = null)
     {
-        $querycomponets = new QueryBuild($this->table, $columns??$this->columns,'', $limit);
+        $querycomponets = new QueryBuild($this->table, $columns??$this->columns,'', ['meta'=>['limit'=>$limit]]);
         $query = $querycomponets->select();
 
         return $this->executeQuery($query);
     }
 
-    function find(array $dataSearch = [self::DATASEARCH])
+    function find(array $dataSearch = [self::DATASEARCH],$meta=[])
     {   
 
         ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($this->columnsForQuery);
-        $componentQuery = new QueryBuild($this->table, $this->columns, $whereColumns);
-        $query = $componentQuery->select();
+        $query = (new QueryBuild($this->table, $whereColumns))
+                    ->columns($this->columns,$meta['columns'])
+                    ->where($meta['where']??'')
+                    ->groupBy($meta['group']??'')
+                    ->orderBy($meta['order']??'')
+                    ->limit($meta['limit'] ?? '')
+                    ->select();
 
         return $this->executeQuery($query, $whereData);
     }
@@ -114,11 +119,6 @@ class ModelMixin
 
         ['data' => $whereData] = $classInstance->filterDataForquery(['id']);
         return $this->executeQuery($query,$whereData);
-    }
-
-    static function getTimeline(){
-        $query = QueryBuild::createQueryTimeline();
-        return (new ModelMixin())->executeQuery($query);
     }
 
     /**

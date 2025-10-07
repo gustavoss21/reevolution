@@ -3,7 +3,8 @@
 :root {
     --block-header: aliceblue;
     --background-primary: #00a8e37d;
-    --background-secondary:#5997ad;
+    --background-secondary:#d31313;
+    --background-tree:#6440715c;
     --font-color-primary: #676262fc;
     --font-color-secondary: #ffffff;  ;
     --background-color: #f9f9f9;
@@ -88,7 +89,10 @@ header {
 }
 
 /* home */
-
+.content-blocks{
+    /* display: flex;
+    gap: 8%; */
+}
 .block-container{
     display: flex;
     gap: 5px;
@@ -113,4 +117,15 @@ header {
 
 .title-item{
     font-weight: 900;
+}
+
+/* home/grafi */
+.content-grafic-averange{
+    background-color: aliceblue;
+    padding: 21px;
+    width: 353px;
+    height: 100vh;
+    position: absolute;
+    right: 0;
+    top: 84px;
 }

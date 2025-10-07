@@ -15,6 +15,7 @@ class Route extends RouterBase
             '/temas/{id}' => 'AppController@themeItem',
             '/timeline' => 'ThemeController@timeline',
             '/media-de-status'=> 'ThemeController@statusAverage',
+            '/time-without-study' => 'StageController@GetTimeWithoutStudy',
         ],
         'POST' => [
             '/topics' => 'TopicController@create',

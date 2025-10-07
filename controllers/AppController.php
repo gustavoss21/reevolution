@@ -19,7 +19,6 @@ class AppController extends Controller
     {
         $tC = (new ThemeModel($data))->find($data);
         $theme = ServiceTimeline::getThemefullData($tC[0]);
-        $theme['averange_status'] = ServiceTimeline::getAverageStatus();
         return $this->view('theme_item', ['theme'=> $theme]);
     }
 }

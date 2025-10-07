@@ -12,7 +12,7 @@ class StageModel extends  ModelMixin
 
     protected $table = 'stages';
 
-    protected $columns = [
+    public $columns = [
         'id',
         'name',
         'topic_id',

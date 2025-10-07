@@ -46,6 +46,9 @@ class ServiceTimeline
     }
 
     static function getAverageStatus(){
-        return StageModel::getPointAverage();
+        return [
+            'averange'=>StageModel::getPointAverage(),
+            'options'=>StageModel::$STATUS_OPTIONS
+        ];
     }
 }

@@ -1,9 +1,9 @@
 - commit
-+ template home   | method delete do mixin 
++ ajustei o construtor de static & criar grafico 
 Model
-<!-- #6440715c -->
+
 ## next
-limit
+media de status por pontus é inutil
 ### controles
    tratamento de resposta
    tratamento de erros

@@ -2,22 +2,25 @@
 
 namespace Database;
 
+use BadFunctionCallException;
+use SQLite3Exception;
+
 /**
  * Class to build SQL queries dynamically.
  */
 class MixinQuerybuild
 {
-
-    protected $table, $columns, $expressions, $limit;
+    protected $table, $columns, $where, $limit;
+    private $meta;
+    protected $order_by, $group_by = '';
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
+    const F_IN_CLOUSERE = ['max'=>'MAX'];
 
-    public function __construct(string $table, $columns = [], $where = 'id', array|null $limit = [])
+    public function __construct(string $table, $columns = [], $where = 'id', array $meta=[])
     {
-        $this->expressions = $this->buildWhere($where);
-        $this->columns = $columns;
         $this->table = $table;
-        $this->limit = $this->buildLimit($limit);
+        $this->meta = $meta;
     }
 
     /**
@@ -88,21 +91,22 @@ class MixinQuerybuild
      * @param mixed $data The data to be filtered, typically an array or object containing the conditions.
      * @return mixed The filtered result based on the provided conditions.
      */
-    function buildWhere($data)
+    function where($data='')
     {
-        $where = ['expression' => [], 'operator' => self::OPERADORES['EQ']];
-        if (empty($data)) return $where;
+        $this->where = ['expression' => [], 'operator' => self::OPERADORES['EQ']];
+
+        if (empty($data)){
+            return $this;
+        }
 
         if (!is_array($data)) {
             // Caso seja uma string, converte para o formato esperado
-            $where['expression']['column'] = $data;
-            return $where;
+            $this->where['expression']['column'] = $data;
+            return $this;
         } else {
             // Caso seja um array com operador definido, converte para o formato esperado
-            $whereResult = $this->unpackWhere($data);
-
-
-            return $whereResult;
+            $this->where = $this->unpackWhere($data);
+            return $this;
         }
     }
 
@@ -162,42 +166,109 @@ class MixinQuerybuild
      * @param int $limit O número máximo de resultados a serem retornados.
      * @return string A cláusula LIMIT formatada para uso em SQL.
      */
-    private function buildLimit($limit)
+    public function limit( $limit=false, $offset=0)
     {
-        if (empty($limit)) return '';
-
-        [$offset, $limit] = $limit;
-
-        return " LIMIT $offset, $limit";
+        if ($limit) $this->limit = "LIMIT $offset, $limit";
+        return $this;
     }
 
-    public static function createQueryTimeline()
-    {
-        return '        SELECT 
-            id,
-            name,
-            priority,
-            domain_level,
-            status,
-            topic_id,
-            updated_at,
-            partial_score
-              + (DATEDIFF(CURDATE(),updated_at) / 5.0)  AS score
-        FROM reevolutiondb.stages
-        ORDER BY score DESC
-        LIMIT 3;';
+    public function columns($columns, array $meta=[]){
+        if(empty($meta)){
+            $this->columns = $columns;
+            return $this;
+        };        
+
+        $columns_result = [];
+        $functions = [
+            'max'=>fn(string $meta_column,&$columns)=> $this->formateColumnMax($meta_column, $columns),
+            'more' => fn(array $meta_columns, &$columns) => $this->formateColumnsMore($meta_columns, $columns),
+            'count' => fn(array $data) => $this->formateColumnCount($data),
+            'averange' => fn(array $meta_columns, &$columns) => $this->formateAverangeColumn($meta_columns, $columns),
+        ];
+
+        foreach($meta as $function => $meta_columns){
+            $column_data = $functions[$function]($meta_columns, $columns);
+            $columns_result[] = $column_data['column'].$column_data['as'];
+        }
+
+        $columns_result = array_merge($columns,$columns_result); 
+        $this->columns = $columns_result;
+
+
+        return $this;
     }
 
-    public static function createQueryGroupByStatus()
+    private function formateColumnMax($meta_column, &$columns){
+        $index = array_search($meta_column, $columns);
+        unset($columns[$index]);
+
+        $column = "max($meta_column)";
+        $column_data = ['column' => $column, 'as' => ' AS ' . $meta_column];
+
+        return $column_data;
+    }
+
+    private function formateColumnCount($data){
+        return ['column'=>"COUNT({$data[0]})",'as'=>" AS {$data['as']}"];
+    }
+
+    private function formateAverangeColumn($meta_column,array &$columns)
     {
-        return 'SELECT 
-                    status,
-                    COUNT(*) AS amount_event,
-                    AVG( partial_score
-                        + (DATEDIFF(CURDATE(), updated_at) / 5.0) 
-                       ) AS point_average
-                FROM reevolutiondb.stages
-                GROUP BY status
-                ';
+        
+        if(!$meta_column['as'])throw new BadFunctionCallException();
+
+        $as = $meta_column['as'];
+
+        unset($meta_column['as']);
+
+        $columnMaxFormated = $this->formateColumnsMore($meta_column, $columns)['column'];
+        $column = "AVG($columnMaxFormated)";
+        $column_data = ['column' => $column, 'as' => ' AS ' . $as];
+
+        return $column_data;        
+
+    }
+
+    private function formateColumnsMore($meta_columns,&$columns){
+        $columns_result = [];
+
+        foreach($meta_columns as $meta_column){
+            $updated_at_diff = '(DATEDIFF(CURDATE(),updated_at) / 5.0)';
+
+            $index = array_search($meta_column, $columns);
+            if($index) unset($columns[$index]);
+
+            if (isset($$meta_column)) {
+                $columns_result[] = $$meta_column;
+            } else {
+                $columns_result[] = $meta_column;
+            }
+        }
+
+        $column = implode(' + ', $columns_result);
+        $column_data = ['column'=>$column,'as'=> ' AS ' . $columns_result[0]];
+
+        return  $column_data;
+    }
+
+
+    public function orderBy(string $column=''){
+        if(!$column)return $this;
+
+        $this->order_by = "ORDER BY $column DESC";
+        return $this;
+    }
+
+    public function groupBy(string $column='')
+    {
+        if (!$column) return $this;
+        $indexID = array_search('id', $this->columns);
+        if(!is_null($indexID)){
+            if(!($column === 'id')){
+                array_splice($this->columns,$indexID,1);
+            }
+        }
+        $this->group_by = "GROUP BY $column";
+        return $this;
     }
 }

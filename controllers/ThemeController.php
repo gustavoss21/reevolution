@@ -79,6 +79,6 @@ class ThemeController extends Controller
     }
 
     public function statusAverage(){
-        return ServiceTimeline::getAverageStatus();
+        return $this->respond(ServiceTimeline::getAverageStatus());
     }
 }
