@@ -10,6 +10,8 @@ use Models\StageModel;
 use Models\ThemeModel;
 use Models\TopicModel;
 use Models\FontModel;
+use Models\ColumnTrait;
+
 
 function factoreTheme()
 {
@@ -85,67 +87,66 @@ function factoreDropAll(StageModel $model)
 //     factoreFont();
 // }
 
-echo '<pre>';
-$s = new StageModel();
-$s->columns = ['updated_at'];
-$r = $s->find(
-    [],
-    [
-        'columns'=>[
-            'max' => 'updated_at'
-        ],
-        'order' => 'updated_at',
-        'limit'=>1
-    ]
-);
-print_r($r);
+// echo '<pre>';
+// $s = new StageModel();
+// $s->columns = ['updated_at'];
+// $r = $s->find(
+//     [],
+//     [
+//         'columns'=>[
+//             'max' => 'updated_at'
+//         ],
+//         'order' => 'updated_at',
+//         'limit'=>1
+//     ]
+// );
+// print_r($r);
 
 // GET TIMELINE
-echo '<pre>';
-$s = new StageModel();
-$s->columns = [
-    'id',
-    'name',
-    'priority',
-    'domain_level',
-    'status',
-    'topic_id',
-    'updated_at',
-    'partial_score'
-];
-$r = $s->find(
-    [],
-    [
-        'columns'=>[
-            'more' => [
-                'partial_score',
-                'updated_at_diff'
-            ]
-
-            ],
-        'order' => 'updated_at',
-        'limit'=>1
-    ]
-);
-
 // echo '<pre>';
 // $s = new StageModel();
 // $s->columns = [
-//     'status'
+//     'id',
+//     'name',
+//     'priority',
+//     'domain_level',
+//     'status',
+//     'topic_id',
+//     'updated_at',
+//     'partial_score'
 // ];
 // $r = $s->find(
 //     [],
 //     [
 //         'columns'=>[
-//             'averange' => [
+//             'more' => [
 //                 'partial_score',
-//                 'updated_at_diff',
-//                 'as'=> 'point_average'
-//             ],
-//             'count'=>['*','as'=>'amount_event']
+//                 'updated_at_diff'
+//             ]
 
 //             ],
 //         'order' => 'updated_at',
+//         'limit'=>1
 //     ]
 // );
+
+echo '<pre>';
+$s = new StageModel();
+
+$r = $s->find(
+    null,
+    [
+        
+        'columns'=>['averange' => [
+            'partial_score',
+            'updated_at_diff',
+            'as'=> 'point_average'
+        ],
+        'count'=>['*','as'=>'amount_event'],
+
+    
+        'order' => 'updated_at',
+        ]
+    ]
+);
 print_r($r);

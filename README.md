@@ -4,6 +4,7 @@ Model
 
 ## next
 media de status por pontus é inutil
+block para indicar uma materia nova
 ### controles
    tratamento de resposta
    tratamento de erros
@@ -13,6 +14,3 @@ ajustar o time da aplicação
 validaçao
 adinar um servidor (ngix|xampper) docker
 
-restrigir acesso a arquivos sensiveis
-tirar construtor de query estatico
-fazer uma unica requisiçao no request

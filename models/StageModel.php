@@ -3,7 +3,6 @@
 namespace Models;
 
 use Models\ModelMixin;
-use Database\QueryBuild;
 use DateTime;
 
 class StageModel extends  ModelMixin
@@ -72,7 +71,19 @@ class StageModel extends  ModelMixin
 
     static function getPointAverage()
     {
-        return (new StageModel)->executeQuery(QueryBuild::createQueryGroupByStatus());
+        $columns_meta = [
+            'columns' => [
+                'averange' => [
+                    'partial_score',
+                    'updated_at_diff',
+                    'as' => 'point_average'
+                ],
+                'count' => ['*', 'as' => 'amount_event']
+
+            ],
+            'order' => 'updated_at',
+        ];
+        return (new StageModel)->find(null,);
     }
 
     public function insert()

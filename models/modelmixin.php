@@ -14,7 +14,7 @@ class ModelMixin
 {
     use ValidateMixin;
 
-    protected $table, $assignedColumns, $query, $columns;
+    protected $table, $assignedColumns, $columns;
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
     const DATASEARCH = 'id';
@@ -22,6 +22,7 @@ class ModelMixin
     private $queryValues = [];
     private $columnsForQuery = [];
     protected $columnsRequired = [];
+    protected $query;
 
     function __construct($data = [])
     {
@@ -34,6 +35,8 @@ class ModelMixin
         foreach ($data as $key => $value) {
             $this->set($key, $value);
         }
+
+        $this->query = new QueryBuild($this->table, array_keys($data));
     }
 
 
@@ -67,20 +70,39 @@ class ModelMixin
         return $this->executeQuery($query);
     }
 
-    function find(array $dataSearch = [self::DATASEARCH],$meta=[])
+    function find(array|null $dataSearch = [self::DATASEARCH],$meta=[])
     {   
 
         ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($this->columnsForQuery);
-        $query = (new QueryBuild($this->table, $whereColumns))
-                    ->columns($this->columns,$meta['columns'])
-                    ->where($meta['where']??'')
-                    ->groupBy($meta['group']??'')
-                    ->orderBy($meta['order']??'')
-                    ->limit($meta['limit'] ?? '')
-                    ->select();
+        $query = $this->query->select();
 
         return $this->executeQuery($query, $whereData);
     }
+
+    public function columns($columns, $meta)
+    {
+        $this->query->columns($columns, $meta);
+        return $this;
+    }
+
+    public function where($where)
+    {
+        $this->query->where($where);
+        return $this;
+    }
+
+    public function groupBy(string $group)
+    {
+        $this->query->groupBy($group);
+        return $this;
+    }
+
+    public function limit(int $limit, int $offset)
+    {
+        $this->query->limit($limit, $offset);
+        return $this;
+    }
+
 
     function delete($dataSearch = [self::DATASEARCH],$_dropAll=false)
     {
