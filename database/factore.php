@@ -3,6 +3,7 @@
 namespace Database;
 
 require dirname(__FILE__, 2) . '/vendor/autoload.php';
+
 use Models\GenerateColumn;
 use DateTime;
 use Faker\Factory;
@@ -11,7 +12,7 @@ use Models\ThemeModel;
 use Models\TopicModel;
 use Models\FontModel;
 use Models\ColumnTrait;
-use Services\ServiceTimeline;
+use Services\ConsultService;
 
 function factoreTheme()
 {
@@ -118,7 +119,7 @@ function factoreDropAll(StageModel $model)
 
 echo '<pre>';
 $s = (new ThemeModel())
-        ->limit(1)
-        ->all();
-$r = (new \Services\ServiceTimeline)->getAverageStatus();
+    ->limit(1)
+    ->all();
+$r = (new \Services\ConsultService)->getAverageStatus();
 print_r($s);

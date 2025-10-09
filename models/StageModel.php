@@ -39,9 +39,9 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         4 => 'Critical'
     ];
 
-    public static $STATUS_OPTIONS = [
+    public static $STATUS_OPTIONS_LABELS = [
         'FINALIZADO',
-        'NÂO INICIADO',
+        'NÃO INICIADO',
         'EM ANDAMENTO'
     ];
 
@@ -63,6 +63,10 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'update' => ['id'],
         'delete' => ['id']
     ];
+
+    static $STATUS_OPTIONS_FINALIZED = 0;
+    static $STATUS_OPTIONS_NOT_STARTED = 1;
+    static $STATUS_OPTIONS_IN_PROGRESS = 2;
 
     static function connect_one_to_many_topics($topic_id)
     {

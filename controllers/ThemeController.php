@@ -4,15 +4,16 @@ namespace Controllers;
 
 use Models\ThemeModel;
 use Controllers\Controller;
-use Services\ServiceTimeline;
+use Services\ConsultService;
 
 class ThemeController extends Controller
 {
-    private $themaModel;
+    private $themaModel, $service;
 
     public function __construct()
     {
         $this->themaModel = new ThemeModel();
+        $this->service = new ConsultService();
     }
 
     public function createThema($data)
@@ -72,13 +73,14 @@ class ThemeController extends Controller
         return $this->themaModel->delete();
     }
 
-    public function timeline(){
-        $service['timeline'] = ServiceTimeline::timeline();
-        $service['averange_status'] = ServiceTimeline::getAverageStatus();
+    public function timeline()
+    {
+        $service['timeline'] = (new ConsultService)->timeline();
         return $this->respond($service);
     }
 
-    public function statusAverage(){
-        return $this->respond(ServiceTimeline::getAverageStatus());
+    public function statusAverage()
+    {
+        return $this->respond((new ConsultService)->getAverageStatus());
     }
 }

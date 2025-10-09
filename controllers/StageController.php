@@ -6,23 +6,26 @@ use Models\StageModel;
 use Models\TopicModel;
 use Controllers\Controller;
 use Models\ColumnEnum as Col;
+use Services\ConsultService;
 
 class StageController extends Controller
 {
-    private $stage;
+    private $stage, $service;
 
     public function __construct()
     {
         $this->stage = new StageModel();
+        $this->service = new ConsultService();
     }
 
-    public function GetTimeWithoutStudy(){
-        $event_without = $this->stage->columns(
-            self::colf('updated_at','max'),
-            self::col('status'),
-            )
-            ->find();
-        return $this->respond($event_without);
+    public function timeWithoutStudy()
+    {
+
+        return $this->respond($this->service->getTimeWithoutStudy());
     }
 
+    public function eventRecommendation()
+    {
+        return $this->respond($this->service->getEventRecommendation());
+    }
 }

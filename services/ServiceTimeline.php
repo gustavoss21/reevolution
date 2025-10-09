@@ -8,7 +8,7 @@ use Models\TopicModel;
 use Models\GenerateColumn;
 
 
-class ServiceTimeline
+class ConsultService
 {
     use GenerateColumn;
 
@@ -54,7 +54,7 @@ class ServiceTimeline
             $stage = new StageModel(['topic_id' => $topic['id']]);
 
             $topic['stage'] = $stage->where('topic_id')->find();
-            $theme['statusLabels'] = StageModel::$STATUS_OPTIONS;
+            $theme['statusLabels'] = StageModel::$STATUS_OPTIONS_LABELS;
         }
 
         $theme['topic'] = $topics;
@@ -71,13 +71,45 @@ class ServiceTimeline
                     self::AVERANGE,
                     'point_average'
                 ),
-                $this->colf('*',self::COUNT, 'amount_event')
+                $this->colf('*', self::COUNT, 'amount_event')
             )->orderBy('updated_at')
             ->find();
 
         return [
             'averange' => $stage,
-            'options' => StageModel::$STATUS_OPTIONS
+            'options' => StageModel::$STATUS_OPTIONS_LABELS
         ];
+    }
+
+    function GetEventRecommendation()
+    {
+        $stage = new StageModel();
+        $stage->set('status', StageModel::$STATUS_OPTIONS_NOT_STARTED);
+        // obter recomencao de eventos nao estudados
+        $event_recommendation = $stage->columns(
+            self::col('id'),
+            self::col('name'),
+            self::col('priority'),
+            self::col('domain_level'),
+            self::col('status'),
+            self::col('topic_id'),
+            self::colf(['updated_at_diff', 'partial_score'], self::MORE, 'score')
+        )->where('status')
+            ->orderBy('score')
+            ->limit(5)
+            ->find();
+
+        return $event_recommendation;
+    }
+
+    function getTimeWithoutStudy()
+    {
+        $stage = new StageModel();
+        $event_without = $stage->columns(
+            self::colf('updated_at', 'max', 'last_update'),
+            self::col('status'),
+        )->find();
+
+        return $event_without;
     }
 }
