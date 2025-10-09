@@ -4,29 +4,25 @@ namespace Database;
 
 use BadFunctionCallException;
 use SQLite3Exception;
-// use Models\ColumnTrait;
+use Models\ColumnTrait;
 
 /**
  * Class to build SQL queries dynamically.
  */
-class MixinQuerybuild
+class MixinQuerybuild 
 {
     use \Models\ColumnTrait;
 
-    protected $table, $columns, $where, $limit;
+    protected $columns, $where, $limit;
     private $meta;
     protected $order_by, $group_by = '';
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
-    const F_IN_CLOUSERE = ['max'=>'MAX'];
+    const OPTION_CONSTRUCT_COLUMN = ['defult'=> 'defult','personal'=> 'ColumnTrait'];
 
 
 
-    public function __construct(string $table, $columns = [], $where = 'id', array $meta=[])
-    {
-        $this->table = $table;
-        $this->meta = $meta;
-    }
+    public function __construct( public string $table, public string $FuncColumnConstruct= self::OPTION_CONSTRUCT_COLUMN['defult']){}
 
     /**
      * Format parameters for SQL queries. 
@@ -43,13 +39,7 @@ class MixinQuerybuild
         $lastIndex = count($queryPartition) - 1;
         $result = '';
 
-        foreach ($queryPartition as $i => $item) {
-            $result .= $item;
-            if ($i !== $lastIndex) {
-                $result .= $separator;
-            }
-        }
-        return $result;
+        return implode($separator,$queryPartition);
     }
 
     /**
@@ -76,7 +66,7 @@ class MixinQuerybuild
         return $parameterFormated;
     }
 
-    function formatParamtsForWhere(array $expWhere)
+    function formatParamtsForWhere($expWhere=[])
     {
         if (empty($expWhere['expression'])) return '';
 
@@ -177,32 +167,29 @@ class MixinQuerybuild
         return $this;
     }
 
-    public function columns($columns, array $meta=[]){
-        if(empty($meta)){
-            $this->columns = $columns;
-            return $this;
-        };        
-
+    public function  columns(array $columns_data){
         $columns_result = [];
+
+        if($this->FuncColumnConstruct === self::OPTION_CONSTRUCT_COLUMN['defult']){
+            return $columns_data;
+        }
         
 
-        foreach($meta as $function => $meta_columns){
-            // $column_data = $functions[$function]($meta_columns, $columns);
-            // $columns_result[] = $column_data['column'].$column_data['as'];
+        foreach($columns_data as $data){
+                $column_formated = $this->{$data['fun']}($data['column'],$data['as']);
+
+                $columns_result[] = $column_formated;
         }
 
-        $columns_result = array_merge($columns,$columns_result); 
         $this->columns = $columns_result;
 
-
-        return $this;
+        return $columns_result;
     }
 
     public function orderBy(string $column=''){
         if(!$column)return $this;
 
         $this->order_by = "ORDER BY $column DESC";
-        return $this;
     }
 
     public function groupBy(string $column='')

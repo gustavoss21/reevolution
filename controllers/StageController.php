@@ -5,6 +5,7 @@ namespace Controllers;
 use Models\StageModel;
 use Models\TopicModel;
 use Controllers\Controller;
+use Models\ColumnEnum as Col;
 
 class StageController extends Controller
 {
@@ -16,8 +17,12 @@ class StageController extends Controller
     }
 
     public function GetTimeWithoutStudy(){
-        $this->stage->columns = ['updated_at'];
-        return $this->respond($this->stage->find([],['max'=>'updated_at']));
+        $event_without = $this->stage->columns(
+            self::colf('updated_at','max'),
+            self::col('status'),
+            )
+            ->find();
+        return $this->respond($event_without);
     }
 
 }

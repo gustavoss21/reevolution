@@ -6,6 +6,7 @@ use Dotenv\Parser\Value;
 use Error;
 use Models\ValidateMixin;
 use Database\DB;
+use Models\ColumnTrait;
 
 /**
  * Mixin class providing getter and setter methods for model properties.
@@ -36,7 +37,13 @@ class ModelMixin
             $this->set($key, $value);
         }
 
-        $this->query = new QueryBuild($this->table, array_keys($data));
+        if(trait_exists(ColumnTrait::class)){
+            $option_construct_column = QueryBuild::OPTION_CONSTRUCT_COLUMN['personal'];
+         }else{
+            $option_construct_column = QueryBuild::OPTION_CONSTRUCT_COLUMN['defult'];
+         }
+
+        $this->query = new QueryBuild($this->table, $option_construct_column);
     }
 
 
@@ -62,26 +69,25 @@ class ModelMixin
         print_r(get_object_vars($this));
     }
 
-    function all($limit=null, $columns = null)
+    function all()
     {
-        $querycomponets = new QueryBuild($this->table, $columns??$this->columns,'', ['meta'=>['limit'=>$limit]]);
-        $query = $querycomponets->select();
+        $query = $this->query->select($this->columns);
 
         return $this->executeQuery($query);
     }
 
     function find(array|null $dataSearch = [self::DATASEARCH],$meta=[])
     {   
-
-        ['data'=>$whereData, 'columns'=>$whereColumns] = $this->filterDataForquery($this->columnsForQuery);
-        $query = $this->query->select();
+        $query = $this->query->select($this->columns);
+        $whereData = $this->filterDataForquery($this->columnsForQuery);
 
         return $this->executeQuery($query, $whereData);
     }
 
-    public function columns($columns, $meta)
+    public function columns(...$columns)
     {
-        $this->query->columns($columns, $meta);
+        $this->columns = $this->query->columns($columns);
+
         return $this;
     }
 
@@ -97,7 +103,13 @@ class ModelMixin
         return $this;
     }
 
-    public function limit(int $limit, int $offset)
+    public function orderBy(string $column)
+    {
+        $this->query->orderBy($column);
+        return $this;
+    }
+
+    public function limit(int $limit, int $offset=0)
     {
         $this->query->limit($limit, $offset);
         return $this;
@@ -106,7 +118,7 @@ class ModelMixin
 
     function delete($dataSearch = [self::DATASEARCH],$_dropAll=false)
     {
-        $componentQuery = new QueryBuild($this->table, $this->columns, $dataSearch);
+        $componentQuery = new QueryBuild($this->table);
 
         if(!$_dropAll) $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
         
@@ -136,11 +148,12 @@ class ModelMixin
     }
 
     public function relationship(ModelMixin $classInstance){
-        $instance_columns = $classInstance->columns;
-        $query = (new QueryBuild($classInstance->table, $instance_columns,'id',[0,1]))->select();
-
-        ['data' => $whereData] = $classInstance->filterDataForquery(['id']);
-        return $this->executeQuery($query,$whereData);
+        $instance_columns = $classInstance
+            ->where('id')
+            ->limit(1)
+            ->find();
+        
+        return $instance_columns;
     }
 
     /**
@@ -170,11 +183,10 @@ class ModelMixin
      * @return array array [dados para consulta, colunas para consulta]
      */
     public function filterDataForquery(array $columns){
-        $dataQuery = ['data'=>[],'columns'=>[]];
+        $dataQuery = [];
 
         foreach($columns as $paramether){
-           $dataQuery['data'][':'.$paramether] = $this->get($paramether);
-            $dataQuery['columns'][] = $paramether;
+           $dataQuery[':'.$paramether] = $this->get($paramether);
         }
 
         return $dataQuery;

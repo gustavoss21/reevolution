@@ -2,7 +2,7 @@
 // include layout file
 $layout = __DIR__ . '/layout/index.php';
 $title = "ANALISE";
-STATIC_LINKS = [
+$statics = [
     'top' => [
         'style' => [
             'style.css'
@@ -15,16 +15,6 @@ STATIC_LINKS = [
         ]
     ]
 ];
-$url = $urlBase . '/media-de-status';
-// $request = new Request($url,['method'=>'GET']);
-// $status_averange_data = $request->run();
-
-$event = $data['theme'];
-$statusMedia = $event['averange_status'];
-$top5 = $event['topic']['stage'];
-
-
-$statusLabels = $event->statusLabels;
 ?>
 
 <main class="container">
@@ -60,16 +50,14 @@ $statusLabels = $event->statusLabels;
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($top5 as $m): ?>
                     <tr>
-                        <td><?= htmlspecialchars($m['name']) ?></td>
-                        <td><?= $m['priority'] ?></td>
-                        <td><?= $m['domain_level'] ?></td>
-                        <td><?= $statusLabels[$m['status']] ?></td>
-                        <td><?= date('d/m/Y', strtotime($m['updated_at'])) ?></td>
-                        <td><strong><?= number_format($m['pontuacao'], 1) ?></strong></td>
+                        <td>'name'</td>
+                        <td>priority</td>
+                        <td>domain_level</td>
+                        <td>status</td>
+                        <td>updated_at</td>
+                        <td><strong>pontuacao</strong></td>
                     </tr>
-                <?php endforeach; ?>
             </tbody>
         </table>
 

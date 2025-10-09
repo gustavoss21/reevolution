@@ -4,9 +4,12 @@ namespace Controllers;
 
 require dirname(__DIR__) . '/config/response.php';
 
+use Models\GenerateColumn;
+
 class Controller 
 {
     use \Config\Response;
+    use GenerateColumn;
 
     // Common functionalities for all controllers can be added here
     protected function respond($data, $status = 200)

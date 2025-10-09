@@ -3,10 +3,13 @@
 namespace Models;
 
 use Models\ModelMixin;
+use Models\ColumnTrait;
 use DateTime;
 
-class StageModel extends  ModelMixin
+class StageModel extends  ModelMixin implements FuncColumnInterface
 {
+    use ColumnTrait;
+
     protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score;
 
     protected $table = 'stages';
@@ -65,8 +68,8 @@ class StageModel extends  ModelMixin
     {
         $topic = new TopicModel();
         $topic->set('id', $topic_id);
-        $topic = (new StageModel)->relationship($topic);
-        return $topic;
+        $topic_item = (new StageModel)->relationship($topic);
+        return $topic_item;
     }
 
     static function getPointAverage()

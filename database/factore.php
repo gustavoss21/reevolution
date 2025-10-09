@@ -3,7 +3,7 @@
 namespace Database;
 
 require dirname(__FILE__, 2) . '/vendor/autoload.php';
-
+use Models\GenerateColumn;
 use DateTime;
 use Faker\Factory;
 use Models\StageModel;
@@ -11,7 +11,7 @@ use Models\ThemeModel;
 use Models\TopicModel;
 use Models\FontModel;
 use Models\ColumnTrait;
-
+use Services\ServiceTimeline;
 
 function factoreTheme()
 {
@@ -115,38 +115,10 @@ function factoreDropAll(StageModel $model)
 //     'updated_at',
 //     'partial_score'
 // ];
-// $r = $s->find(
-//     [],
-//     [
-//         'columns'=>[
-//             'more' => [
-//                 'partial_score',
-//                 'updated_at_diff'
-//             ]
-
-//             ],
-//         'order' => 'updated_at',
-//         'limit'=>1
-//     ]
-// );
 
 echo '<pre>';
-$s = new StageModel();
-
-$r = $s->find(
-    null,
-    [
-        
-        'columns'=>['averange' => [
-            'partial_score',
-            'updated_at_diff',
-            'as'=> 'point_average'
-        ],
-        'count'=>['*','as'=>'amount_event'],
-
-    
-        'order' => 'updated_at',
-        ]
-    ]
-);
-print_r($r);
+$s = (new ThemeModel())
+        ->limit(1)
+        ->all();
+$r = (new \Services\ServiceTimeline)->getAverageStatus();
+print_r($s);

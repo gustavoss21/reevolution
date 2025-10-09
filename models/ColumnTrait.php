@@ -1,77 +1,61 @@
 <?php
 
 namespace Models;
-use Models\ColumnEnum;
+use Models\FuncColumnInterface;
 
 trait ColumnTrait{
     private $column, $as, $operator;
     private $columns_partial = [];
 
-    public function columns($column, $as=null){
+    public function fomatedColumnsGeneric($column){
         $this->column = $column;
-        $this->as = $as;
+        return $column;
     }
 
-    public function funcColumns($columns,$as, ColumnEnum $operator){
-        $this->columns_partial = $columns;
-        $this->as = $as;
-        $this->operator = $operator->value;
-    }
-
-    private function formateColumnMax($meta_column, &$columns)
+    public function formateColumnMax($meta_column,$as=null)
     {
-        $index = array_search($meta_column, $columns);
-        unset($columns[$index]);
-
         $column = "max($meta_column)";
-        $column_data = ['column' => $column, 'as' => ' AS ' . $meta_column];
+        $column .= $as ? ' AS ' . $as : '';
 
-        return $column_data;
+        return $column;
     }
 
-    private function formateColumnCount($data)
+    public function formateColumnCount($data, $as=null)
     {
-        return ['column' => "COUNT({$data[0]})", 'as' => " AS {$data['as']}"];
+        $column = "COUNT({$data[0]}) ";
+        $column .= $as ? ' AS ' . $as : '';
+
+
+        return $column;
     }
 
-    private function formateAverangeColumn($meta_column, array &$columns)
+    public function formateAverangeColumn($column, $as)
     {
+        $columnMaxFormated = $this->formateColumnsMore($column);
+        $column_result = "AVG($columnMaxFormated) AS $as";
 
-        if (!$meta_column['as']) throw new \BadFunctionCallException();
-
-        $as = $meta_column['as'];
-
-        unset($meta_column['as']);
-
-        $columnMaxFormated = $this->formateColumnsMore($meta_column, $columns)['column'];
-        $column = "AVG($columnMaxFormated)";
-        $column_data = ['column' => $column, 'as' => ' AS ' . $as];
-
-        return $column_data;
+        return $column_result;
     }
 
-    private function formateColumnsMore($meta_columns, &$columns)
+    public function formateColumnsMore($columns, $as = null)
     {
-        $columns_result = [];
+        $parcial_column = [
+            'updated_at_diff' => '(DATEDIFF(CURDATE(),updated_at) / 5.0)'
+        ];
 
-        foreach ($meta_columns as $meta_column) {
-            $updated_at_diff = '(DATEDIFF(CURDATE(),updated_at) / 5.0)';
-
-            $index = array_search($meta_column, $columns);
-            if ($index) unset($columns[$index]);
-
-            if (isset($$meta_column)) {
-                $columns_result[] = $$meta_column;
+        $column = array_map(function ($column_item) use ($parcial_column) {
+            if (isset($parcial_column[$column_item])) {
+                return $parcial_column[$column_item];
             } else {
-                $columns_result[] = $meta_column;
+                return $column_item;
             }
-        }
+        }, $columns);
 
-        $column = implode(' + ', $columns_result);
-        $column_data = ['column' => $column, 'as' => ' AS ' . $columns_result[0]];
+        $as = $as ? ' AS ' . $as : '';
+        $column_result = implode(' + ',$column) . $as; 
 
-        return  $column_data;
+
+        return $column_result;
     }
-
 
 }

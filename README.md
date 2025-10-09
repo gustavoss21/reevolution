@@ -14,3 +14,6 @@ ajustar o time da aplicação
 validaçao
 adinar um servidor (ngix|xampper) docker
 
+- OBS: APP SEM  ['theme'=> $theme]
+$tC = (new ThemeModel($data))->find($data);
+        $theme = ServiceTimeline::getThemefullData($tC[0]);

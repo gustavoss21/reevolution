@@ -32,7 +32,7 @@ class ThemeController extends Controller
 
     public function getAllThemas()
     {
-        return $this->themaModel->all();
+        return $this->respond($this->themaModel->all());
     }
 
     public function getThemaById($id)

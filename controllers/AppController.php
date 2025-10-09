@@ -10,15 +10,13 @@ use Services\ServiceTimeline;
 class AppController extends Controller
 {
     
-    public function home($data)
+    public function home()
     {
         return $this->view('home');
     }
 
-    public function themeItem($data)
+    public function themeItem()
     {
-        $tC = (new ThemeModel($data))->find($data);
-        $theme = ServiceTimeline::getThemefullData($tC[0]);
-        return $this->view('theme_item', ['theme'=> $theme]);
+        return $this->view('theme_item');
     }
 }
