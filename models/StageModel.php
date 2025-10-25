@@ -76,23 +76,6 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         return $topic_item;
     }
 
-    static function getPointAverage()
-    {
-        $columns_meta = [
-            'columns' => [
-                'averange' => [
-                    'partial_score',
-                    'updated_at_diff',
-                    'as' => 'point_average'
-                ],
-                'count' => ['*', 'as' => 'amount_event']
-
-            ],
-            'order' => 'updated_at',
-        ];
-        return (new StageModel)->find(null,);
-    }
-
     public function insert()
     {
 

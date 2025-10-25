@@ -66,16 +66,24 @@ class MixinQuerybuild
         return $parameterFormated;
     }
 
-    function formatParamtsForWhere($expWhere=[])
+    function formatParamtsForWhere()
     {
-        if (empty($expWhere['expression'])) return '';
+        if( empty($this->where)) return '';
 
-        $whereFormated = 'WHERE ' . $expWhere['expression']['column'] . ' ' . $expWhere['operator'] . ' :' . $expWhere['expression']['column'];
+        $whereFormated = 'WHERE ' . $this->where['column'] . ' ' . $this->where['operator'] . ' :' . $this->where['column'];
+        $nextWhere = $this->where['next'] ?? null;
+        
+        while($nextWhere){
+            $whereFormated .= " {$nextWhere['operator']} {$nextWhere['clousere']['column']} {$nextWhere['clousere']['operator']} :{$nextWhere['expression']['column']}";
+            
+            if(!empty($nextWhere['next'])) {
+                $nextWhere = $nextWhere['next'];
+                continue;
+            };
+            
+            break;
 
-        if (isset($expWhere['expression']['next'])) {
-            $nextWhere = $expWhere['expression']['next'];
-            $whereFormated .= " {$expWhere['expression']['operator']} {$nextWhere['expression']['column']} {$nextWhere['operator']} :{$nextWhere['expression']['column']}";
-        }
+        }        
 
         return $whereFormated;
     }
@@ -86,71 +94,28 @@ class MixinQuerybuild
      * @param mixed $data The data to be filtered, typically an array or object containing the conditions.
      * @return mixed The filtered result based on the provided conditions.
      */
-    function where($data='')
+    function where($where, $operator = self::OPERADORES['EQ'], $op_logic=self::OPERADORES_LOGICOS['AND'])
     {
-        $this->where = ['expression' => [], 'operator' => self::OPERADORES['EQ']];
+        $clousureWhere = ['column' => $where, 'operator' => $operator];
 
-        if (empty($data)){
-            return $this;
+        if(!in_array($operator, self::OPERADORES)){
+            throw new \Exception("Operador inválido para cláusula WHERE.");
         }
 
-        if (!is_array($data)) {
-            // Caso seja uma string, converte para o formato esperado
-            $this->where['expression']['column'] = $data;
-            return $this;
-        } else {
-            // Caso seja um array com operador definido, converte para o formato esperado
-            $this->where = $this->unpackWhere($data);
-            return $this;
+        if (!in_array($op_logic, self::OPERADORES_LOGICOS)) {
+            throw new \Exception("Operador inválido para cláusula WHERE.");
         }
-    }
+        //verifica se já existe uma expressão where
+        if (!empty($this->where['column'])) {
 
-    /**
-     * Desempacota e processa os dados fornecidos para construir uma cláusula WHERE.
-     *
-     * @param mixed $data Os dados de entrada que serão utilizados para gerar a condição WHERE.
-     * @return array Retorna um array representando a cláusula WHERE processada.
-     */
-    private function unpackWhere($data)
-    {
-        $where = ['expression' => [], 'operator' => $data['operator'] ?? self::OPERADORES['EQ']];
+            $this->where['next']['clousere'] = $clousureWhere;
+            $this->where['next']['operator'] = $op_logic;
+        };
 
-        foreach ($data as $key => $item) {
-            if ($key === 'operator') {
-                continue;
-            }
+        $this->where = $clousureWhere;
 
-            if (!empty($where['expression'])) {
-
-                $nexWhere = ['expression' => [], 'operator' =>  self::OPERADORES['EQ']];
-
-                $nexWhere['expression']['column'] = $item;
-
-
-                if (is_array($item)) {
-                    $nexWhere = $this->unpackWhere($item);
-                }
-
-                if (!isset($data['operator'])) {
-                    $where['expression']['operator'] = self::OPERADORES_LOGICOS['AND'];
-                } else {
-                    $where['expression']['operator'] = in_array($data['operator'], self::OPERADORES_LOGICOS) ? $data['operator'] : self::OPERADORES_LOGICOS['AND'];
-                }
-
-                $where['expression']['next'] = $nexWhere;
-                continue;
-            };
-
-
-            if (is_array($item)) {
-                $where = $this->unpackWhere($item);
-                continue;
-            }
-
-            $where['expression']['column'] = $item;
-        }
-
-        return $where;
+        return $this;
+        
     }
 
 
@@ -174,14 +139,25 @@ class MixinQuerybuild
             return $columns_data;
         }
         
-
         foreach($columns_data as $data){
-                $column_formated = $this->{$data['fun']}($data['column'],$data['as']);
+            $data['column'] = $this->columnsInColumn($data['column']);
+            
+            $columns_result[] = $this->{$data['fun']}($data['column'],$data['as']);
 
-                $columns_result[] = $column_formated;
         }
 
         $this->columns = $columns_result;
+
+        return $columns_result;
+    }
+
+    private function columnsInColumn($columnData){
+        $columns_result = $columnData;
+
+        while(isset($columnData['column'])) {
+            $columns_result = $this->{$columnData['fun']}($columnData['column'], $columnData['as']);
+            $columnData = $this->columnsInColumn($columnData['column']) ?? null;
+        };
 
         return $columns_result;
     }
@@ -192,15 +168,17 @@ class MixinQuerybuild
         $this->order_by = "ORDER BY $column DESC";
     }
 
-    public function groupBy(string $column='')
+    public function groupBy(string $column)
     {
-        if (!$column) return $this;
+        if (empty($column)) return $this;
+
         $indexID = array_search('id', $this->columns);
-        if(!is_null($indexID)){
-            if(!($column === 'id')){
-                array_splice($this->columns,$indexID,1);
-            }
-        }
+
+        // if(!is_null($indexID)){
+        //     if(!($column === 'id')){
+        //         array_splice($this->columns,$indexID,1);
+        //     }
+        // }
         $this->group_by = "GROUP BY $column";
         return $this;
     }

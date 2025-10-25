@@ -2,9 +2,11 @@
 /* Reset some default browser styles */
 :root {
     --block-header: aliceblue;
-    --background-primary: #00a8e37d;
-    --background-secondary:#d31313;
-    --background-tree:#6440715c;
+    --background-primary: #55d3ff;
+    --background-secondary:#ff6300;
+    --background-tree:#75e308;
+    --background-button:#d31313;
+    --background-tree:#b5b0b17a;
     --font-color-primary: #676262fc;
     --font-color-secondary: #ffffff;  ;
     --background-color: #f9f9f9;
@@ -62,6 +64,9 @@ ul {
 header {
     background-color: var(--block-header);
     text-align: center;
+        position: relative;
+    bottom: 20px;
+    padding-top: 13px;
 }
 .navbar  li {
     display: inline-block;
@@ -79,7 +84,6 @@ header {
 
 /* container */
 .container, .navbar, footer {
-    width: 80%;
     margin: 20px auto;
     padding: 20px;
 }
@@ -89,20 +93,37 @@ header {
 }
 
 /* home */
+.subtitle{
+    font-size: 1.5em;
+    color: var(--font-color-primary);
+    font-weight: 500;
+}
 .content-blocks{
-    /* display: flex;
-    gap: 8%; */
+    display: flex;
+    gap: 8%;
 }
 .block-container{
+
     display: flex;
     gap: 5px;
+    flex-wrap: wrap;
+    border: 1px solid red;
+    margin-right: 160px;
+    padding: 20px;
+    position: relative;
+    height: 220px;
+    min-width: 565px;
 }
 
 .theme-item{
-    padding: 15px;
+        padding: 15px;
     background-color: var(--background-secondary);
     color: var(--font-color-secondary);
     border-radius: 13px;
+    box-shadow: 7px 6px 8px 0px #478eb09e;
+    font-size: 0.8em;
+    width: 255px;
+
 }
 
 .theme-title{
@@ -120,12 +141,36 @@ header {
 }
 
 /* home/grafi */
-.content-grafic-averange{
-    background-color: aliceblue;
+.content-side-blocks{
     padding: 21px;
-    width: 353px;
-    height: 100vh;
-    position: absolute;
-    right: 0;
-    top: 84px;
+    width: 389px;
+    height: 785px;
+    position: relative;
+    background-color: #b5b0b13b;
+    border-radius: 32px;
+    color: white;
 }
+
+h2.content-theme{
+    position: absolute;
+    bottom: 95%;
+    left: 20%;
+    background: var(--background-primary);
+    padding: 4px 20px;
+    min-width: 274px;
+}
+
+@media only screen and (max-width: 1524px) {
+  .block-container {
+    height: 377px;
+    width: 564px;
+  }
+}
+/*
+@media only screen and (max-width: 1236px) {
+  .block-container {
+    height: 377px;
+    width: 564px;
+  }
+} */
+

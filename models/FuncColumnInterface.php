@@ -3,9 +3,9 @@
 namespace Models;
 
 interface FuncColumnInterface{
-    function formateColumnMax($columns, $as = null);
-    function formateColumnCount($data, $as = null);
-    function formateAverangeColumn($columns, $as);
-    function formateColumnsMore($columns, $as = null);
-    function fomatedColumnsGeneric($column);
+    function MAX($columns, $as = null);
+    function COUNT($data, $as = null);
+    function AVERANGE($columns, $as);
+    function MORE($columns, $as = null);
+    function GENERIC($column);
 }

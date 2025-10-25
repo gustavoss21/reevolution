@@ -75,12 +75,12 @@ class ThemeController extends Controller
 
     public function timeline()
     {
-        $service['timeline'] = (new ConsultService)->timeline();
-        return $this->respond($service);
+        return $this->respond((new ConsultService)->timeline());
     }
 
     public function statusAverage()
     {
-        return $this->respond((new ConsultService)->getAverageStatus());
+        $statusAverage = (new ConsultService)->getAverageStatus();
+        return $this->respond($statusAverage);
     }
 }

@@ -118,8 +118,13 @@ function factoreDropAll(StageModel $model)
 // ];
 
 echo '<pre>';
-$s = (new ThemeModel())
-    ->limit(1)
-    ->all();
-$r = (new \Services\ConsultService)->getAverageStatus();
-print_r($s);
+// $s = (new ThemeModel())
+//     ->columns('update_diff')
+//     ->limit(1)
+//     ->find();
+$r = (new \Services\ConsultService)->getMoreTimeWithoutStudy();
+print_r($r);
+
+
+
+

@@ -40,6 +40,9 @@ class RouterBase
     public function setAction($uri, $body)
     {
         $uri = str_replace($this->routeBase, '', $uri);
+        if(empty($uri)) {
+            $uri = '/';
+        }
         
         foreach ($this->routes[$this->method] as $route => $action) {
             $pattern = preg_replace('/\{[a-zA-Z_][a-zA-Z0-9_]*\}/', '([a-zA-Z0-9_]+)', $route);
@@ -58,8 +61,7 @@ class RouterBase
                 return $this;
             }
         }
-        http_response_code(404);
-        return ['error' => 'Not Found'];
+        return $this;
     }
 
 }

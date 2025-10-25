@@ -1,43 +1,80 @@
- body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background: #f9f9f9;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.charts {
+.flex{
     display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    flex-direction: column;
+
 }
 
-.chart-container {
-    background: #fff;
-    padding: 20px;
+#amount_averange_id{
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--background-secondary);
+    text-align: center;
+    border-radius: 30px;
+    position: relative;
+}
+
+#amount_averange_id span{
+        position: relative;
+    top: 4px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#point_averange_id{
+        padding: 10px;
+    width: 170px;
+    height: 50px;
+    max-width: 80%;
+    background-color: var(--background-secondary);
+    text-align: center;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    position: relative;
+        font-size: 20px;
+    font-weight: bold;
+}
+/* SIDEBAR */
+.content-side-blocks > div{
+    margin-bottom: 35px;
+    
+}
+.content-side-blocks > h3{
+    font-size: 30px;
 }
 
-table {
-    width: 100%;
+.averange-data-container{
+    position: relative;
+    left: 7%;
+        display: flex;
+    gap: 10px;
+    text-align: center;
+}
+
+.averange-data-container {
     margin-top: 20px;
-    border-collapse: collapse;
-    background: #fff;
 }
 
-th,
-td {
-    padding: 8px;
-    border: 1px solid #ddd;
-    text-align: left;
+.averange-data-block {
+    margin: 50px 0;
 }
 
-th {
-    background: #f0f0f0;
+.format-data{
+    padding: 10px;
+    background-color: #75e308;
+    border-radius: 10px;
+    font-size: 26px;
+    font-family: math;
+    text-align: center;
 }
+
+.time-whitout-study{
+
+}
+
+.amaunt-events{
+    width: 50px;
+    height: 50px;
+}
+

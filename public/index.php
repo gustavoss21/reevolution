@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-require 'router.php';
+require dirname(__FILE__,2) . '/vendor/autoload.php';
+require dirname(__FILE__, 2) .'/router.php';
 
 use Routes\Route;
 
@@ -9,4 +9,5 @@ $route->setMethod($_SERVER['REQUEST_METHOD']);
 $route->setAction(
     $_SERVER['REQUEST_URI'],
     $_REQUEST
-)->route();
+)
+->route();

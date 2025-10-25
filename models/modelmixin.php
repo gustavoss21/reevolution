@@ -91,9 +91,15 @@ class ModelMixin
         return $this;
     }
 
-    public function where($where)
+    public function where($where, $operator = null, $op_logic=null)
     {
-        $this->query->where($where);
+        if(!empty($operator)){
+            if(!in_array($operator, self::OPERADORES)){
+                throw new \Exception("Operador inválido para cláusula WHERE.");
+            }
+        }
+
+        $this->query->where($where, $operator);
         return $this;
     }
 
@@ -149,7 +155,7 @@ class ModelMixin
 
     public function relationship(ModelMixin $classInstance){
         $instance_columns = $classInstance
-            ->where('id')
+            ->where('id',self::OPERADORES['EQ'])
             ->limit(1)
             ->find();
         

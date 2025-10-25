@@ -10,14 +10,18 @@ class Route extends RouterBase
         'GET' => [
             //WEB
             '/' => 'AppController@home',
-            '/temas/{id}' => 'AppController@themeItem',
+            '/theme/{id}' => 'AppController@themeItem',
 
             //API
             '/temas' => 'ThemeController@getAllThemas',
             '/timeline' => 'ThemeController@timeline',
-            '/media-de-status'=> 'ThemeController@statusAverage',
+            '/status-averange'=> 'ThemeController@statusAverage',
             '/time-without-study' => 'StageController@timeWithoutStudy',
-            '/event-recommendation' => 'StageController@eventRecommendation',
+            '/new-event-init' => 'StageController@eventRecommendation',
+            '/count-events-weekly' => 'StageController@eventsWeekly',
+            '/averange-time-without-study' => 'StageController@averangeTimeWithoutStudy',
+            '/more-time-without-study' => 'StageController@moreTimeWithoutStudy',
+            '/more-priority-events' => 'StageController@morePriorityEvents',
         ],
         'POST' => [
             '/topics' => 'TopicController@create',

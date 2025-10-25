@@ -20,10 +20,10 @@ trait GenerateColumn
 
     private function formateOptions($func_name)
     {
-        $func_name_formated = ucfirst($func_name);
+        $func_name_formated = strtoupper($func_name);
 
         foreach ($this->functions as $func) {
-            if (str_contains($func, $func_name_formated)) {
+            if ($func === $func_name_formated) {
                 return $func;
             }
         }

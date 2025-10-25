@@ -4,7 +4,7 @@ require_once 'request.php';
 $content = '';
 $layout = '';
 $title = "";
-$urlBase = 'HTTP://' . $_SERVER['SERVER_NAME'] . '/reevolution';
+$urlBase = 'http://localhost:5173/views/static/';
 $statics = [];
 
 
@@ -12,7 +12,7 @@ $statics = [];
 function construictStatic(array $statics) {
     
     $links = ['top'=>[],'end'=>[]];
-    $urlbase = 'HTTP://' . $_SERVER['SERVER_NAME'] . '/reevolution';
+    $urlbase = 'http://localhost:5173/views/static/';
 
     $style = function($item){
         $file = $item['dir'] .'css/'. $item['arq'];
@@ -30,7 +30,7 @@ function construictStatic(array $statics) {
     };
 
     foreach ($statics as $static ){
-        $static_links =  ['arq' => '', 'dir' => $urlbase . '/views/static/', 'tag'=>'', 'type' => '', 'position' => 'top'];
+        $static_links =  ['arq' => '', 'dir' => $urlbase, 'tag'=>'', 'type' => '', 'position' => 'top'];
 
         $static_links_fomated = array_merge($static_links, $static);
         
