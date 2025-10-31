@@ -11,8 +11,7 @@
                         <h2 class="theme-title"></h2>
                             <h3 class="theme-topic"></h3>
                                 <div>
-                                    <span class="title-item">Estagio:</span>
-                                    <span class="title-item-stage">{{event.topic.stage.name}}</span>
+                                    <h4 class="title-item-stage">{{event.topic.stage.name}}</h4>
                                 </div>
                                 <div>
                                     <span class="title-item">Prioridade:</span>
