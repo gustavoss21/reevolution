@@ -7,11 +7,8 @@
 }
 
 #amount_averange_id{
-    padding: 10px;
     width: 50px;
     height: 50px;
-    background-color: var(--background-secondary);
-    text-align: center;
     border-radius: 30px;
     position: relative;
 }
@@ -24,57 +21,11 @@
 }
 
 #point_averange_id{
-        padding: 10px;
     width: 170px;
     height: 50px;
     max-width: 80%;
-    background-color: var(--background-secondary);
-    text-align: center;
     border-radius: 10px;
     position: relative;
-        font-size: 20px;
-    font-weight: bold;
 }
 /* SIDEBAR */
-.content-side-blocks > div{
-    margin-bottom: 35px;
-    
-}
-.content-side-blocks > h3{
-    font-size: 30px;
-}
-
-.averange-data-container{
-    position: relative;
-    left: 7%;
-        display: flex;
-    gap: 10px;
-    text-align: center;
-}
-
-.averange-data-container {
-    margin-top: 20px;
-}
-
-.averange-data-block {
-    margin: 50px 0;
-}
-
-.format-data{
-    padding: 10px;
-    background-color: #75e308;
-    border-radius: 10px;
-    font-size: 26px;
-    font-family: math;
-    text-align: center;
-}
-
-.time-whitout-study{
-
-}
-
-.amaunt-events{
-    width: 50px;
-    height: 50px;
-}
 

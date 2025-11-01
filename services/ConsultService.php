@@ -196,4 +196,31 @@ class ConsultService
 
         return $more_priority_data;
     }
+
+    function getMoreTimeWithoutStudyEvent()
+    {
+        $stage = new StageModel();
+        $more_time_data = $stage->limit(3)
+            ->orderBy('updated_at')
+            ->find();
+
+        return $more_time_data;
+    }
+
+    function getTotalQuantityEachStatus()
+    {
+        $stage = new StageModel();
+        $total_status = $stage->columns(
+            $this->col('status'),
+            $this->colf('status', self::COUNT, 'amount_event')
+        )
+        ->groupBy('status')
+        ->find();
+
+        foreach($total_status as &$status){
+            $status['label'] = StageModel::$STATUS_OPTIONS_LABELS[$status['status']] ?? 'Desconhecido';
+        }
+
+        return $total_status;
+    }
 }

@@ -25,7 +25,7 @@ trait ColumnTrait{
 
     public function COUNT($data, $as=null)
     {
-        $column = "COUNT({$data[0]}) ";
+        $column = "COUNT({$data}) ";
         $column .= $as ? ' AS ' . $as : '';
 
 

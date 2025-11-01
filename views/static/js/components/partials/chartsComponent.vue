@@ -1,7 +1,7 @@
 
 <template>
-    <div>
-        <canvas :id="this.chartData.id"></canvas>
+    <div class="chart-container">
+        <canvas id="TESTE"></canvas>
     </div>
 </template>
 <script>
@@ -11,20 +11,68 @@
     // Chart.register(...registerables);
 
     export default {
-        props: ['chartData'],
+        props: ['id','type','chartData','colors'],
 
         mounted() {
+            this.setColors();
             this.renderChart();
         },
 
         methods: {
             renderChart() {
-                const ctx = document.getElementById(this.chartData.id).getContext('2d');
-                const data = new TypeDataChart(this.chartData);
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: data.data,
-                    options: data.options
+                const canvas = document.getElementById('TESTE');
+                const ctx = canvas.getContext('2d');
+
+                // build config from TypeDataChart or fallback to simple dataset
+                const data = TypeDataChart.doughnut(this.chartData)
+
+                // helper: truncate
+                const truncate = (text, max = 24) => {
+                    if (!text) return '';
+                    return text.length > max ? text.slice(0, max - 1) + '…' : text;
+                };
+
+                const config = {
+                    type: this.type,
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 18,
+                                    padding: 8,
+                                    font: { size: 12 },
+                                    color: '#333',
+                                    // generate multi-line labels so the icon appears above the text
+                                    generateLabels(chart) {
+                                        return chart.data.labels.map((lbl, i) => ({
+                                            // first line empty (icon will be drawn next to it), second line the truncated label
+                                            text: ['', truncate(lbl, 24)],
+                                            fillStyle: chart.data.datasets[0].backgroundColor?.[i] || '#ccc',
+                                            hidden: chart.data.datasets[0].data?.[i] === 0,
+                                            index: i
+                                        }));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // destroy previous instance if exists
+                if (this._chartInstance) {
+                    try { this._chartInstance.destroy(); } catch(e){}
+                }
+                this._chartInstance = new Chart(ctx, config);
+            },
+
+            setColors() {
+                // Logic to set colors based on this.colors prop
+                this.chartData.forEach(data => {
+                        data.color = this.colors[data.status];
                 });
             }
         }

@@ -34,15 +34,28 @@ class StageController extends Controller
         return $this->respond($this->service->getEventsWeekly());
     }
 
-    public function averangeTimeWithoutStudy(){
+    public function averangeTimeWithoutStudy()
+    {
         return $this->respond($this->service->getAverangeTimeWithoutStudy());
     }
 
-    public function moreTimeWithoutStudy(){
+    public function dateTimeWithoutStudy()
+    {
         return $this->respond($this->service->getMoreTimeWithoutStudy());
     }
 
-    public function morePriorityEvents(){
+    public function morePriorityEvents()
+    {
         return $this->respond($this->service->getMorePriorityEvents());
+    }
+
+    public function moreTimeWithoutStudyEvent()
+    {
+        return $this->respond($this->service->getMoreTimeWithoutStudyEvent());
+    }
+
+    function totalQuantityEachStatus()
+    {
+        return $this->respond($this->service->getTotalQuantityEachStatus());
     }
 }

@@ -1,5 +1,23 @@
 <template>
     <div class="content-side-blocks">
+        <div v-if="data.total_quantity_each_tatus">
+            <div v-if="data.media_averange" class="block-status">
+                <h3>EVENTOS</h3>
+                <div class="averange-data-container">
+                    <div class="flex pointer">
+                        <div class="data-status" id="amount_averange_id"><span>{{ data.media_averange.amount_event }}</span> </div>
+                        <span>TOTAL</span>
+                    </div>
+                    <div class="flex pointer">
+                        <span class="data-status" id="point_averange_id"> {{ data.media_averange.point_average }} </span>
+                        <span>PONTO MÉDIO</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <ChartsComponent id="status-pizza-charts" type="doughnut" :chartData="data.total_quantity_each_tatus"  :colors="COLORS"></ChartsComponent>
+            </div>
+        </div>
         <div v-if="data.time_without_study" class="averange-data-block">
             <h3>TEMPO SEM ESTUDO</h3>
             <date class="time-whitout-study format-data">{{ data.time_without_study }}</date>
@@ -15,25 +33,24 @@
         <div v-if="data.media_averange" class="averange-data-block">
             <h3>NIVEL MEDIO SEM ESTUDO</h3>
         </div>
-        <div v-if="data.media_averange" class="averange-data-block">
-            <h3>EVENTOS</h3>
-            <div class="averange-data-container">
-                <div class="flex pointer">
-                    <div id="amount_averange_id"><span>{{ data.media_averange.amount_event }}</span> </div>
-                    <span>TOTAL</span>
-                </div>
-                <div class="flex pointer">
-                    <span id="point_averange_id"> {{ data.media_averange.point_average }}% </span>
-                    <span>PONTO MÉDIO</span>
-                </div>
-            </div>
-        </div>
-        <h2>Media de evolução</h2>
 
     </div>
 </template>
 <script>
+    import ChartsComponent  from "./chartsComponent.vue";
     export default {
-        props: ['data']
+        props: ['data'],
+        data() {
+            return {
+                COLORS : {
+                    0 : 'rgb(54, 162, 235)',
+                    1:'rgb(255, 99, 132)',
+                    2:'rgb(255, 205, 86)',
+                }
+            }
+        },
+        components: { ChartsComponent},
+
+    
     }
 </script>
