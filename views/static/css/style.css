@@ -9,6 +9,7 @@
   --background-tree: #b5b0b17a;
   --font-color-primary: #676262fc;
   --font-color-secondary: #ffffff;
+  --font-color-tertiary: #322f69;
   --background-color: #f9f9f9;
 }
 
@@ -113,14 +114,18 @@ footer {
   justify-content: space-around;
   margin-top: 110px;
 }
-.block-container {
+
+.block-stage{
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
   border: 1px solid red;
-  padding: 20px;
+}
+
+.block-container {
+ 
+  padding: 30px 20px 20px 20px;
   position: relative;
-  height: 190px;
   min-height: 225px;
   margin-bottom: 60px;
 }
@@ -150,70 +155,31 @@ footer {
 }
 
 /* home/grafi */
-.content-side-blocks {
-  padding: 21px;
-  width: 389px;
-  height: 785px;
-  position: relative;
-  background-color: #b5b0b13b;
-  border-radius: 32px;
-  color: white;
-}
-
 h2.content-theme {
   position: absolute;
-  bottom: 83%;
-  left: 32%;
+  top: -19px;
+  left: calc(50% - 175.1px);
   background: var(--background-primary);
   padding: 4px 20px;
   min-width: 274px;
 }
 
-@media only screen and (max-width: 1524px) {
-  .block-container {
-    height: 400px;
-    width: 564px;
-  }
-
-  h2.content-theme {
-    bottom: 90%;
-    left: 26%;
-  }
-}
-
-@media screen and (max-width: 929px) {
-  .content-blocks {
-    flex-wrap: wrap;
-  }
-
-  .content-side-blocks {
-    width: 565px;
-  }
-}
-
-@media screen and (max-width: 596px) {
-  .content-blocks {
-    flex-wrap: wrap;
-  }
-
-  .content-side-blocks {
-    width: 565px;
-  }
-
-  .block-container {
-    gap: 14px;
-    padding: 41px;
-    min-height: 614px;
-    justify-content: center;
-    width: 100%;
-  }
-
-  h2.content-theme {
-    bottom: 93%;
-  }
-}
-
 /* HOME - SIDE */
+.content-side-block {
+  padding: 21px;
+  max-width: 412px;
+  /* width: 30%; */
+  height: 785px;
+  position: relative;
+
+}
+
+.side-block{
+    background-color: #b5b0b13b;
+  border-radius: 32px;
+  color: white;
+}
+
 .chart-container{
   height: 200px
 }
@@ -250,7 +216,7 @@ h2.content-theme {
 
 .format-data{
     padding: 10px;
-    background-color: #75e308;
+    background-color: var(--background-tree);
     border-radius: 10px;
     font-size: 26px;
     font-family: math;
@@ -268,4 +234,36 @@ h2.content-theme {
     text-align: center;
     font-weight: bold;
     font-size: 20px;
+}
+
+.data-stage{
+    font-size: 18px;
+    margin-left: 5px;
+    font-weight: 900;
+    color: var(--font-color-tertiary);
+}
+
+/* responsive */
+@media screen and (max-width: 1044px) {
+
+  .side-block{
+        min-width: 85%;
+  }
+}
+
+@media screen and (max-width: 596px) {
+
+  .block-container {
+    gap: 14px;
+    padding: 41px;
+    min-height: 614px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .content-blocks {
+  flex-wrap: wrap-reverse;
+}
+
+
 }

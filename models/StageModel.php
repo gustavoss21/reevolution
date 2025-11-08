@@ -39,10 +39,17 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         4 => 'Critical'
     ];
 
+    static $label_priorities = [
+        'low'=>1,
+        'medium'=>2,
+        'high'=>3,
+        'critical'=>4
+    ];
+
     public static $STATUS_OPTIONS_LABELS = [
-        'FINALIZADO',
-        'NÃO INICIADO',
-        'EM ANDAMENTO'
+        -1=>'NÃO INICIADO',
+        0=>'EM ANDAMENTO',
+        1=>'FINALIZADO'
     ];
 
     public static $DOMAIN_LEVEL_OPTIONS = [
@@ -64,9 +71,9 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'delete' => ['id']
     ];
 
-    static $STATUS_OPTIONS_FINALIZED = 0;
-    static $STATUS_OPTIONS_NOT_STARTED = 1;
-    static $STATUS_OPTIONS_IN_PROGRESS = 2;
+    static $STATUS_OPTIONS_FINALIZED = 1;
+    static $STATUS_OPTIONS_NOT_STARTED = -1;
+    static $STATUS_OPTIONS_IN_PROGRESS = 0;
 
     static function connect_one_to_many_topics($topic_id)
     {

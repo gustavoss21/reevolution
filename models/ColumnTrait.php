@@ -59,4 +59,12 @@ trait ColumnTrait{
         return $column_result;
     }
 
+    public function MIN($meta_column, $as = null)
+    {
+        $column = "min($meta_column)";
+        $column .= $as ? ' AS ' . $as : '';
+
+        return $column;
+    }
+
 }

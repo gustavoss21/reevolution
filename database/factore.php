@@ -14,115 +14,88 @@ use Models\FontModel;
 use Models\ColumnTrait;
 use Services\ConsultService;
 
-function factoreTheme()
+class Factore
 {
-    $faker = Factory::create('pt_BR');
-    $name = $faker->company();
-    $data = ['name' => $name, 'slug' => $faker->slug(), 'description' => $faker->paragraph(),  'updated_at' => $faker->dateTimeBetween('2025/08/01')->format('Y/m/d h:i:s')];
-    $stage = new ThemeModel($data);
-    $stage->insert();
+    use GenerateColumn;
+
+    function factoreTheme()
+    {
+        $faker = Factory::create('pt_BR');
+        $name = $faker->company();
+        $data = ['name' => $name, 'slug' => $faker->slug(), 'description' => $faker->paragraph(),  'updated_at' => $faker->dateTimeBetween('2025/08/01')->format('Y/m/d h:i:s')];
+        $stage = new ThemeModel($data);
+        $stage->insert();
+    }
+
+    function factoreTopic()
+    {
+
+        $faker = Factory::create('pt_BR');
+        $name = $faker->jobTitle();
+        $mT = (new ThemeModel())->all(null, ['id']);
+        $range_id = array_map(fn($data) => $data['id'], $mT);
+        $data = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph()];
+        $stage = new TopicModel($data);
+        $stage->insert();
+    }
+
+    function factoreStage()
+    {
+
+        $faker = Factory::create('pt_BR');
+        $name = $faker->name();
+        $mT = (new TopicModel())->columns(self::col('id'))->all();
+        $range_id = array_map(fn($data) => $data['id'], $mT);
+        $data = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(-1, 1), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4)];
+        $stage = new StageModel($data);
+        $stage->insert();
+    }
+
+    function factoreFont()
+    {
+
+        $faker = Factory::create('pt_BR');
+        //get method font
+        $fontOptions = ['url', 'fileExtension'];
+        $fakeMethod = $fontOptions[array_rand($fontOptions)];
+        //get font
+        $font = $faker->{$fakeMethod}();
+        $font = $fakeMethod == $fontOptions[1] ? $faker->word() . '.' . $font : $font;
+        //get stage_id
+        $mS = (new StageModel())->all(null, ['id']);
+        $range_id = array_map(fn($data) => $data['id'], $mS);
+
+        $data = ['font' => $font, 'stage_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph()];
+        $stage = new FontModel($data);
+        $stage->insert();
+    }
+
+    function factoreDropAll(StageModel $model)
+    {
+        $model->delete(false, true);
+    }
 }
+// Fatctore::factoreDropAll(new StageModel);
 
-function factoreTopic()
-{
+// for ($x = 0; $x < 20; $x++) {
+    //    $class = new Factore;
+    //    $class->factoreStage();
+//     $class->factoreTopic();
+//     $class->factoreFont();
 
-    $faker = Factory::create('pt_BR');
-    $name = $faker->jobTitle();
-    $mT = (new ThemeModel())->all(null, ['id']);
-    $range_id = array_map(fn($data) => $data['id'], $mT);
-    $data = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph()];
-    $stage = new TopicModel($data);
-    $stage->insert();
-}
-
-function factoreStage()
-{
-    $faker = Factory::create('pt_BR');
-    $name = $faker->name();
-    $mT = (new TopicModel())->all(null, ['id']);
-    $range_id = array_map(fn($data) => $data['id'], $mT);
-    $data = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(0, 2), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4)];
-    $stage = new StageModel($data);
-    $stage->insert();
-}
-
-function factoreFont()
-{
-
-    $faker = Factory::create('pt_BR');
-    //get method font
-    $fontOptions = ['url', 'fileExtension'];
-    $fakeMethod = $fontOptions[array_rand($fontOptions)];
-    //get font
-    $font = $faker->{$fakeMethod}();
-    $font = $fakeMethod == $fontOptions[1] ? $faker->word() . '.' . $font : $font;
-    //get stage_id
-    $mS = (new StageModel())->all(null, ['id']);
-    $range_id = array_map(fn($data) => $data['id'], $mS);
-
-    $data = ['font' => $font, 'stage_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph()];
-    $stage = new FontModel($data);
-    $stage->insert();
-}
-
-function factoreDropAll(StageModel $model)
-{
-    $model->delete(false, true);
-}
-
-// factoreDropAll(new StageModel);
-
-// for( $x=0; $x < 5; $x++){
-//     factoreTheme();
 // }
 
 // for ($x = 0; $x < 20; $x++) {
-//     factoreTopic();
+//     (new Factore)->factoreStage();
 // }
 
-// for ($x = 0; $x < 20; $x++) {
-//     factoreStage();
-// }
-
-// for ($x = 0; $x < 20; $x++) {
-//     factoreFont();
-// }
-
-// echo '<pre>';
-// $s = new StageModel();
-// $s->columns = ['updated_at'];
-// $r = $s->find(
-//     [],
-//     [
-//         'columns'=>[
-//             'max' => 'updated_at'
-//         ],
-//         'order' => 'updated_at',
-//         'limit'=>1
-//     ]
-// );
-// print_r($r);
-
-// GET TIMELINE
-// echo '<pre>';
-// $s = new StageModel();
-// $s->columns = [
-//     'id',
-//     'name',
-//     'priority',
-//     'domain_level',
-//     'status',
-//     'topic_id',
-//     'updated_at',
-//     'partial_score'
-// ];
 
 echo '<pre>';
 // $s = (new ThemeModel())
 //     ->columns('update_diff')
 //     ->limit(1)
 //     ->find();
-$r = (new \Services\ConsultService)->getMoreTimeWithoutStudy();
+$r = (new \Services\ConsultService)->getExtraordinaryEvents();
 print_r($r);
 
 

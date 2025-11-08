@@ -91,15 +91,9 @@ class ModelMixin
         return $this;
     }
 
-    public function where($where, $operator = null, $op_logic=null)
+    public function where($where, $operator = self::OPERADORES['EQ'], $op_logic= self::OPERADORES_LOGICOS['AND'])
     {
-        if(!empty($operator)){
-            if(!in_array($operator, self::OPERADORES)){
-                throw new \Exception("Operador inválido para cláusula WHERE.");
-            }
-        }
-
-        $this->query->where($where, $operator);
+        $this->query->where($where, $operator, $op_logic);
         return $this;
     }
 
@@ -146,10 +140,10 @@ class ModelMixin
 
     public function insert()
     {   
-        $componentQuery = new QueryBuild($this->table, $this->assignedColumns);
-        ['data'=>$whereData] = $this->filterDataForquery($this->assignedColumns);
+        $componentQuery = new QueryBuild($this->table);
+        $whereData = $this->filterDataForquery($this->assignedColumns);
         $this->validateRequiredFields($this->columnsRequiredForMethods['create']);
-        $query = $componentQuery->insert();
+        $query = $componentQuery->insert($this->assignedColumns);
         return $this->executeQuery($query, $whereData);
     }
 

@@ -25,9 +25,9 @@ class QueryBuild extends MixinQuerybuild{
         return "UPDATE {$this->table} SET  $columns $whereWith";
     }
     
-    function insert(){
-        $columns = $this->formatParamts($this->columns,', ');
-        $columnValues = $this->formatParamtsForValue($this->columns);
-        return "INSERT INTO {$this->table} ($columns) VALUES ($columnValues)";
+    function insert($columns){
+        $query_columns = $this->formatParamts($columns,', ');
+        $query_column_value = $this->formatParamtsForValue($columns);
+        return "INSERT INTO {$this->table} ($query_columns) VALUES ($query_column_value)";
     }
 }

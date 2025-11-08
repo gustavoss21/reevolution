@@ -74,7 +74,7 @@ class MixinQuerybuild
         $nextWhere = $this->where['next'] ?? null;
         
         while($nextWhere){
-            $whereFormated .= " {$nextWhere['operator']} {$nextWhere['clousere']['column']} {$nextWhere['clousere']['operator']} :{$nextWhere['expression']['column']}";
+            $whereFormated .= " {$nextWhere['operator']} {$nextWhere['clousere']['column']} {$nextWhere['clousere']['operator']} :{$nextWhere['clousere']['column']}";
             
             if(!empty($nextWhere['next'])) {
                 $nextWhere = $nextWhere['next'];
@@ -94,24 +94,29 @@ class MixinQuerybuild
      * @param mixed $data The data to be filtered, typically an array or object containing the conditions.
      * @return mixed The filtered result based on the provided conditions.
      */
-    function where($where, $operator = self::OPERADORES['EQ'], $op_logic=self::OPERADORES_LOGICOS['AND'])
+    function where($where, $operator, $op_logic)
     {
-        $clousureWhere = ['column' => $where, 'operator' => $operator];
 
+        //verifica se o operador é válido
         if(!in_array($operator, self::OPERADORES)){
             throw new \Exception("Operador inválido para cláusula WHERE.");
         }
 
-        if (!in_array($op_logic, self::OPERADORES_LOGICOS)) {
-            throw new \Exception("Operador inválido para cláusula WHERE.");
-        }
-        //verifica se já existe uma expressão where
+        $clousureWhere = ['column' => $where, 'operator' => $operator];
+
+
+        //definer o where next
         if (!empty($this->where['column'])) {
+            if (!in_array($op_logic, self::OPERADORES_LOGICOS)) {
+                throw new \Exception("Operador inválido para cláusula WHERE.");
+            }
 
             $this->where['next']['clousere'] = $clousureWhere;
             $this->where['next']['operator'] = $op_logic;
+            return $this;
         };
 
+        //definer o primeiro where 
         $this->where = $clousureWhere;
 
         return $this;

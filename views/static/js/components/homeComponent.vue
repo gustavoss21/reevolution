@@ -2,7 +2,7 @@
   <div>
     <div class="content-blocks">
         <div>
-            <div class="block-container">
+            <div class="block-container block-stage">
                 <h2 class="content-theme">CRONOGRAMA PRINCIPAL</h2>
 
                 <a v-for="event in timeline" href="" :key="'theme-' + event.id">
@@ -10,42 +10,42 @@
                     <h2 class="theme-title"></h2>
                     <h3 class="theme-topic"></h3>
                     <div>
-                    <h4 class="title-item-stage">{{ event.topic.stage.name }}</h4>
+                    <h4 class="title-item-stage data-stage">{{ event.topic.stage.name }}</h4>
                     </div>
                     <div>
                     <span class="title-item">Prioridade:</span>
-                    <span class="title-item-stage-priority">
+                    <span class="title-item-stage-priority data-stage">
                         {{event.topic.stage.priority}}
                     </span>
                     </div>
                     <div>
                     <span class="title-item">Domínio:</span>
-                    <span class="title-item-stage-domain">{{
+                    <span class="title-item-stage-domain" data-stage>{{
                         event.topic.stage.domain_level
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Estatus:</span>
-                    <span class="title-item-stage-status">{{
+                    <span class="title-item-stage-status data-stage">{{
                         event.topic.stage.status
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Pontuação:</span>
-                    <span class="title-item-stage-score">{{
+                    <span class="title-item-stage-score data-stage">{{
                         event.topic.stage.score
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Ultima atualização: </span>
-                    <data class="title-item-stage-updated_at">{{
+                    <data class="title-item-stage-updated_at data-stage">{{
                         event.topic.stage.upadated_at
                     }}</data>
                     </div>
                 </div>
                 </a>
             </div>
-            <div class="block-container">
+            <div class="block-container block-stage">
                 <h2 class="content-theme">MAIS TEMPO SEM ESTUDO</h2>
 
                 <a v-for="without_study_event in more_time_without_study_event" href="" :key="'theme-' + without_study_event.id">
@@ -53,42 +53,42 @@
                     <h2 class="theme-title"></h2>
                     <h3 class="theme-topic"></h3>
                     <div>
-                    <h4 class="title-item-stage">{{ without_study_event.name }}</h4>
+                    <h4 class="title-item-stage data-stage">{{ without_study_event.name }}</h4>
                     </div>
                     <div>
                     <span class="title-item">Prioridade:</span>
-                    <span class="title-item-stage-priority">{{
+                    <span class="title-item-stage-priority data-stage">{{
                         without_study_event.priority
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Domínio:</span>
-                    <span class="title-item-stage-domain">{{
+                    <span class="title-item-stage-domain data-stage">{{
                         without_study_event.domain_level
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Estatus:</span>
-                    <span class="title-item-stage-status">{{
+                    <span class="title-item-stage-status data-stage">{{
                         without_study_event.status
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Pontuação:</span>
-                    <span class="title-item-stage-score">{{
+                    <span class="title-item-stage-score data-stage">{{
                         without_study_event.score
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Ultima atualização: </span>
-                    <data class="title-item-stage-updated_at">{{
+                    <data class="title-item-stage-updated_at data-stage">{{
                         without_study_event.upadated_at
                     }}</data>
                     </div>
                 </div>
                 </a>
             </div>
-            <div class="block-container">
+            <div class="block-container block-stage">
                 <h2 class="content-theme">MAIS IMPORTANTES</h2>
 
                 <a v-for="event_priority in more_priority_events" href="" :key="'theme-' + event_priority.id">
@@ -96,35 +96,35 @@
                     <h2 class="theme-title"></h2>
                     <h3 class="theme-topic"></h3>
                     <div>
-                    <h4 class="title-item-stage">{{ event_priority.name }}</h4>
+                    <h4 class="title-item-stage data-stage">{{ event_priority.name }}</h4>
                     </div>
                     <div>
                     <span class="title-item">Prioridade:</span>
-                    <span class="title-item-stage-priority">{{
+                    <span class="title-item-stage-priority data-stage">{{
                         event_priority.priority
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Domínio:</span>
-                    <span class="title-item-stage-domain">{{
+                    <span class="title-item-stage-domain data-stage">{{
                         event_priority.domain_level
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Estatus:</span>
-                    <span class="title-item-stage-status">{{
+                    <span class="title-item-stage-status data-stage">{{
                         event_priority.status
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Pontuação:</span>
-                    <span class="title-item-stage-score">{{
+                    <span class="title-item-stage-score data-stage">{{
                         event_priority.score
                     }}</span>
                     </div>
                     <div>
                     <span class="title-item">Ultima atualização: </span>
-                    <data class="title-item-stage-updated_at">{{
+                    <data class="title-item-stage-updated_at data-stage">{{
                         event_priority.upadated_at
                     }}</data>
                     </div>

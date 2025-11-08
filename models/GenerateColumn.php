@@ -8,6 +8,7 @@ use Models\FuncColumnInterface;
 trait GenerateColumn
 {
     public const MAX = 'max';
+    public const MIN = 'min';
     public const COUNT = 'count';
     public const AVERANGE = 'averange';
     public const MORE = 'more';

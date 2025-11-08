@@ -19,7 +19,7 @@ $statics = [
 
 <main class="container">
     <h1>Analize de Evento</h1>
-    <div class="block-container">
+    <div class="block-container block-stage">
         <h1>📅 Painel de Análise de Estudos</h1>
 
         <div class="charts">
@@ -50,14 +50,14 @@ $statics = [
                 </tr>
             </thead>
             <tbody>
-                    <tr>
-                        <td>'name'</td>
-                        <td>priority</td>
-                        <td>domain_level</td>
-                        <td>status</td>
-                        <td>updated_at</td>
-                        <td><strong>pontuacao</strong></td>
-                    </tr>
+                <tr>
+                    <td>'name'</td>
+                    <td>priority</td>
+                    <td>domain_level</td>
+                    <td>status</td>
+                    <td>updated_at</td>
+                    <td><strong>pontuacao</strong></td>
+                </tr>
             </tbody>
         </table>
 

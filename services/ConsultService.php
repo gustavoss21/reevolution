@@ -223,4 +223,22 @@ class ConsultService
 
         return $total_status;
     }
+
+    function getRevision(){
+        
+    }
+
+    function getExtraordinaryEvents(){
+        $stage_recomendation = new StageModel([
+            'status' => StageModel::$STATUS_OPTIONS_NOT_STARTED,
+            'priority'=>StageModel::$label_priorities['critical']
+        ]);
+        $recomendation_event = $stage_recomendation->where('status')
+            ->where('priority')
+            ->limit(3)
+            ->find();
+        
+        return $recomendation_event;
+    }
+
 }
