@@ -1,5 +1,5 @@
 <header>
-    <nav class="navbar">
+    <nav class="custom-nav">
         <h1 class="title">Reevolution</h1>
         <ul>
             <li><a href="/">Home</a></li>

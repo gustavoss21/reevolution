@@ -24,7 +24,7 @@ export class ApiClient {
       return await response.json();
     } catch (error) {
       console.error("Erro na requisição:", error);
-      throw error;
+      throw await error;
     }
   }
 

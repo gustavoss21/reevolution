@@ -74,12 +74,23 @@ class Factore
     {
         $model->delete(false, true);
     }
+
+    function teste()
+    {
+
+        $faker = Factory::create('pt_BR');
+        $name = $faker->name();
+        $mT = new TopicModel();
+        $mTs = $mT->columns(self::col('id'));
+        $mTa = $mT->columns(self::col('name'));
+        print_r($mT);
+    }
 }
 // Fatctore::factoreDropAll(new StageModel);
 
 // for ($x = 0; $x < 20; $x++) {
-    //    $class = new Factore;
-    //    $class->factoreStage();
+//    $class = new Factore;
+//    $class->factoreStage();
 //     $class->factoreTopic();
 //     $class->factoreFont();
 
@@ -89,15 +100,4 @@ class Factore
 //     (new Factore)->factoreStage();
 // }
 
-
-echo '<pre>';
-// $s = (new ThemeModel())
-//     ->columns('update_diff')
-//     ->limit(1)
-//     ->find();
-$r = (new \Services\ConsultService)->getExtraordinaryEvents();
-print_r($r);
-
-
-
-
+(new Factore)->teste();

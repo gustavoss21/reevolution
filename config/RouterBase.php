@@ -37,30 +37,49 @@ class RouterBase
         $this->method = strtoupper($method);
     }
 
-    public function setAction($uri, $body)
-    {
+    public function formatURI($uri, $body){
         $uri = str_replace($this->routeBase, '', $uri);
+        $uri = strtok($uri, '?'); // Remove query string
         if(empty($uri)) {
             $uri = '/';
         }
-        
+
+        if($this->method === 'GET' && !empty($body)){
+            $uri .= '/';
+
+            foreach($body as $key => $value){
+                $uri .= '{'.$key.'}';
+                if($value !== end($body)){
+                    $uri .= '/';
+                }
+            }
+        }
+
+        return $uri;
+    }
+
+    public function setAction($uri, $body)
+    {
+        $uri = $this->formatURI($uri,$body);
+
         foreach ($this->routes[$this->method] as $route => $action) {
-            $pattern = preg_replace('/\{[a-zA-Z_][a-zA-Z0-9_]*\}/', '([a-zA-Z0-9_]+)', $route);
-            $pattern = str_replace('/', '\/', $pattern);
+            $pattern = str_replace('/', '\/', $route);
             if (preg_match('/^' . $pattern . '$/', $uri, $matches)) {
                 array_shift($matches); // Remove the full match
                 // Extract controller and method
                 list($this->controller, $this->action) = explode('@', $action);
-                // If there are parameters in the route, add them to the body
-                if (preg_match_all('/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/', $route, $paramNames)) {
-                    foreach ($paramNames[1] as $index => $name) {
-                        $this->body[$name] = $matches[$index];
-                    }
-                }
-                // return self::route($controller, $method, $body);
-                return $this;
             }
         }
+        return $this;
+    }
+
+    function setBody($body)
+    {
+        if($this->method === 'POST'){
+            $input = file_get_contents("php://input");
+            $body = json_decode($input, true);
+        }
+        $this->body = $body;
         return $this;
     }
 

@@ -5,30 +5,28 @@ namespace Controllers;
 use Models\ThemeModel;
 use Controllers\Controller;
 use Services\ConsultService;
+use Services\ChangeData;
 
 class ThemeController extends Controller
 {
-    private $themaModel, $service;
+    private $themaModel, $service, $serviceGenerate;
 
     public function __construct()
     {
         $this->themaModel = new ThemeModel();
         $this->service = new ConsultService();
+        $this->serviceGenerate = new ChangeData;
     }
 
-    public function createThema($data)
+    public function create($data)
+    {   
+        $data_formated = $this->serviceGenerate->formatValueKey($data);
+        return $this->respond($this->serviceGenerate->createTheme($data_formated));   
+    }
+
+    public function createEvent($data)
     {
-        // Validate and sanitize input data
-        if (empty($data['name']) || empty($data['description'])) {
-            throw new \Exception("Name and description are required.");
-        }
-
-        // Set thema properties
-        $this->themaModel->set('name', htmlspecialchars($data['name']));
-        $this->themaModel->set('description', htmlspecialchars($data['description']));
-
-        // Save thema to database
-        return $this->themaModel->insert();
+        return $this->respond($this->serviceGenerate->createEvent($data));
     }
 
     public function getAllThemas()
@@ -82,5 +80,31 @@ class ThemeController extends Controller
     {
         $statusAverage = (new ConsultService)->getAverageStatus();
         return $this->respond($statusAverage);
+    }
+
+    public function matchEvent($event)
+    {
+        $statusAverage = (new ConsultService)->getMatchEvent($event,'themes');
+        return $this->respond($statusAverage);
+    }
+
+    public function matchTopic($topic)
+    {
+        $statusAverage = (new ConsultService)->getMatchEvent($topic,'topics');
+        return $this->respond($statusAverage);
+    }
+
+    public function relationTableToCreatetheme($table){
+        $this->service->getColData($table);
+    }
+
+    public function form(){
+        $topic = $this->service->getForm('topics');
+        $data['topic'] = $topic;        $data['stage'] = $this->service->getForm('stages');
+        $data['theme_id_child'] = $this->service->getForm('themes');
+        $data['tag_id_child'] = $this->service->getForm('tags');
+        $data['topic_id_child'] = $topic;
+
+        return $this->respond($data);
     }
 }

@@ -10,13 +10,12 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
 {
     use ColumnTrait;
 
-    protected $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score;
-
+    public $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score, $more_advanced;
     protected $table = 'stages';
-
     public $columns = [
         'id',
         'name',
+        'more_advanced',
         'topic_id',
         'slug',
         'description',
@@ -32,41 +31,66 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'partial_score'
     ];
 
-    static $priorities = [
-        1 => 'Low',
-        2 => 'Medium',
-        3 => 'High',
-        4 => 'Critical'
-    ];
-
-    static $label_priorities = [
-        'low'=>1,
-        'medium'=>2,
-        'high'=>3,
-        'critical'=>4
+    static $PRIORITE_LABEL = [
+        1 => 'Baixa',
+        2 => 'Média',
+        3 => 'Alta',
+        4 => 'Critica'
     ];
 
     public static $STATUS_OPTIONS_LABELS = [
-        -1=>'NÃO INICIADO',
-        0=>'EM ANDAMENTO',
-        1=>'FINALIZADO'
+        -1 => 'NÃO INICIADO',
+        0 => 'EM ANDAMENTO',
+        1 => 'FINALIZADO'
     ];
 
-    public static $DOMAIN_LEVEL_OPTIONS = [
-        'INICIANTE',
-        'INTERMEDIÁRIO',
-        'AVANÇADO'
+    public static $LABELS = [
+        'more_advanced' => 'Deveria estar mais avançado neste evento',
+        'more_advanced_op_yes' => 'Sim',
+        'more_advanced_op_no' => 'Não',
+        'topic_id' => 'Esta matéria é pré-requisito para outros eventos, quais',
+        'description' => 'Topa digitar por voz, e explicar o que entende sobre o assunto',
+        'learning_stage' => 'Em qual estagio voce está, esta há',
+        'learning_op_stage_a' => 'Aprender a fazer',
+        'learning_op_stage_e' => 'Ter experiência Concreta',
+        'learning_op_stage_p' => 'Pensar e Criar Abstração',
+        'learning_op_stage_f' => 'Fazer Exercícios e Aplicar',
+        'domain_level' => 'Nível de Domínio',
+        'domain_op_level_ini' => 'Iniciante',
+        'domain_op_level_inter' => 'Intermediário',
+        'domain_op_level_av' => 'Avançado',
+        'priority' => 'Prioridade'
+        
+
     ];
 
-    public static $LEARNING_STAGE_OPTIONS = [
-        1 => 'APRENDER A FAZER',
-        'EXPERIÊNCIA CONCRETA',
-        'PENSAR E CRIAR ABSTRAÇÃO',
-        'FAZER EXERCICIOS'
+    const DOMAIN_LEVEL = [
+        'domain_level_op_ini'=>1,
+        'domain_level_op_inter'=>2,
+        'domain_level_op_av'=>3
+    ];
+
+    const MORE_ADVANCED = [
+        'more_advanced_op_yes' => 1,
+        'more_advanced_op_no' => 0
+    ];
+
+    const LEARNING_STAGE = [
+        'learning_op_stage_a' => 1,
+        'learning_op_stage_e' => 2,
+        'learning_op_stage_p' => 3,
+        'learning_op_stage_f' => 4
+    ];
+
+    static $label_key_priorities = [
+        1,
+        2,
+        3,
+        4,
     ];
 
     protected $columnsRequiredForMethods = [
-        'create' => ['name', 'topic_id', 'status', 'domain_level', 'learning_stage', 'priority', 'partial_score'],
+        'create' => ['name', 'slug', 'topic_id', 'status', 'domain_level', 'learning_stage', 'priority', 'partial_score', 'more_advanced'],
         'update' => ['id'],
         'delete' => ['id']
     ];
@@ -99,5 +123,11 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         $partial_score = $pointP + $pointD + $pointS;
 
         $this->set('partial_score', $partial_score);
+    }
+
+    public function setDataDefault(){
+        $this->get('status') ?? $this->set('status', self::$STATUS_OPTIONS_NOT_STARTED);
+        $this->get('name') ?? $this->set('name', 'init_stage_' . uniqid());
+        $this->set('slug', $this->slug($this->get('name')));
     }
 }

@@ -10,4 +10,5 @@ $route->setAction(
     $_SERVER['REQUEST_URI'],
     $_REQUEST
 )
+->setBody($_REQUEST)
 ->route();

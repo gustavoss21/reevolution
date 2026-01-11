@@ -1,6 +1,34 @@
 - commit
+models(theme):attributes
+   description::type
+   name::type
+
+
+
+this.element
+   .set_child("btn_main")
+   .set_label("Fechar")
+   .set_type("button")
+   .set_class("btn btn-secondary")
+   .set_action("close");
+
+criar o emit no inputSearch
 
 ## next
+
+se nao comprir com os dias o score aumentar
+e o proveitamento abaixa
+
+colocar a opçoa de colocar evento temporario
+
+input nivel deve tem um limite
+
+no modal se começar a inserir em um form diferente do 1 da uma avaria, e tem que clicar mais vezes para eviar os formas,mesmo que esteja tudo certo
+
+quando houver uma erro em um input resques, aparecera um error, na hora de corrigir as options aparecera abaixo do error
+
+
+fazer com que o model feche o createtheme
 aproveitamento da semana 
 mostra a quantidade estudada;
 maior pontuaçao Q3 50% M | 
@@ -36,6 +64,8 @@ em services verificar a necessidade de status em progresso em todos
 criar uma pagina que contenha todos os assuntos, e tenha
 ultimo estudo;
 aproveitamento;
+
+criar uma obrigatoriedade para ter o primeiro estudo em 24h o segundo em menos de 7 dias e outro antes do 30 dias
 
 ### controles
    tratamento de resposta
@@ -86,4 +116,10 @@ não aceita ativades concluidas
 atividades com mais tem sem estudo aceita as finalizadas
 ### MAIS IMPORTANTE
 não aceita ativades concluidas
+### Revisao
+Quando vejo um exercício ou problema dessa matéria, eu sei como começar?
+
+O que poderia ter feito para melhorar seu desempenho?
+
+Como você avalia seu desempenho neste evento
 

@@ -2,12 +2,15 @@
 
 namespace Services;
 
+use Composer\Autoload\ClassLoader;
 use DateTime;
 use Models\ThemeModel;
 use Models\StageModel;
 use Models\TopicModel;
+use Models\TagModel;
 use Models\GenerateColumn;
 
+use function Composer\Autoload\includeFile;
 
 class ConsultService
 {
@@ -15,6 +18,13 @@ class ConsultService
 
     //(prioridade * 1.5) + (ultimaVez dia/ 5) + ((3 - dominio) * 2) + ((2 + status)/2)*3 
     public $stage = '';
+    private $tables = [
+        'themes' => ThemeModel::class,
+        'stages' => StageModel::class,
+        'topics' => TopicModel::class,
+        'tags' => TagModel::class
+    ];
+
     function timeline()
     {
         $stages = (new StageModel())
@@ -82,8 +92,7 @@ class ConsultService
 
     function GetEventRecommendation()
     {
-        $stage = new StageModel();
-        $stage->set('status', StageModel::$STATUS_OPTIONS_NOT_STARTED);
+        $stage = new StageModel(['status' => StageModel::$STATUS_OPTIONS_NOT_STARTED]);
         // obter recomencao de eventos nao estudados
         $event_recommendation = $stage->columns(
             self::col('id'),
@@ -95,7 +104,7 @@ class ConsultService
             self::colf(['updated_at_diff', 'partial_score'], self::MORE, 'score')
         )->where('status')
             ->orderBy('score')
-            ->limit(5)
+            ->limit(3)
             ->find();
 
         return $event_recommendation;
@@ -141,7 +150,7 @@ class ConsultService
         //obtem a data do inicio da semana
         $start_week = date('Y-m-d', strtotime('monday this week'));
         $stage = new StageModel(['updated_at' => $start_week]);
-        $weekly_study = $stage->where('updated_at', '>=', $start_week)
+        $weekly_study = $stage->where('updated_at', $stage::OPERADORES['GTE'])
             ->columns(
                 $this->colf('*', self::COUNT, 'amount_event_weekly')
             )
@@ -166,8 +175,8 @@ class ConsultService
 
         $h = 0;
         $d = 0;
-        
-        foreach($average_time as $item){
+
+        foreach ($average_time as $item) {
             // calcular a diferença entre as datas
             $d += $data->diff((new DateTime($item['updated_at'])))->format('%a');
             $h += $data->diff((new DateTime($item['updated_at'])))->format('%H');
@@ -214,31 +223,45 @@ class ConsultService
             $this->col('status'),
             $this->colf('status', self::COUNT, 'amount_event')
         )
-        ->groupBy('status')
-        ->find();
+            ->groupBy('status')
+            ->find();
 
-        foreach($total_status as &$status){
+        foreach ($total_status as &$status) {
             $status['label'] = StageModel::$STATUS_OPTIONS_LABELS[$status['status']] ?? 'Desconhecido';
         }
 
         return $total_status;
     }
 
-    function getRevision(){
-        
+    function getRevision() {}
+
+    function getMatchEvent($event, $table = 'themes')
+    {
+        $table = $this->tables[$table];
+        $instaceModel = new $table(['name' => $event['name']]);
+
+        return $instaceModel->columns($this->col('id'), $this->col('name'))->where('name', $instaceModel::OPERADORES['LIKE'])->find();
     }
 
-    function getExtraordinaryEvents(){
-        $stage_recomendation = new StageModel([
-            'status' => StageModel::$STATUS_OPTIONS_NOT_STARTED,
-            'priority'=>StageModel::$label_priorities['critical']
-        ]);
-        $recomendation_event = $stage_recomendation->where('status')
-            ->where('priority')
-            ->limit(3)
-            ->find();
-        
-        return $recomendation_event;
+    function getColData($event)
+    {
+        $tables = ['tags' => TagModel::class, 'topics' => TopicModel::class];
+        $event_key = array_key_first($event);
+
+        if (!(array_key_exists($event_key, $tables) && count($event) === 1)) return ['error'];
+
+        $tabel_instance = new ($tables[$event_key])($event[$event_key]);
+
+        return $tabel_instance->where('id')->find();
     }
 
+    function getForm($table)
+    {
+        $model = $this->tables[$table];
+        $instance = new ($model)();
+        $data['data'] = $instance->getForm();
+        //label
+        $data['labelS'] = $model::$LABELS;
+        return $data;
+    }
 }

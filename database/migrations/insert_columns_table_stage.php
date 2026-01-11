@@ -27,7 +27,8 @@ class InsertColumnsInStage
                 ADD attention text,
                 ADD learning_stage int NOT NULL,
                 ADD priority int NOT NULL,
-                ADD partial_score int NOT NULL
+                ADD partial_score int NOT NULL,
+                ADD more_advanced BOOLEAN NOT NULL
             ;
         ";
 
@@ -53,7 +54,8 @@ class InsertColumnsInStage
                 DROP COLUMN attention,
                 DROP COLUMN priority,
                 DROP COLUMN learning_stage,
-                DROP COLUMN partial_score
+                DROP COLUMN partial_score,
+                DROP COLUMN more_advanced
                 ;";
 
         try {

@@ -24,9 +24,15 @@ class Route extends RouterBase
             '/more-time-without-study-event' => 'StageController@moreTimeWithoutStudyEvent',
             '/more-priority-events' => 'StageController@morePriorityEvents',
             '/total-quantity-each-tatus' => 'StageController@totalQuantityEachStatus',
+            '/match-event/{name}'=> 'ThemeController@matchEvent',
+            '/match-event-topic/{name}'=> 'ThemeController@matchTopic',
+            '/relationTable'=> 'ThemeController@relationTableToCreatetheme',
+            '/form/{create-event}' => 'ThemeController@form'
         ],
         'POST' => [
             '/topics' => 'TopicController@create',
+            '/theme' => 'ThemeController@create',
+            '/event' => 'ThemeController@createEvent',
         ],
         'PUT' => [
             '/topics/{id}' => 'TopicController@update',

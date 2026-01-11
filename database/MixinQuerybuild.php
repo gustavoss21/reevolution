@@ -13,7 +13,8 @@ class MixinQuerybuild
 {
     use \Models\ColumnTrait;
 
-    protected $columns, $where, $limit;
+    protected $columns, $where = [];
+    protected $limit;
     private $meta;
     protected $order_by, $group_by = '';
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
@@ -68,23 +69,14 @@ class MixinQuerybuild
 
     function formatParamtsForWhere()
     {
-        if( empty($this->where)) return '';
+        if( count($this->where) < 1) return '';
 
-        $whereFormated = 'WHERE ' . $this->where['column'] . ' ' . $this->where['operator'] . ' :' . $this->where['column'];
-        $nextWhere = $this->where['next'] ?? null;
+        $whereFormated = 'WHERE ';
+
+        foreach($this->where as $whereItem){
+            $whereFormated .= $whereItem['column'] . ' ' . $whereItem['operator'] . ' :' . $whereItem['column'] . $whereItem['op_logic'] ?? '';
+        }
         
-        while($nextWhere){
-            $whereFormated .= " {$nextWhere['operator']} {$nextWhere['clousere']['column']} {$nextWhere['clousere']['operator']} :{$nextWhere['clousere']['column']}";
-            
-            if(!empty($nextWhere['next'])) {
-                $nextWhere = $nextWhere['next'];
-                continue;
-            };
-            
-            break;
-
-        }        
-
         return $whereFormated;
     }
 
@@ -94,7 +86,7 @@ class MixinQuerybuild
      * @param mixed $data The data to be filtered, typically an array or object containing the conditions.
      * @return mixed The filtered result based on the provided conditions.
      */
-    function where($where, $operator, $op_logic)
+    function where($where, $operator, $op_logic=null)
     {
 
         //verifica se o operador é válido
@@ -102,22 +94,11 @@ class MixinQuerybuild
             throw new \Exception("Operador inválido para cláusula WHERE.");
         }
 
-        $clousureWhere = ['column' => $where, 'operator' => $operator];
+        $clousureWhere = ['column' => $where, 'operator' => $operator, 'op_logic' => $op_logic];
 
-
-        //definer o where next
-        if (!empty($this->where['column'])) {
-            if (!in_array($op_logic, self::OPERADORES_LOGICOS)) {
-                throw new \Exception("Operador inválido para cláusula WHERE.");
-            }
-
-            $this->where['next']['clousere'] = $clousureWhere;
-            $this->where['next']['operator'] = $op_logic;
-            return $this;
-        };
 
         //definer o primeiro where 
-        $this->where = $clousureWhere;
+        $this->where[] = $clousureWhere;
 
         return $this;
         

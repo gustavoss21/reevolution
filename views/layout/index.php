@@ -16,7 +16,7 @@
 <body>
     <?php include_once dirname(__FILE__, 2) . '/partials/head.php' ?>
 
-    <?php echo $content; ?>
+    /<?php echo $content; ?>
 
     <script type="module" src="http://localhost:5173/views/static/js/main.js"></script>
     <?php echo implode('\n', STATIC_LINKS['end']) ?>

@@ -6,6 +6,7 @@ use Dotenv\Parser\Value;
 use Error;
 use Models\ValidateMixin;
 use Database\DB;
+use Dotenv\Util\Regex;
 use Models\ColumnTrait;
 
 /**
@@ -13,9 +14,9 @@ use Models\ColumnTrait;
  */
 class ModelMixin
 {
-    use ValidateMixin;
+    use ValidateMixin;    
 
-    protected $table, $assignedColumns, $columns;
+    protected $table, $assignedColumns , $columns, $columnsWhere;
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
     const DATASEARCH = 'id';
@@ -24,6 +25,7 @@ class ModelMixin
     private $columnsForQuery = [];
     protected $columnsRequired = [];
     protected $query;
+    static $LABELS;
 
     function __construct($data = [])
     {
@@ -46,7 +48,9 @@ class ModelMixin
         $this->query = new QueryBuild($this->table, $option_construct_column);
     }
 
-
+    public function setDataDefault()
+    {
+    }
 
     function get($paramether)
     {
@@ -57,8 +61,9 @@ class ModelMixin
 
     function set($paramether, $value)
     {
-        if (!property_exists($this, $paramether)) return;
-        if($paramether !== 'id') $this->assignedColumns[] = $paramether;
+        if (!property_exists($this, $paramether) || is_null($value)) return;
+        // if($paramether === 'id')return; 
+        $this->assignedColumns[] = $paramether;
         $this->{$paramether} = $value;
         $this->queryValues[':' . $paramether] = $value;
         $this->columnsForQuery[$paramether] = $paramether;
@@ -76,12 +81,14 @@ class ModelMixin
         return $this->executeQuery($query);
     }
 
-    function find(array|null $dataSearch = [self::DATASEARCH],$meta=[])
+    function find()
     {   
         $query = $this->query->select($this->columns);
-        $whereData = $this->filterDataForquery($this->columnsForQuery);
+        $columnsData = $this->filterDataForquery($this->assignedColumns??[]);
+        $whereData = $this->filterDataForquery($this->columnsWhere??[]);
+        $queryData = array_merge($columnsData,$whereData);
 
-        return $this->executeQuery($query, $whereData);
+        return $this->executeQuery($query, $queryData);
     }
 
     public function columns(...$columns)
@@ -91,9 +98,33 @@ class ModelMixin
         return $this;
     }
 
-    public function where($where, $operator = self::OPERADORES['EQ'], $op_logic= self::OPERADORES_LOGICOS['AND'])
+    public function where($where, $operator = self::OPERADORES['EQ'])
+    {        
+        if($operator === self::OPERADORES['LIKE']){
+            $this->set($where, $this->get($where).'%');
+        }
+        $this->columnsWhere[] = $where;
+        $this->query->where($where, $operator);
+        return $this;
+    }
+
+    public function whereAnd($where, $operator = self::OPERADORES['EQ'])
     {
-        $this->query->where($where, $operator, $op_logic);
+        if ($operator === self::OPERADORES['LIKE']) {
+            $this->set($where, $this->get($where) . '%');
+        }
+        $this->columnsWhere[] = $where;
+        $this->query->where($where, $operator, self::OPERADORES_LOGICOS['AND']);
+        return $this;
+    }
+
+    public function whereOr($where, $operator = self::OPERADORES['EQ'])
+    {
+        if ($operator === self::OPERADORES['LIKE']) {
+            $this->set($where, $this->get($where) . '%');
+        }
+        $this->columnsWhere[] = $where;
+        $this->query->where($where, $operator, self::OPERADORES_LOGICOS['OR']);
         return $this;
     }
 
@@ -169,7 +200,7 @@ class ModelMixin
         }
         try {
             $stmt = $this->dbconection->prepare($scriptSql);
-            $stmt->execute($params);
+            $stmt->execute($params); 
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             error_log($e->getMessage());
@@ -186,9 +217,48 @@ class ModelMixin
         $dataQuery = [];
 
         foreach($columns as $paramether){
-           $dataQuery[':'.$paramether] = $this->get($paramether);
+           $data = $this->get($paramether);
+
+           if(is_null($data) || !property_exists($this, $paramether) )continue;
+
+           $dataQuery[':'.$paramether] = $data;
         }
 
         return $dataQuery;
+    }
+
+    public function slug($string) {
+        // Converte para minúsculas
+        $slug = strtolower($string);
+
+        // Remove acentuação
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug);
+
+        // Troca qualquer coisa que não seja letra/número por hífen
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+        // Remove hífens extras no começo/fim
+        $slug = trim($slug, '-');
+
+        return $slug;
+    }
+
+    public function getForm(){
+        $columns_f = "";
+        foreach(static::$LABELS as $key => $_){
+            if(!in_array($key,$this->columns))continue;
+            $columns_f .= "'$key', ";
+        };
+        $columns_f = rtrim($columns_f, ', ');
+        $query = "SELECT 
+                    column_name,
+                    data_type,
+                    character_maximum_length,
+                    column_default,
+                    is_nullable
+                  FROM information_schema.columns
+                  WHERE table_name = :table and COLUMN_NAME in ($columns_f);";
+        // return $query;
+        return $this->executeQuery($query,[':table'=> $this->table]);
     }
 }
