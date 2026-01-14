@@ -11,13 +11,17 @@ export class ManageStap {
   stap_nav_index = 0;
   data_children = {};
   element_rest = [];
+  id = '';
 
   getStap() {
     let element = this.staps[this.stap_index];
+
     if (!element) {
       console.error("fun:getStap -> Elemento nao definido");
       return {};
     }
+
+    this.element = element;
 
     return element;
   }
@@ -28,20 +32,20 @@ export class ManageStap {
 
   next_stap() {
     let index = this.stap_index + 1;
-    this.navigate_to_stap(index);
+    this.navigate_to_stap(index,false);
   }
 
   jump_stap(index) {
-    this.navigate_to_stap(index);
+    this.navigate_to_stap(index,false);
   }
 
-  setNav(newIndex, oldIndex) {
+  setNav(newIndex, oldIndex, start=true) {
     this.stap_nav
       .get_child("main", newIndex)
       .set_class("nav-item-modal active-modal");
     this.stap = this.stap_nav.get_child("main", newIndex);
 
-    if (oldIndex == newIndex) return;
+    if (oldIndex == newIndex && start) return;
 
     let stap_old = this.stap_nav
       .get_child("main", oldIndex)
@@ -70,11 +74,20 @@ export class ManageStap {
       .input_error(this.stap_nav);
   }
 
-  generateElement(data) {
-    if (!data) return;
+  generateElement(data, id) {
+    this.element_parent = new Element({ name: "parent" });
+    this.staps = [];
+    this.stap_nav = new Element({ name: "stap" });
+    this.stap_nav_index = 0;
+    this.data_children = {};
+    this.element_rest = [];
     let all_data_form = this.filterRawData(data);
     let element = null;
     let form_labels = {};
+    this.id = id;
+
+    if (!all_data_form) return;
+
     all_data_form.forEach((key) => {
       let form_data = data[key]["data"];
       form_labels = data[key]["labelS"];
@@ -88,13 +101,16 @@ export class ManageStap {
     });
 
     if (this.element_rest.length > 0) {
+      element = element ?? this.createElement(id);
+      
       this.setElementData(this.element_rest, form_labels, element);
       this.element_rest = [];
     }
+
     this.navigate_to_stap();
   }
 
-  filterRawData(data) {
+  filterRawData(data=[]) {
     let data_keys = Object.keys(data);
     return data_keys.filter((k) => {
       let index = k.search("_child");
@@ -173,7 +189,7 @@ export class ManageStap {
   createElement(el_name, is_active = false, button_submit = null, data = {}) {
     let element = this.element_parent
       .set_child("main", data)
-      .set_id("add-event")
+      .set_id(this.id)
       .set_action("create");
 
     this.staps.push(element);
@@ -208,14 +224,14 @@ export class ManageStap {
     }
   }
 
-  navigate_to_stap(index = 0) {
+  navigate_to_stap(index = 0, start=true) {
     if (index < 0 || index >= this.staps.length) {
       index = 0;
     }
     if (this.stap_index == null) {
       this.stap_index = index;
     }
-    this.setNav(index, this.stap_index);
+    this.setNav(index, this.stap_index, start);
     this.stap_index = index;
     this.setElement();
 
@@ -341,12 +357,12 @@ export class ManageStap {
 
     if (!data_child) return;
     element_c
-      .set_type("request")
       .set_name(name_base + "_name")
       .set_id(name_base + "_name")
       .set_class("card collapse")
       .set_action("requestL")
       .set_placeholder("escreva e selecione o ...")
+      .set_type("request")
 
       .set_child("id_hidden")
       .set_name(column_name)
@@ -359,7 +375,8 @@ export class ManageStap {
       .set_child()
       .set_label(title)
       .set_action("create")
-      .set_type("collapse");
+      // .set_type("collapse")
+      .set_type("request")
 
     let el = this.setElementData(
       data_child["data"],

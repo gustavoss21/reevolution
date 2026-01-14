@@ -65,8 +65,8 @@ export default {
   },
 computed:{
   fullMessage(){
-    console.log(this.fullMessage)
-    return this.fullMessage}
+    return this.fullMessage
+  }
 },
   methods: {
     /**

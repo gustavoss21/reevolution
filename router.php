@@ -27,7 +27,10 @@ class Route extends RouterBase
             '/match-event/{name}'=> 'ThemeController@matchEvent',
             '/match-event-topic/{name}'=> 'ThemeController@matchTopic',
             '/relationTable'=> 'ThemeController@relationTableToCreatetheme',
-            '/form/{create-event}' => 'ThemeController@form'
+            '/form-event' => 'ThemeController@formEvent',
+            '/form/{form}' => 'ThemeController@form',
+            // '/form/{topic}' => 'ThemeController@form',
+            // '/form/{tag}' => 'ThemeController@form'
         ],
         'POST' => [
             '/topics' => 'TopicController@create',

@@ -1,33 +1,34 @@
 <template>
   <hr />
 
-  <button
-    type="button"
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#add-event"
-    data-bs-whatever="@getbootstrap"
-  >
+  <div class="d-flex gap-3 justify-content-center">
+  <!-- <Button id_element="event" @button-click="get_form" data_bs_target="#add-event">
     Adicionar Evento
-  </button>
-  <ModalComponent       
+  </Button> -->
+  <Button v-for="key in Object.keys(labels_form)" :id_element="key" :data_bs_target="'#add-' + key" :key="key">
+    {{ labels_form[key] }}
+  </Button>
+  </div>
+  <ModalComponent  v-for="[key,instance] in Object.entries(formInstacesList)"  
     @e_function="handleF"
-    :element_data="instanceStap.getStap()"
+    :element_data="instance.getStap()"
    >
     <div class="nav-modal">
-      <template v-for="stap in instanceStap.stap_nav.get_child()">
-        <div :class="stap.class" @click="instanceStap.jump_stap(stap.id)">
+      <template v-for="stap in instance.stap_nav.get_child()">
+        <div :class="stap.class" @click="instance.jump_stap(stap.id)">
           {{ stap.value }}
         </div>
       </template>
     </div>
     <div class="modal-header">
-      <h1 class="modal-title fs-5" id="ModalLabel">NOVO EVENTO</h1>
+      <h1 class="modal-title fs-5" id="ModalLabel">{{ labels_form[key] }}</h1>
     </div>
   </ModalComponent>
+
 </template>
 <script>
 import ModalComponent from "./modalComponent.vue";
+import Button from "./Button.vue";
 import {ManageStap} from "@/js/utils/ManageStap.js";
 import { ApiClient } from "@/js/utils/request.js";
 
@@ -35,38 +36,46 @@ export default {
     data(){
       return{
           request: new ApiClient(location.href),
-          instanceStap:new ManageStap(),
           requestList: {
             theme_name: "/match-event?name=",
             topic_name: "/match-event-topic?name=",
             tags: "/relationTable?id=",
             topics: "/relationTable?id=",
-            form:'/form?'
+            form:'/form?',
+          },
+          formInstacesList:{},
+          instaceManageStap:null,
+          url_form:{
+            event:'form-event',
+            theme:'form=theme',
+            topic:'form=topic',
+            tag:'form=tag',
+          },
+          labels_form: {
+            event:'Novo Evento',
+            theme:'Nova Temática',
+            topic:'Novo Tópico',
+            tag:'Nova Tag',
           },
           fullMessage: this.message
           
       }
     },
     created(){
-          console.log('ADD monte');
-
-      this.request.get('/form?create-event=stages')
-        .then(response => {
-          this.instanceStap.generateElement(response);
-          // this.element_data = this.instanceStap.getStap()
-          console.log(this.instanceStap);
-        })
+      Object.keys(this.url_form).forEach((uri_key)=> {
+        this.get_form(uri_key);
+      });
     },
 
     methods:{
       handleF(methodName, domEvent,data){
-        console.log(methodName)
+        this.instaceManageStap = this.formInstacesList[domEvent.name];
         this[methodName](domEvent,data)
       },
       nextStap(){
-        // if(this.instanceStap.stap_index === 4){
-        this.instanceStap.next_stap();
-        console.log(this.fullMessage)
+        // if(this.instaceManageStap.stap_index === 4){
+        this.instaceManageStap.getStap();
+        this.instaceManageStap.next_stap();
       },
       next() {
         this.nextStap();        
@@ -88,7 +97,7 @@ export default {
         await this.request
         .get(url)
         .then((response) => {
-          let el = this.instanceStap.element.search_child(key_request)
+          let el = this.instaceManageStap.element.search_child(key_request)
 
           el.for_data('set_child','options_search',response)
             .for_children('set_action','options_search','setEvent')
@@ -100,11 +109,11 @@ export default {
       create(ins_element, event) {
         this.next();
 
-        if(this.instanceStap.stap_nav.has_error_child(0))return;
+        if(this.instaceManageStap.stap_nav.has_error_child(0))return;
         
-        this.instanceStap.set_data_form()
+        this.instaceManageStap.set_data_form()
 
-        let data_v = this.instanceStap.element_parent.get_child('form_data');
+        let data_v = this.instaceManageStap.element_parent.get_child('form_data');
         // let form_data = new FormData(form);
         // const data = Object.fromEntries(form_data.entries());
 
@@ -128,8 +137,25 @@ export default {
             .set_value(data.id)
         inst_el.child['options_search'] = []
       },
+      get_form(name,button){
+        let uri = this.url_form[name]
+        let url = uri.search('=') == -1 ?uri:'form?'+uri;
+        
+        this.request.get('/'+url)
+        .then(response => {
+          let name_form = 'add-' + name;
+
+          let instance = new ManageStap();
+          instance.generateElement(response, name_form);
+          console.log(instance);
+          this.formInstacesList[name] = instance;
+          
+          // button.target.click();
+
+        });
+      },
     },
 
-    components: { ModalComponent }
+    components: { ModalComponent,Button }
 }
 </script>

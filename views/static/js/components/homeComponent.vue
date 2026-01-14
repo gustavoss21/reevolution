@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="content-left">
+    <div>
       <AddEventComponent></AddEventComponent>
     </div>
     <div class="content-blocks">
@@ -177,8 +177,6 @@ export default {
       .get("/timeline")
       .then((response) => {
         this.timeline = response;
-        console.log("this.timeline");
-        console.log(this.timeline);
       })
       .catch((error) => {
         console.error("Error fetching timeline:", error);
@@ -188,8 +186,6 @@ export default {
       .get("/status-averange")
       .then((response) => {
         this.data.media_averange = response;
-        console.log("this.media_averange");
-        console.log(this.media_averange);
       })
       .catch((error) => {
         console.error("Error fetching media_averange:", error);
@@ -199,8 +195,6 @@ export default {
       .get("/time-without-study")
       .then((response) => {
         this.data.time_without_study = response;
-        console.log("this.time_without_study");
-        console.log(this.time_without_study);
       })
       .catch((error) => {
         console.error("Error fetching time_without_study:", error);
@@ -210,8 +204,6 @@ export default {
       .get("/count-events-weekly")
       .then((response) => {
         this.data.count_events_weekly = response;
-        console.log("this.count_events_weekly");
-        console.log(this.count_events_weekly);
       })
       .catch((error) => {
         console.error("Error fetching count_events_weekly:", error);
@@ -221,8 +213,6 @@ export default {
       .get("/averange-time-without-study")
       .then((response) => {
         this.data.averange_time_without_study = response;
-        console.log("this.averange_time_without_study");
-        console.log(this.count_events_weekly);
       })
       .catch((error) => {
         console.error("Error fetching averange_time_without_study:", error);
@@ -232,8 +222,6 @@ export default {
       .get("/date-time-without-study")
       .then((response) => {
         this.data.more_time_without_study = response;
-        console.log("this.more_time_without_study");
-        console.log(this.count_events_weekly);
       })
       .catch((error) => {
         console.error("Error fetching averange_time_without_study:", error);
@@ -243,8 +231,6 @@ export default {
       .get("/date-time-without-study")
       .then((response) => {
         this.more_time_without_study = response;
-        console.log("this.more_time_without_study");
-        console.log(this.count_events_weekly);
       })
       .catch((error) => {
         console.error("Error fetching more_time_without_study:", error);
@@ -254,7 +240,6 @@ export default {
       .get("/more-priority-events")
       .then((response) => {
         this.more_priority_events = response;
-        console.log("this.more_priority_events");
       })
       .catch((error) => {
         console.error("Error fetching more_priority_events:", error);
@@ -264,7 +249,6 @@ export default {
       .get("/more-time-without-study-event")
       .then((response) => {
         this.more_time_without_study_event = response;
-        console.log("this.more_time_without_study_event");
       })
       .catch((error) => {
         console.error("Error fetching more_time_without_study_event:", error);
@@ -274,7 +258,6 @@ export default {
       .get("/total-quantity-each-tatus")
       .then((response) => {
         this.data.total_quantity_each_tatus = response;
-        console.log("this.total-quantity-each-tatus");
       })
       .catch((error) => {
         console.error("Error fetching total-quantity-each-tatus:", error);

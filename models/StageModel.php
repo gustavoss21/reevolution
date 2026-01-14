@@ -48,7 +48,7 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'more_advanced' => 'Deveria estar mais avançado neste evento',
         'more_advanced_op_yes' => 'Sim',
         'more_advanced_op_no' => 'Não',
-        'topic_id' => 'Esta matéria é pré-requisito para outros eventos, quais',
+        'topic_id' => 'Esta matéria tem como pré-requisito outros eventos, quais',
         'description' => 'Topa digitar por voz, e explicar o que entende sobre o assunto',
         'learning_stage' => 'Em qual estagio voce está, esta há',
         'learning_op_stage_a' => 'Aprender a fazer',

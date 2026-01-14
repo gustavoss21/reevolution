@@ -264,4 +264,20 @@ class ConsultService
         $data['labelS'] = $model::$LABELS;
         return $data;
     }
+
+    function getFormRecursive($form){
+        $table = $form . 's';
+        $data = [];
+        $data[$form] = $this->getForm($table);
+        $columns = $data[$form]['labelS'];
+        $pathern = "/.*_id/";
+        $columnsWithId = preg_filter($pathern, '$0', array_keys($columns));
+
+        foreach ($columnsWithId as $column) {
+            $tableName = str_replace('_id', 's', $column);
+            $data[$column . '_child'] = $this->getForm($tableName);
+        }
+
+        return $data;
+    }
 }

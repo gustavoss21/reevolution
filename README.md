@@ -16,6 +16,8 @@ criar o emit no inputSearch
 
 ## next
 
+apresetar error ou success
+
 se nao comprir com os dias o score aumentar
 e o proveitamento abaixa
 

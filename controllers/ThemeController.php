@@ -98,13 +98,21 @@ class ThemeController extends Controller
         $this->service->getColData($table);
     }
 
-    public function form(){
+    public function formEvent(){
         $topic = $this->service->getForm('topics');
-        $data['topic'] = $topic;        $data['stage'] = $this->service->getForm('stages');
+        $data['topic'] = $topic;        
+        $data['stage'] = $this->service->getForm('stages');
         $data['theme_id_child'] = $this->service->getForm('themes');
         $data['tag_id_child'] = $this->service->getForm('tags');
         $data['topic_id_child'] = $topic;
 
         return $this->respond($data);
+    }
+    public function form($form)
+    {   
+
+        $form_data = $this->service->getFormRecursive($form['form']);
+
+        return $this->respond($form_data);
     }
 }

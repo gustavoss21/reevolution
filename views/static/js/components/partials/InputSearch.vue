@@ -104,8 +104,5 @@
         }
       },
       components:{InputRadio, InputTextarea, InputGeneric },
-      mounted(){
-       console.log(this.data); 
-      }
   }
 </script>

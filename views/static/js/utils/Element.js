@@ -250,17 +250,3 @@ export class Element {
     return child_finded[0];
   }
 }
-
-// let e = new Element()
-//   .set_name('teste')
-//   .set_label()
-
-// let a = e.set_child()
-//   .set_name('chil')
-// let c = e.set_child().set_name("chil").set_value("value1");
-// let b = e.set_child().set_name("cdren").set_value("value2");
-
-// let r = e.search_child('chil');
-
-// console.log(c.msg_r);
-// console.log(b.msg_r);
