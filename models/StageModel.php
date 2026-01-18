@@ -60,8 +60,6 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'domain_op_level_inter' => 'Intermediário',
         'domain_op_level_av' => 'Avançado',
         'priority' => 'Prioridade'
-        
-
     ];
 
     const DOMAIN_LEVEL = [

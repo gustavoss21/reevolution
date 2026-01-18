@@ -11,7 +11,7 @@ export class ManageStap {
   stap_nav_index = 0;
   data_children = {};
   element_rest = [];
-  id = '';
+  id = "";
 
   getStap() {
     let element = this.staps[this.stap_index];
@@ -32,14 +32,14 @@ export class ManageStap {
 
   next_stap() {
     let index = this.stap_index + 1;
-    this.navigate_to_stap(index,false);
+    this.navigate_to_stap(index, false);
   }
 
   jump_stap(index) {
-    this.navigate_to_stap(index,false);
+    this.navigate_to_stap(index, false);
   }
 
-  setNav(newIndex, oldIndex, start=true) {
+  setNav(newIndex, oldIndex, start = true) {
     this.stap_nav
       .get_child("main", newIndex)
       .set_class("nav-item-modal active-modal");
@@ -91,6 +91,10 @@ export class ManageStap {
     all_data_form.forEach((key) => {
       let form_data = data[key]["data"];
       form_labels = data[key]["labelS"];
+
+      //insert input by label
+      this.setEvent(form_data, form_labels);
+
       let element = this.createElement(key);
 
       if (this.element_rest.length > 0) {
@@ -102,7 +106,7 @@ export class ManageStap {
 
     if (this.element_rest.length > 0) {
       element = element ?? this.createElement(id);
-      
+
       this.setElementData(this.element_rest, form_labels, element);
       this.element_rest = [];
     }
@@ -110,7 +114,7 @@ export class ManageStap {
     this.navigate_to_stap();
   }
 
-  filterRawData(data=[]) {
+  filterRawData(data = []) {
     let data_keys = Object.keys(data);
     return data_keys.filter((k) => {
       let index = k.search("_child");
@@ -163,6 +167,7 @@ export class ManageStap {
         .set_value(el.COLUMN_DEFAULT)
         .set_parent_name(element.name)
         .set_require(el.IS_NULLABLE);
+        element_c.tag = column_name;
 
       //radio
       if (column_radio_filted.length > 0) {
@@ -173,8 +178,11 @@ export class ManageStap {
         this.elementSearch(element_c, form_labels, column_name);
       }
 
-      let required_next_step = (pagination && Number.isInteger((index + 1) / 4) && inputs_length - 4 >= 3)
-      
+      let required_next_step =
+        pagination &&
+        Number.isInteger((index + 1) / 4) &&
+        inputs_length - 4 >= 3;
+
       if (required_next_step) {
         if (inputs_length - 1 <= index + 3) {
           this.element_rest = form_data.slice(index);
@@ -219,12 +227,13 @@ export class ManageStap {
     }
 
     if (submit) {
-      element.for_children("set_dismiss", "btn_main", true);
+      let children = element.get_child('btn_main')
+      element.for_children(children,"set_dismiss",true);
       button.set_label("Criar").set_action("criar");
     }
   }
 
-  navigate_to_stap(index = 0, start=true) {
+  navigate_to_stap(index = 0, start = true) {
     if (index < 0 || index >= this.staps.length) {
       index = 0;
     }
@@ -316,7 +325,7 @@ export class ManageStap {
           .set_child("form_data")
           .set_name(parent.name);
       }
-      
+
       let children = parent.get_child();
 
       children.forEach((element) => {
@@ -326,7 +335,6 @@ export class ManageStap {
   }
 
   set_input_data_form(parent, element) {
-
     let child = parent.set_child("main", element);
 
     if (element.type == "request") {
@@ -336,6 +344,21 @@ export class ManageStap {
     }
 
     return child;
+  }
+
+  setEvent(
+    form_data, form_labels) {
+    if (!form_labels["event"]) return;
+
+    let data = form_labels["event"];
+
+    data.forEach(form_full => {
+      form_labels[form_full["COLUMN_NAME"]] = form_full["label"];
+      delete form_full["label"];
+      form_full['tag'] = true;
+      form_data.push(form_full);
+      
+    });
   }
 
   elementRadio(element_c, columns_radio, form_labels) {
@@ -352,17 +375,16 @@ export class ManageStap {
     }
   }
   elementSearch(element_c, form_labels, column_name) {
-    let name_base = column_name.replace(/(.+)_id/, "$1");
+    let name_base = column_name.replace(/(.+)_id$/, "$1");
     let data_child = this.data_children[column_name];
 
-    if (!data_child) return;
     element_c
       .set_name(name_base + "_name")
       .set_id(name_base + "_name")
       .set_class("card collapse")
       .set_action("requestL")
       .set_placeholder("escreva e selecione o ...")
-      .set_type("request")
+      .set_type("request")      
 
       .set_child("id_hidden")
       .set_name(column_name)
@@ -370,13 +392,22 @@ export class ManageStap {
       .set_parameter("hidden")
       .set_parent_name(column_name);
 
+    element_c.tag = name_base + "_name"
+      
+
+    if(element_c.tag){
+      element_c.data_child['action'] = 'requestLTopic'
+    }
+
+    if (!data_child) return;
+    
     let title = "criar " + form_labels[column_name];
     let form_event_create = element_c
       .set_child()
       .set_label(title)
       .set_action("create")
       // .set_type("collapse")
-      .set_type("request")
+      .set_type("request");
 
     let el = this.setElementData(
       data_child["data"],

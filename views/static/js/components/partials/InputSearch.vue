@@ -8,13 +8,13 @@
         :placeholder="data.placeholder"
         :id="data.id"
         class="form-control"
-        @input="(e) => emitFunction(data.action,e.target.value, data.name)"
+        @input="(e) => emitFunction(data.action, data, e.target.value)"
         v-model="data.value"
         type="text"
       />
       <a
         ref="btn_create"
-        v-if="data.action"
+        v-if="data.action && data.hasChild()"
         class="icon-add"
         data-bs-toggle="collapse"
         href="#block-add"
@@ -37,9 +37,11 @@
         :key="theme.id"
         class="list-group-item"
         aria-current="true"
-          @click.prevent="emitFunction(theme.action,data,theme)"
+          @dblclick="emitFunction(theme.action,data,theme)"
       >
         {{ theme.name }}
+        {{ data.tag }}
+        <span v-if="data.tag == 'event_name'"  @click="()=>emitFunction('requestLTopic',theme)" class="corner-more">⇲</span>
       </li>
     </ul>
     <div>
@@ -47,6 +49,7 @@
         id="block-add"
         :class="data.class"
         style="width: 18rem"
+        v-if="data.hasChild()"
       >
         <div class="card-body">
           <!-- <h5 class="card-title">{{ data.get_child('main',0).label }}</h5> -->
@@ -69,11 +72,11 @@
         </div>
       </div>
     </div>
-    <input v-if="data.get_child('id_hidden',0)"
+    <input v-if="data.hasChild('null','id_hidden')"
       hidden
       type="number"
       :name="data.get_child('id_hidden',0).name"
-      v-model="data.get_child('id_hidden',0).value"
+      v-model="data.get_child('',0,true).value"
     />
   </div>
   

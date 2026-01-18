@@ -25,6 +25,11 @@ class ConsultService
         'tags' => TagModel::class
     ];
 
+    function getByid($table_name,$value){
+        $instaceModel = new $this->tables[$table_name]((['id'=>$value]));
+        $instaceModel->where('id');
+    }
+
     function timeline()
     {
         $stages = (new StageModel())
@@ -53,6 +58,18 @@ class ConsultService
         }
 
         return $themes;
+    }
+
+    function filterTopic($data)
+    {
+        $topic = new TopicModel();
+
+        foreach($data as $column => $value){
+            $topic->set($column,$value);
+            $topic->where($column);
+        }
+
+        $topic->find();
     }
 
     function getThemefullData(array $theme)
@@ -270,7 +287,7 @@ class ConsultService
         $data = [];
         $data[$form] = $this->getForm($table);
         $columns = $data[$form]['labelS'];
-        $pathern = "/.*_id/";
+        $pathern = "/.*_id$/";
         $columnsWithId = preg_filter($pathern, '$0', array_keys($columns));
 
         foreach ($columnsWithId as $column) {

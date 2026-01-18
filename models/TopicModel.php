@@ -7,9 +7,9 @@ use Models\ModelMixin;
 // 
 class TopicModel extends  ModelMixin
 {
-    protected $table = 'topics';
+    public $table = 'topics';
     public $columns = ['id', 'name', 'slug', 'description', 'theme_id', 'created_at', 'updated_at', 'can_explain', 'times_week_necessary', 'domain_week', 'started_study', 'lot_to_discuss', 'actived', 'end_date', 'study_time'];
-    protected $id, $name, $theme_id, $slug, $description, $created_at, $updated_at, $can_explain, $times_week_necessary, $domain_week, $started_study, $lot_to_discuss, $actived, $end_date, $study_time;
+    protected $id, $name, $theme_id, $topic_id, $slug, $description, $created_at, $updated_at, $can_explain, $times_week_necessary, $domain_week, $started_study, $lot_to_discuss, $actived, $end_date, $study_time;
     static $LABELS = [
         'name' => 'Tópico do Evento',
         'theme_id' => 'Tema do Evento',
@@ -35,7 +35,15 @@ class TopicModel extends  ModelMixin
         'lot_to_discuss' => 'É preciso consultar muito material para o evento',
         'lot_to_discuss_op_no' => 'Não',
         'lot_to_discuss_op_yes' => 'Sim',
-        'description' => 'Descrição'
+        'description' => 'Descrição',
+        'event' => [[
+            'COLUMN_NAME' => 'event_id',
+            'DATA_TYPE' => 'int',
+            'CHARACTER_MAXIMUM_LENGTH' => null,
+            'COLUMN_DEFAULT' => '',
+            'IS_NULLABLE' => 'YES',
+            'label' => 'Esta matéria tem como pré - requisito outros eventos, quais '
+        ]],
     ];
 
     const DOMAIN_WEEK = [

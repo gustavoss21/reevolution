@@ -1,4 +1,4 @@
-import { handleError } from "vue";
+import { handleError, Static } from "vue";
 
 export class Element {
   id;
@@ -15,9 +15,12 @@ export class Element {
   parent_name;
   tag = "";
   child = {};
+  data_child = {};
   msg = "";
   message_type = "";
   children_error_messages = [];
+  search_full = null;
+  static _child = {};
 
   constructor(data = {}) {
     this.set_data(data);
@@ -85,14 +88,14 @@ export class Element {
   }
 
   set_require(is_nullable) {
-    if(is_nullable === 'YES'){
+    if (is_nullable === "YES") {
       this.require = false;
       return this;
     }
 
     this.require = true;
     // let has_ = this.label.search("*");
-    this.label +=  "  *";
+    this.label += "  *";
     return this;
   }
 
@@ -118,26 +121,34 @@ export class Element {
     return this;
   }
 
-  for_data(fun, child_name, data) {
+  /**
+   * Iterates over data array and executes a function for each element
+   * @param {Array} data - Array of data to iterate over
+   * @param {string} func - Name of the method to call for each data element
+   * @param {string} child_name - Name of the child property to store results
+   * @returns {this} Returns the current instance for method chaining
+   */
+  for_data(data,func, child_name  ) {
     this.child[child_name] = [];
     data.forEach((d) => {
-      this[fun](child_name, d);
+      this[func](child_name, d);
     });
-    return this;
+    
+    return this.child[child_name]
   }
 
+  
   /**
-   * @argument fun - function name to call on children
-   * @argument child_name - the block name
-   * @argument data - data to pass to function
+   * Iterates over each child element and executes a function with a given value.
+   * @param {Array} children - The array of child elements to iterate over.
+   * @param {string} fun - The name of the function to call on each child.
+   * @param {*} value - The value to pass as an argument to the function.
+   * @returns {this} Returns the current instance for method chaining.
    */
-  for_children(fun, child_name, data) {
-    let children = this.get_child(child_name);
-    // this.child[child_name] = [];
-    if (!children) throw new handleError("child not found in for_children");
+  for_children(children, fun, value) {
 
     children.forEach((child) => {
-      child[fun](data);
+      child[fun](value);
     });
     return this;
   }
@@ -215,18 +226,49 @@ export class Element {
     let parseJson = JSON.stringify(this);
     return Object.assign({}, JSON.parse(parseJson));
   }
-  get_child(block_name = "main", index = null) {
-    let child = this.child;
 
-    if (Object.hasOwn(child, block_name)) {
-      child = child[block_name];
-    } else {
+  /**
+   * Retrieves a child element from the children collection by block name and optional index.
+   *
+   * @param {string} [block_name="main"] - The name of the child block to retrieve. Defaults to "main".
+   * @param {number|null} [index=null] - Optional index to retrieve a specific child from the block.
+   *                                      If provided, returns the child at that index position.
+   * @param {boolean} [recover=false] - If true, returns the previously cached child element stored in Element._child.
+   *
+   * @returns {Object|null} - Returns the child element object matching the block_name and optional index.
+   *                          Returns null if the block_name does not exist in children.
+   *                          Returns the cached Element._child if recover is true.
+   *
+   * @example
+   * // Get the main block's children
+   * const mainChild = element.get_child();
+   *
+   * @example
+   * // Get a specific child at index 2 from the "sidebar" block
+   * const sidebarChild = element.get_child("sidebar", 2);
+   *
+   * @example
+   * // Recover the last retrieved child from cache
+   * const cachedChild = element.get_child("main", null, true);
+   */
+  get_child(block_name = "main", index = null, recorvere = false) {
+    if (recorvere) return Element._child;
+
+    let children = this.child;
+
+    if (!Object.hasOwn(children, block_name)) {
+      Element._child = {};
+
       return null;
     }
+
+    let child = children[block_name];
+
     if (typeof index == "number") {
-      return child[index];
+      child = child[index];
     }
 
+    Element._child = child;
     return child;
   }
   /**
@@ -234,9 +276,11 @@ export class Element {
    * @argument block_name - the block name
    * @returns Element:class child
    */
-  search_child(value_key, block_name = "main",by='name') {
+  search_child(value_key, block_name = "main", by = "name") {
     if (!Object.hasOwn(this.child, block_name)) {
       // this.element_error("Bloco '" + block_name + "' não existe.");
+      Element._child = {};
+
       return null;
     }
     let children = this.child[block_name];
@@ -247,6 +291,30 @@ export class Element {
       }
     });
 
+    Element._child = child_finded[0];
     return child_finded[0];
   }
+
+  /**
+   * @param {string} value_key received string, the default is the string 'null'
+   * @param {string} [block_name="main"] received string, the default is 'main'
+   * @param {string} [by="name"] received string, the default is 'name'
+   * @returns {Element|false}
+   */
+  hasChild(value_key = "null", block_name = "main", by = "name") {
+    if (!Object.hasOwn(this.child, block_name)) {
+      // this.element_error("Bloco '" + block_name + "' não existe.");
+      return false;
+    }
+
+    if (value_key === "null") return true;
+
+    let children = this.child[block_name];
+    return children.some((item) => {
+      if (item[by] == value_key) {
+        return item;
+      }
+    });
+  }
 }
+

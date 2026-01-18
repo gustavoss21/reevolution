@@ -29,8 +29,7 @@ class Route extends RouterBase
             '/relationTable'=> 'ThemeController@relationTableToCreatetheme',
             '/form-event' => 'ThemeController@formEvent',
             '/form/{form}' => 'ThemeController@form',
-            // '/form/{topic}' => 'ThemeController@form',
-            // '/form/{tag}' => 'ThemeController@form'
+            '/themes/{id}/topics' => 'TopicController@topicByTheme',
         ],
         'POST' => [
             '/topics' => 'TopicController@create',

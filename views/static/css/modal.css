@@ -41,3 +41,17 @@
 .col-form-label {
     font-weight: 550;
 }
+
+.corner-more{
+  font-size: 22px;
+  position: absolute;
+  right: 1px;
+  top: 12px;
+  color: black; 
+}
+
+.corner-more:hover{
+  background: yellow;
+  padding: 0 5px;
+  border-radius: 15px 0;
+}
