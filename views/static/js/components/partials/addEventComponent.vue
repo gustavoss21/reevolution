@@ -170,9 +170,9 @@ export default {
       },
 
       requestLTopic(data){
-        this.request.get(`/themes?id=${data.id}/topics`)
+        this.request.get(`/topics?id=${data.id}`)
           .then(response=>{
-            console.log(`/themes?id=${data.id}/topics`)
+            console.log(`/topics?id=${data.id}`)
             console.log(response)
           })
       }

@@ -8,7 +8,8 @@
             "Config\\": "config/",
             "Routes\\": "routes/",
             "Services\\":"services/",
-            "Database\\":"database/"
+            "Database\\":"database/",
+            "Test\\": "tests/"
         }
     },
     "authors": [

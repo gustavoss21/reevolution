@@ -2,6 +2,8 @@
 
 namespace Config;
 
+use Dotenv\Util\Regex;
+
 class RouterBase
 {
     public $routes = [];
@@ -37,7 +39,7 @@ class RouterBase
         $this->method = strtoupper($method);
     }
 
-    public function formatURI($uri, $body){
+    public function formatURI($uri, &$body){
         $uri = str_replace($this->routeBase, '', $uri);
         $uri = strtok($uri, '?'); // Remove query string
         if(empty($uri)) {
@@ -49,9 +51,20 @@ class RouterBase
 
             foreach($body as $key => $value){
                 $uri .= '{'.$key.'}';
-                if($value !== end($body)){
+
+                
+                
+                @[0=>$body_value,1=>$uri_parcial]      = $this->getUriInQuerySearch($value);
+
+                if($uri_parcial){
+                    $uri .= $uri_parcial;
+                    $body[$key] = $body_value;
+                }
+                if(next($body)){
                     $uri .= '/';
                 }
+
+
             }
         }
 
@@ -61,6 +74,8 @@ class RouterBase
     public function setAction($uri, $body)
     {
         $uri = $this->formatURI($uri,$body);
+        $this->setBody($body);
+
 
         foreach ($this->routes[$this->method] as $route => $action) {
             $pattern = str_replace('/', '\/', $route);
@@ -79,8 +94,26 @@ class RouterBase
             $input = file_get_contents("php://input");
             $body = json_decode($input, true);
         }
+
         $this->body = $body;
+
         return $this;
+    }
+
+    function createRoute($serve, $body){
+        $this->setMethod($serve['REQUEST_METHOD']);
+        $this->setAction(
+            $serve['REQUEST_URI'],
+            $body
+        );
+    }
+
+    function getUriInQuerySearch($body){
+        $pathern_uri_last_part = '/(\/[\w_-][^\/]+)/';
+        // $uri                   = preg_replace($pathern_uri_last_part, '$1', $body);
+        $data                = preg_split($pathern_uri_last_part,$body,2, PREG_SPLIT_DELIM_CAPTURE);
+        return array_slice($data,0,2);
+        
     }
 
 }

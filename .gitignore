@@ -28,7 +28,3 @@ coverage
 *.sw?
 *.tsbuildinfo
 package-lock.json
-
-views/static/js/test/
-
-composer.json

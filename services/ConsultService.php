@@ -25,9 +25,10 @@ class ConsultService
         'tags' => TagModel::class
     ];
 
-    function getByid($table_name,$value){
-        $instaceModel = new $this->tables[$table_name]((['id'=>$value]));
-        $instaceModel->where('id');
+    function getByid($table_name,$id){
+        $instaceModel = new $this->tables[$table_name](['id'=>$id]);
+        return $instaceModel->where('id')
+               ->find();
     }
 
     function timeline()
