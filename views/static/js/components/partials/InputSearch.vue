@@ -40,8 +40,18 @@
           @dblclick="emitFunction(theme.action,data,theme)"
       >
         {{ theme.name }}
-        {{ data.tag }}
-        <span v-if="data.tag == 'event_name'"  @click="()=>emitFunction('requestLTopic',theme)" class="corner-more">⇲</span>
+        <template v-if = "data.tag == 'event_name'" >
+          <span  @click = "()=>emitFunction('requestLTopic',theme)" class = "corner-more">⇲</span>
+          <ul   v-if         = "theme.child['topics']">
+            <li   v-for        = "topics in theme.get_child('topics')"
+                :key          = "topics.id"
+                class        = "list-group-item"
+                aria-current = "true"
+                @click    = "emitFunction(topics.action,data,topics)">
+              {{ topics.name }}
+            </li>
+          </ul>
+        </template>
       </li>
     </ul>
     <div>

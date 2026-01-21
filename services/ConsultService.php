@@ -25,9 +25,10 @@ class ConsultService
         'tags' => TagModel::class
     ];
 
-    function getByid($table_name,$id){
-        $instaceModel = new $this->tables[$table_name](['id'=>$id]);
-        return $instaceModel->where('id')
+    function searchForOther($byTable,$searchInTable, $byTableId){
+        $columnTableId = $byTable . '_id';
+        $instaceModel = new $this->tables[$searchInTable]([$columnTableId=> $byTableId]);
+        return $instaceModel->where('theme_id')
                ->find();
     }
 

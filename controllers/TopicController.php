@@ -31,17 +31,17 @@ class TopicController extends Controller
         return $this->respond($this->topic->all());
     }
 
-    public function getTopic($topic)
+    public function getTopicforTheme($theme)
     {
         $table    = $this->topic->table;
-        $topic_id = $topic['id'];
+        $theme_id = $theme['id'];
         
-        $result = $this->service->getByid($table, $topic_id);
+        $result = $this->service->searchForOther('theme', $table,$theme_id);
         
         if (empty($result)) {
             return $this->respond('data not found',404);
         }
-        return $this->respond($result[0]);
+        return $this->respond($result);
     }
 
     public function get($id)

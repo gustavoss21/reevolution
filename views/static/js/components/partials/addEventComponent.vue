@@ -170,10 +170,12 @@ export default {
       },
 
       requestLTopic(data){
-        this.request.get(`/topics?id=${data.id}`)
+        this.request.get(`/themes?id=${data.id}/topics`)
           .then(response=>{
+            let children = data.for_data(response,'set_child','topics')
+            data.for_children(children,'set_action','setEvent')
             console.log(`/topics?id=${data.id}`)
-            console.log(response)
+            console.log(data)
           })
       }
     },
