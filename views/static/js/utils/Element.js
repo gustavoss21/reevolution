@@ -2,7 +2,7 @@ import { handleError, Static } from "vue";
 
 export class Element {
   id;
-  class;
+  class='';
   name;
   value;
   type;
@@ -30,7 +30,7 @@ export class Element {
   }
   set_data(data) {
     this.id = data.id;
-    this.class = data.class;
+    this.class = data.class||'';
     this.name = data.name;
     this.value = data.value;
     this.type = data.type;
@@ -58,8 +58,12 @@ export class Element {
   }
 
   set_class(cls) {
-    this.class = cls;
+    this.class += ' '+cls;
     return this;
+  }
+
+  drop_class(cls){
+    this.class = 'this.class'.replace(cls,'');
   }
 
   set_value(value) {
@@ -301,7 +305,7 @@ export class Element {
    * @param {string} [by="name"] received string, the default is 'name'
    * @returns {Element|false}
    */
-  hasChild(value_key = "null", block_name = "main", by = "name") {
+  hasChild(block_name = "main",value_key = "null", by = "name") {
     if (!Object.hasOwn(this.child, block_name)) {
       // this.element_error("Bloco '" + block_name + "' não existe.");
       return false;
@@ -315,6 +319,10 @@ export class Element {
         return item;
       }
     });
+  }
+
+  hasClass(className){
+    return this.class.includes(className);
   }
 }
 

@@ -113,7 +113,10 @@ export default {
           //
          
           let children = data.for_data(response,'set_child','options_search')
-          data.for_children(children,'set_action')
+          data.for_children(children,'set_action','setEvent')
+          data.for_children(children,'set_class','d-block')
+          // data.set_class('d-block')
+
         })
         .catch((error) => {
           console.error("Error fetching timeline:", error);
@@ -172,10 +175,8 @@ export default {
       requestLTopic(data){
         this.request.get(`/themes?id=${data.id}/topics`)
           .then(response=>{
-            let children = data.for_data(response,'set_child','topics')
+            let children = data.for_data(response,'set_child','options_search')
             data.for_children(children,'set_action','setEvent')
-            console.log(`/topics?id=${data.id}`)
-            console.log(data)
           })
       }
     },

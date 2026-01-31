@@ -1,3 +1,7 @@
+.list-group-bg > li{
+  background-color: #e1ee7e22;
+}
+
 .list-group-item:hover {
   background-color: #0d6efd;
     color: white;
@@ -43,15 +47,108 @@
 }
 
 .corner-more{
-  font-size: 22px;
-  position: absolute;
-  right: 1px;
-  top: 12px;
-  color: black; 
+    position: absolute;
+    right: 0px;
+    top: 14px;
+    color: black;
+    padding: 7px 5px 8px 10px;
+    font: icon;
+    line-height: 11px;
+  
 }
 
 .corner-more:hover{
   background: yellow;
-  padding: 0 5px;
-  border-radius: 15px 0;
+  border-radius: 15px 0 0 0 ;
+}
+
+
+/* MODEL */
+
+.border-form {
+  border-top: 1px solid #dee2e6;
+}
+.icon-in-input{
+  right: 6px;
+  top  : 44px;
+}
+.icon-add{
+  width: 28px;
+  height: 28px;
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 10px;
+  position: absolute;
+  cursor: pointer;
+
+}
+
+.icon-add-item{
+  height: 20px;
+  width : 0px;
+
+  border: 2.4px solid white;
+  position: relative;
+  border-radius: 5px;
+
+}
+
+.icon-add-x{
+    transform: rotate(90deg);
+    left: 11.3px;
+    bottom: 15px;
+}
+
+.icon-add-y{
+  margin: auto;
+  top   : 5px;
+  
+}
+.icon-in-search{
+    right: 6px;
+    top  : 5px;
+}
+.icon-x{
+    width           : 20px;
+    height          : 20px;
+    color           : white;
+    border-radius   : 10px;
+    position        : absolute;
+    cursor          : pointer;
+    background-color: red;
+
+}
+.icon-x > *{
+  height      : 16px;
+  width       : 0px;
+  border       : 2.3px solid white;
+  position     : relative;
+  border-radius: 5px;
+}
+
+.icon-xx{
+    transform: rotate(45deg);
+    left     : 9.2px;
+    bottom   : 14.3px;
+}
+
+.icon-xy{
+  transform: rotate(135deg);
+    top: 2px;
+    left: 9px;
+}
+
+
+.scroll{
+  max-height: 200px;
+  overflow: auto;
+}
+
+.highlights-li:hover{
+  background-color: var(--label);
+  color: #7b5050;
+}
+
+.menu-border{
+  border-radius: 5px;
 }

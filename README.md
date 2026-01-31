@@ -27,6 +27,8 @@ input nivel deve tem um limite
 
 no modal se começar a inserir em um form diferente do 1 da uma avaria, e tem que clicar mais vezes para eviar os formas,mesmo que esteja tudo certo
 
+na pesquisa de eventos theme->topics,
+adicionar um 
 quando houver uma erro em um input resques, aparecera um error, na hora de corrigir as options aparecera abaixo do error
 
 

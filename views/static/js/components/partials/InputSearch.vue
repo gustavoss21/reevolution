@@ -14,8 +14,8 @@
       />
       <a
         ref="btn_create"
-        v-if="data.action && data.hasChild()"
-        class="icon-add"
+        v-if="data.action && data.hasChild() && !(data.value)"
+        class="icon-add icon-in-input"
         data-bs-toggle="collapse"
         href="#block-add"
         role="button"
@@ -25,14 +25,19 @@
         <div class="icon-add-item icon-add-y"></div>
         <div class="icon-add-item icon-add-x"></div>
       </a>
+      <span @click = "()=>clearSearchFull(data,false)" v-else :class = "'icon-in-input icon-x d-'+display.show">
+      <div  class  = "icon-xy"></div>
+      <div  class  = "icon-xx"></div>
+      </span>
+      
     </div>
     <span v-if="data.msg_r" class="text-danger">{{ data.msg }}</span>
 
     <ul
-      v-if="data.child['options_search']"
-      class="list-group list-event-request"
+      v-if = "data.child['options_search']"
+      class="list-group list-group-bg list-event-request scroll"
     >
-      <li
+      <li 
         v-for="theme in data.get_child('options_search')"
         :key="theme.id"
         class="list-group-item"
@@ -40,15 +45,19 @@
           @dblclick="emitFunction(theme.action,data,theme)"
       >
         {{ theme.name }}
-        <template v-if = "data.tag == 'event_name'" >
-          <span  @click = "()=>emitFunction('requestLTopic',theme)" class = "corner-more">⇲</span>
-          <ul   v-if         = "theme.child['topics']">
-            <li   v-for        = "topics in theme.get_child('topics')"
-                :key          = "topics.id"
-                class        = "list-group-item"
+        <template v-if             = "data.tag == 'event_name'">
+          <span v-if="theme.hasClass(display.show)" @click = "()=>{emitFunction('requestLTopic',theme);generateDisplay(theme)}" :class = "'corner-more '+theme.class" >⇲</span>
+          <span @click = "()=>clearSearchFull(theme)" v-else :class = "'icon-x icon-in-search '+display.show">
+            <div      class            = "icon-xy"></div>
+            <div      class            = "icon-xx"></div>
+          </span>
+          <ul class="menu-border"   v-if         = "theme.child['options_search']">
+            <li    v-for        = "option in theme.get_child('options_search')"
+                :key          = "option.id"
+                class        = "list-group-item scroll highlights-li position-relative"
                 aria-current = "true"
-                @click    = "emitFunction(topics.action,data,topics)">
-              {{ topics.name }}
+                @click    = "emitFunction(option.action,data,option)">
+              {{ option.name }}
             </li>
           </ul>
         </template>
@@ -59,7 +68,7 @@
         id="block-add"
         :class="data.class"
         style="width: 18rem"
-        v-if="data.hasChild()"
+        v-if="data.hasChild() && !data.value"
       >
         <div class="card-body">
           <!-- <h5 class="card-title">{{ data.get_child('main',0).label }}</h5> -->
@@ -100,6 +109,10 @@
       props: ['data'],
       data() {
           return {
+            display:{
+              show: 'd-block',
+              none:'d-none'
+            },
             listComponents:{
               date:InputGeneric,
               text:InputGeneric,
@@ -112,6 +125,24 @@
           }
       },    
       methods:{
+        generateDisplay(element){
+          if(element.hasClass(this.display.show)){
+            element.set_class(this.display.none)
+            element.drop_class(this.display.show)
+            return
+          }
+
+          element.drop_class(this.display.none)
+          element.set_class(this.display.show)
+        },
+
+        clearSearchFull(element,change=true){
+          change?this.generateDisplay(element): '';
+          element.value = '';
+          
+          delete element.child.options_search
+        },
+
         emitFunction(methodName, domEvent,data) {
           this.$emit("e_function",methodName,domEvent,data)
         }
