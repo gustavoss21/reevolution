@@ -131,6 +131,16 @@ export default {
         this.request
           .post("/event", data_v, { accept: "application/json" })
           .then((response) => {
+
+            if(event !== 'null'){
+              data_v.forEach(el => {
+                ele.child.main.forEach(input =>{
+                  input.value = '';
+                })
+              })
+              return;
+
+            };
             //collapse
             let el = document.querySelector("#block-add");
             el.className = ins_element.class;

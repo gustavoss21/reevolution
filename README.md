@@ -1,19 +1,3 @@
-- commit
-models(theme):attributes
-   description::type
-   name::type
-
-
-
-this.element
-   .set_child("btn_main")
-   .set_label("Fechar")
-   .set_type("button")
-   .set_class("btn btn-secondary")
-   .set_action("close");
-
-criar o emit no inputSearch
-
 ## next
 
 apresetar error ou success
@@ -21,19 +5,21 @@ apresetar error ou success
 se nao comprir com os dias o score aumentar
 e o proveitamento abaixa
 
+tema do topico tem que ser a terceira no form,
+pois, caso contrario pode esquecer qual era o
+topico 
+
 colocar a opçoa de colocar evento temporario
 
-input nivel deve tem um limite
+quando for o ultimo ou unico model form, apresentar o stap icon com
+um destaque em vermelho em caso de erros
 
-no modal se começar a inserir em um form diferente do 1 da uma avaria, e tem que clicar mais vezes para eviar os formas,mesmo que esteja tudo certo
-
-na pesquisa de eventos theme->topics,
-adicionar um 
 quando houver uma erro em um input resques, aparecera um error, na hora de corrigir as options aparecera abaixo do error
 
-adicionar um butao para todos os staps
+eu estava criando um topico de assunto novo, me deparei
+com a pergunta "estuda o assunto a quanto tempo", sendo,
+que tinha acabado de marcar a opção "nao comecei a estuar"
 
-fazer com que o model feche o createtheme
 aproveitamento da semana 
 mostra a quantidade estudada;
 maior pontuaçao Q3 50% M | 
@@ -41,18 +27,17 @@ mais tempo sem estudo Q3 25% T |
 mais importante Q3 25% I
 M+T+I = 100%
 
-
-
 novo evento iniciado: 
 semana passa SP
 semana atual SA
 EVOLUÇÃO DA SEMANA
 exe: sp - SA = AP%
 
-gerar os dados dinamicamente sobre prioridade, status, aprovetamento, ...
-
 - verificar quais dados realmente precisa nos topicos home
 - verificar se os dados apresentados no home-side estão correstos
+
+definir um campo chadmado "nivel minimo"
+label: qual nivel minimo eu preciso atingir no assunto?
 
 no home mostrar em destaque apenas uma tarefa, em seguida
 mostrar as categorias já definidas talves de forma compactar
@@ -89,7 +74,29 @@ $tC = (new ThemeModel($data))->find($data);
         $theme = ConsultService::getThemefullData($tC[0]);
 
 
-## documentation
+## documentatio
+# NAVEGAÇÃO
+   ### acompanhamento
+      * visao geral
+      * search
+      * categorias
+      * evoluçao
+      * comparação entre eventos
+      * comparação do mesmo evento em relação com o tempo
+   ### aprofundamento
+      * aprofundamento
+      * evento específico(salvo em cache do navegador)
+      * relacionados
+   ### cronograma
+      * estagions urgentes
+      * topicos urgentes
+      * revisao
+      * temas urgentes
+      * categorias urgentes
+      
+      * porcentagem de aproveitamento
+      - urgencia pode ser definida por algum parametro, tempo, dominio, score
+   ### cronograma
 ### flashcard
 os flashcard são responsaveis por criar uma descrição
 funcional e dinâmica, pois, podemos criar relacionamento

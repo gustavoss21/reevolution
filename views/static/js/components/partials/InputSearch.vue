@@ -73,7 +73,7 @@
         <div class="card-body">
           <!-- <h5 class="card-title">{{ data.get_child('main',0).label }}</h5> -->
           <form
-            @submit.prevent="e=>emitFunction(data.get_child('main',0).action,data,e)"
+            @submit.prevent="e=>emitFunction(data.get_child('main',0).action,data,'null')"
           >
             <template v-for="input in data.get_child('main',0).get_child()">
               <component v-bind:is="listComponents[input.type]" :data="input"></component>

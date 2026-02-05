@@ -104,7 +104,7 @@ class ChangeData
 
             $instanceClass->setDataDefault();
             $instanceClass->columns()->insert();
-            $status[$table] = $instanceClass->dbLog['status'];
+            $status[] = $instanceClass->log;
         }
         
         return $status;

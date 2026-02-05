@@ -21,12 +21,14 @@ class ThemeController extends Controller
     public function create($data)
     {   
         $data_formated = $this->serviceGenerate->formatValueKey($data);
-        return $this->respond($this->serviceGenerate->createTheme($data_formated));   
+        $creationResult = $this->serviceGenerate->createTheme($data_formated);
+        return $this->respond($creationResult);   
     }
 
     public function createEvent($data)
     {
-        return $this->respond($this->serviceGenerate->createEvent($data));
+        $creationResult = $this->serviceGenerate->createEvent($data);
+        return $this->respond($creationResult);
     }
 
     public function getAllThemas()

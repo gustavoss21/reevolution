@@ -58,6 +58,7 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'learning_stage_op_r'   => 'Revisar',
         'domain_level'          => 'Nível de Domínio',
         'domain_level_op_ini'   => 'Iniciante',
+        'domain_level_op_Pe'   => 'Pegando o jeito',
         'domain_level_op_inter' => 'Intermediário',
         'domain_level_op_av'    => 'Avançado',
         'priority'              => 'Prioridade',
@@ -68,10 +69,18 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
 
     ];
 
+    const PRIORITY = [
+        'priority_op_1' => 1,
+        'priority_op_2' => 2,
+        'priority_op_3' => 3,
+        'priority_op_4' => 4
+    ];
+
     const DOMAIN_LEVEL = [
-        'domain_level_op_ini'=>1,
-        'domain_level_op_inter'=>2,
-        'domain_level_op_av'=>3
+        'domain_level_op_ini'   => 1,
+        'domain_level_op_Pe'   => 2,
+        'domain_level_op_inter' => 3,
+        'domain_level_op_av'    => 4
     ];
 
     const MORE_ADVANCED = [

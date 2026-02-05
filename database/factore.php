@@ -99,12 +99,12 @@ class Factore
         print_r($mT);
     }
 }
-  // DROP ALL DATA
-  // (new Factore())->factoreDropAll(new StageModel);
-  // (new Factore())->factoreDropAll(new ThemeModel);
-  // (new Factore())->factoreDropAll(new TopicModel);
-  // (new Factore())->factoreDropAll(new FontModel);
-  // (new Factore())->factoreDropAll(new TagModel);
+    // DROP ALL DATA
+    // (new Factore())->factoreDropAll(new StageModel);
+    // (new Factore())->factoreDropAll(new ThemeModel);
+    // (new Factore())->factoreDropAll(new TopicModel);
+    // (new Factore())->factoreDropAll(new FontModel);
+    // (new Factore())->factoreDropAll(new TagModel);
 
   // for ($x = 0; $x < 20; $x++) {
   //    $class = new Factore;
@@ -119,4 +119,4 @@ class Factore
 //     (new Factore)->factoreStage();
 // }
 
-  // (new Factore)->teste();
+      // (new Factore)->teste();
