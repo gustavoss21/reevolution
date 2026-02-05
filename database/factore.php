@@ -11,6 +11,7 @@ use Models\StageModel;
 use Models\ThemeModel;
 use Models\TopicModel;
 use Models\FontModel;
+use Models\TagModel;
 use Models\ColumnTrait;
 use Services\ConsultService;
 
@@ -70,7 +71,19 @@ class Factore
         $stage->insert();
     }
 
-    function factoreDropAll(StageModel $model)
+    function factoreTag()
+    {
+
+        $faker = Factory::create('pt_BR');
+        $name = $faker->name();
+        $mT = (new TopicModel())->columns(self::col('id'))->all();
+        $range_id = array_map(fn($data) => $data['id'], $mT);
+        $data = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(-1, 1), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4)];
+        $stage = new StageModel($data);
+        $stage->insert();
+    }
+
+    function factoreDropAll($model)
     {
         $model->delete(false, true);
     }
@@ -86,13 +99,19 @@ class Factore
         print_r($mT);
     }
 }
-// Fatctore::factoreDropAll(new StageModel);
+  // DROP ALL DATA
+  // (new Factore())->factoreDropAll(new StageModel);
+  // (new Factore())->factoreDropAll(new ThemeModel);
+  // (new Factore())->factoreDropAll(new TopicModel);
+  // (new Factore())->factoreDropAll(new FontModel);
+  // (new Factore())->factoreDropAll(new TagModel);
 
-// for ($x = 0; $x < 20; $x++) {
-//    $class = new Factore;
-//    $class->factoreStage();
-//     $class->factoreTopic();
-//     $class->factoreFont();
+  // for ($x = 0; $x < 20; $x++) {
+  //    $class = new Factore;
+  //    $class->factoreStage();
+  //     $class->factoreTopic();
+  //     $class->factoreFont();
+  //     $class->factoreFont();
 
 // }
 
@@ -100,4 +119,4 @@ class Factore
 //     (new Factore)->factoreStage();
 // }
 
-(new Factore)->teste();
+  // (new Factore)->teste();
