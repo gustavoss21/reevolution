@@ -38,11 +38,11 @@
       class="list-group list-group-bg list-event-request scroll"
     >
       <li 
-        v-for="theme in data.get_child('options_search')"
-        :key="theme.id"
-        class="list-group-item"
-        aria-current="true"
-          @dblclick="emitFunction(theme.action,data,theme)"
+          v-for        = "theme in data.get_child('options_search')"
+        :key           = "theme.id"
+          class        = "list-group-item"
+          aria-current = "true"
+          @dblclick    = "emitFunction(theme.action,data,theme)"
       >
         {{ theme.name }}
         <template v-if             = "data.tag == 'event_name'">

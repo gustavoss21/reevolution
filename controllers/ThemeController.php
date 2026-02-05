@@ -101,7 +101,7 @@ class ThemeController extends Controller
     public function formEvent(){
         $topic = $this->service->getForm('topics');
         $data['topic'] = $topic;        
-        $data['stage'] = $this->service->getForm('stages');
+        $data['stage'] = $this->service->getForm('stages',['topic_id']);
         $data['theme_id_child'] = $this->service->getForm('themes');
         $data['tag_id_child'] = $this->service->getForm('tags');
         $data['topic_id_child'] = $topic;

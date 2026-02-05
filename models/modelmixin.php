@@ -243,10 +243,13 @@ class ModelMixin
         return $slug;
     }
 
-    public function getForm(){
+    public function getForm($without_columns = []){
         $columns_f = "";
+        
         foreach(static::$LABELS as $key => $_){
             if(!in_array($key,$this->columns))continue;
+            if(in_array($key, $without_columns))continue;
+
             $columns_f .= "'$key', ";
         };
         $columns_f = rtrim($columns_f, ', ');

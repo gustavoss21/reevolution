@@ -21,7 +21,7 @@ class TopicController extends Controller
     public function create($data)
     {   
         $data_formated = $this->serviceGenerate->formatValueKey($data);
-        // return $this->respond($this->serviceGenerate->create($data_formated));   
+        return $this->respond($this->serviceGenerate->createEvent($data_formated));   
     }
 
    

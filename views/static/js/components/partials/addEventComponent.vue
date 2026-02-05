@@ -2,14 +2,11 @@
   <hr />
 
   <div class="d-flex gap-3 justify-content-center">
-    <!-- <Button id_element="event" @button-click="get_form" data_bs_target="#add-event">
-    Adicionar Evento
-  </Button> -->
     <Button
-      v-for="key in Object.keys(labels_form)"
-      :id_element="key"
-      :data_bs_target="'#add-' + key"
-      :key="key"
+        v-for         = "key in Object.keys(labels_form)"
+      :id_element     = "key"
+      :data_bs_target = "'#add-' + key"
+      :key            = "key"
     >
       {{ labels_form[key] }}
     </Button>
@@ -53,10 +50,11 @@ export default {
           formInstacesList:{},
           instaceManageStap:null,
           url_form:{
-            event:'form-event',
-            theme:'form=theme',
-            topic:'form=topic',
-            tag:'form=tag',
+            event: 'form-event',
+            theme: 'form=theme',
+            topic: 'form=topic',
+            stage: 'form=stage',
+            tag  : 'form=tag',
           },
           labels_form: {
             event:'Novo Evento',
@@ -76,12 +74,12 @@ export default {
 
     methods:{
       handleF(methodName, domEvent,data){//data.name = topic
-        let name = (domEvent.name).replace(/_\w+$/,'')
-        this.instaceManageStap = this.formInstacesList[name];
+        // let name                   = (domEvent.name).replace(/_\w+$/,'')
+        let name                   = domEvent.parent_name;
+            this.instaceManageStap = this.formInstacesList[name];
         this[methodName](domEvent,data)
       },
-      nextStap(){
-        // if(this.instaceManageStap.stap_index === 4){
+      nextStap(){        
         this.instaceManageStap.getStap();
         this.instaceManageStap.next_stap();
       },
@@ -109,13 +107,9 @@ export default {
         await this.request
         .get(url)
         .then((response) => {
-          // let el = this.instaceManageStap.element.search_child(key_request)
-          //
-         
           let children = data.for_data(response,'set_child','options_search')
           data.for_children(children,'set_action','setEvent')
           data.for_children(children,'set_class','d-block')
-          // data.set_class('d-block')
 
         })
         .catch((error) => {
@@ -166,8 +160,6 @@ export default {
           instance.generateElement(response, name_form);
           console.log(instance);
           this.formInstacesList[name] = instance;
-
-          // button.target.click();
 
         });
       },

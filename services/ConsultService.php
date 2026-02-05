@@ -274,11 +274,11 @@ class ConsultService
         return $tabel_instance->where('id')->find();
     }
 
-    function getForm($table)
+    function getForm($table, $without_col = [])
     {
         $model = $this->tables[$table];
         $instance = new ($model)();
-        $data['data'] = $instance->getForm();
+        $data['data'] = $instance->getForm($without_col);
         //label
         $data['labelS'] = $model::$LABELS;
         return $data;

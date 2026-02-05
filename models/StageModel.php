@@ -45,21 +45,27 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
     ];
 
     public static $LABELS = [
-        'more_advanced' => 'Deveria estar mais avançado neste evento',
-        'more_advanced_op_yes' => 'Sim',
-        'more_advanced_op_no' => 'Não',
-        'topic_id' => 'Esta matéria tem como pré-requisito outros eventos, quais',
-        'description' => 'Topa digitar por voz, e explicar o que entende sobre o assunto',
-        'learning_stage' => 'Em qual estagio voce está, esta há',
-        'learning_op_stage_a' => 'Aprender a fazer',
-        'learning_op_stage_e' => 'Ter experiência Concreta',
-        'learning_op_stage_p' => 'Pensar e Criar Abstração',
-        'learning_op_stage_f' => 'Fazer Exercícios e Aplicar',
-        'domain_level' => 'Nível de Domínio',
-        'domain_op_level_ini' => 'Iniciante',
-        'domain_op_level_inter' => 'Intermediário',
-        'domain_op_level_av' => 'Avançado',
-        'priority' => 'Prioridade'
+        'more_advanced'         => 'Deveria estar mais avançado neste evento',
+        'more_advanced_op_yes'  => 'Sim',
+        'more_advanced_op_no'   => 'Não',
+        'topic_id'              => 'Esta matéria tem como pré-requisito outros eventos, quais',
+        'description'           => 'Topa digitar por voz, e explicar o que entende sobre o assunto',
+        'learning_stage'        => 'Em qual estagio voce está, esta há',
+        'learning_stage_op_a'   => 'Aprender a fazer',
+        'learning_stage_op_e'   => 'Ter experiência Concreta',
+        'learning_stage_op_p'   => 'Pensar e Criar Abstração',
+        'learning_stage_op_f'   => 'Fazer Exercícios e Aplicar',
+        'learning_stage_op_r'   => 'Revisar',
+        'domain_level'          => 'Nível de Domínio',
+        'domain_level_op_ini'   => 'Iniciante',
+        'domain_level_op_inter' => 'Intermediário',
+        'domain_level_op_av'    => 'Avançado',
+        'priority'              => 'Prioridade',
+        'priority_op_1'         => 'Baixa',
+        'priority_op_2'         => 'Média',
+        'priority_op_3'         => 'Alta',
+        'priority_op_4'         => 'Crítica'
+
     ];
 
     const DOMAIN_LEVEL = [

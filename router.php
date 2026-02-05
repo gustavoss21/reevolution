@@ -32,7 +32,7 @@ class Route extends RouterBase
             '/themes/{id}/topics' => 'TopicController@getTopicforTheme',
         ],
         'POST' => [
-            '/topics' => 'TopicController@create',
+            '/topic' => 'TopicController@create',
             '/theme' => 'ThemeController@create',
             '/event' => 'ThemeController@createEvent',
         ],

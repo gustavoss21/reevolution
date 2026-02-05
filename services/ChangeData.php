@@ -23,7 +23,9 @@ class ChangeData
         'tag' => TagModel::class
     ];
 
-
+      /**
+     * Format data keys by removing table prefixes
+     */
     public function formatValueKey($data){
         $tables = [
             'theme',
