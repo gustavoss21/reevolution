@@ -61,7 +61,7 @@ class TopicModel extends  ModelMixin
 
     const CAN_EXPLAIN = [
         'can_explain_op_no'=>0,
-        'can_ex;plain_op_yes'=>1
+        'can_explain_op_yes'=>1
     ];
 
     const STARTED_STUDY = [

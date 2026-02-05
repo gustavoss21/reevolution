@@ -19,5 +19,10 @@ class ThemeModel extends ModelMixin
         'update'=>['id'],
         'delete'=>['id']
     ];
+
+    public function setDataDefault()
+    {
+        $this->set('slug', $this->slug($this->get('name')));
+    }
     
 }

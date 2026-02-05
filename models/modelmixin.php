@@ -26,6 +26,7 @@ class ModelMixin
     protected $columnsRequired = [];
     protected $query;
     static $LABELS;
+    public $dbLog;
 
     function __construct($data = [])
     {
@@ -200,10 +201,12 @@ class ModelMixin
         }
         try {
             $stmt = $this->dbconection->prepare($scriptSql);
-            $stmt->execute($params); 
+            $stmt->execute($params);
+            $this->logDb('success');
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             error_log($e->getMessage());
+            $this->logDb('error',$e->getMessage());
             return false;
         }
     }
@@ -263,5 +266,14 @@ class ModelMixin
                   WHERE table_name = :table and COLUMN_NAME in ($columns_f);";
         // return $query;
         return $this->executeQuery($query,[':table'=> $this->table]);
+    }
+
+    private function logDb($status,$message=''){
+        $this->dbLog = [
+            'table'=>$this->table,
+            'status'=>$status,
+            'message'=>$message,
+            'timestamp'=>date('Y-m-d H:i:s')
+        ];
     }
 }

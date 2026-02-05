@@ -73,6 +73,7 @@ class ChangeData
     public function createEvent($data)
     {
         $table = null;
+        $status = [];
         
         foreach($data as $data_table){
 
@@ -84,18 +85,17 @@ class ChangeData
             $instanceClass = new $table();            
 
             $columns = $data_table['child']['main'];
-            $columns_for_table = [];
 
             foreach($columns as $column_data){
-                $value = $column_data['value'];
+                $value  = $column_data['value'];
                 $column = $column_data['id'];
+                
+                if(empty($value)) continue;
 
                 if ($column_data['type'] === 'radio') {
                     $constColumn = strtoupper($column);
                     $value = constant("$table::$constColumn")[$value];
                 }
-
-                // $columns_for_table[] = $this->col($column);
 
                 is_numeric($value) ? $value = (int)$value : $value;
 
@@ -104,9 +104,10 @@ class ChangeData
 
             $instanceClass->setDataDefault();
             $instanceClass->columns()->insert();
+            $status[$table] = $instanceClass->dbLog['status'];
         }
         
-        return true;
+        return $status;
 
     }
    

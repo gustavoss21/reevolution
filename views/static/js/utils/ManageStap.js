@@ -79,14 +79,15 @@ export class ManageStap {
 			name: "parent",
 			id: id.replace("add-", ""),
 		});
-		this.staps = [];
-		this.stap_nav = new Element({ name: "stap" });
-		this.stap_nav_index = 0;
-		this.data_children = {};
-		this.element_rest = [];
-		let all_data_form = this.filterRawData(data);
-		let element = null;
-		let form_labels = {};
+		    this.staps          = [];
+		    this.stap_nav       = new Element({ name: "stap" });
+		    this.stap_nav_index = 0;
+		    this.data_children  = {};
+		    this.element_rest   = [];
+		let all_data_form       = this.filterRawData(data);
+		let element             = null;
+		let form_labels         = {};
+		let lastKey = '';
 		this.id = id;
 
 		if (!all_data_form) return;
@@ -99,22 +100,24 @@ export class ManageStap {
 			this.setEvent(form_data, form_labels);
 
 			let element = this.createElement(key);
-			//set data from last element rest
+			
+			element = this.setElementData(form_data, form_labels, element);
+			  //set data from last element rest
 			if (this.element_rest.length > 0) {
-        		let [ form_data, form_labels ] = this.element_rest;
+				let [ form_data, form_labels ] = this.element_rest;
+				
 				this.setElementData(form_data, form_labels, element);
 				this.element_rest = [];
 			}
-			
-			element = this.setElementData(form_data, form_labels, element);
+
 		});
 
-		if (this.element_rest.length > 0) {
-			element = element ?? this.createElement(id);
+		// if (this.element_rest.length > 0) {
+		// 	element = element ?? this.createElement(id);
 
-			this.setElementData(this.element_rest, form_labels, element);
-			this.element_rest = [];
-		}
+		// 	this.setElementData(this.element_rest, form_labels, element);
+		// 	this.element_rest = [];
+		// }
 
 		this.navigate_to_stap();
 	}

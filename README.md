@@ -31,6 +31,7 @@ na pesquisa de eventos theme->topics,
 adicionar um 
 quando houver uma erro em um input resques, aparecera um error, na hora de corrigir as options aparecera abaixo do error
 
+adicionar um butao para todos os staps
 
 fazer com que o model feche o createtheme
 aproveitamento da semana 
