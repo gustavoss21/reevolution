@@ -2,16 +2,17 @@ import { Element } from "./Element.js";
 import dataType from "./dataType.js";
 import translation from "./transletion.js";
 export class ManageStap {
-	stap_index     = null;
-	element        = null;
+	stap_index = null;
+	element = null;
 	element_parent = new Element({ name: "parent" });
-	stap           = null;
-	staps          = [];
-	stap_nav       = new Element({ name: "stap" });
+	stap = null;
+	staps = [];
+	stap_nav = new Element({ name: "stap" });
 	stap_nav_index = 0;
-	data_children  = {};
-	element_rest   = [];
-	id             = "";
+	data_children = {};
+	element_rest = [];
+	id = "";
+	static elements_conditional = [];
 
 	getStap() {
 		let element = this.staps[this.stap_index];
@@ -79,15 +80,15 @@ export class ManageStap {
 			name: "parent",
 			id: id.replace("add-", ""),
 		});
-		    this.staps          = [];
-		    this.stap_nav       = new Element({ name: "stap" });
-		    this.stap_nav_index = 0;
-		    this.data_children  = {};
-		    this.element_rest   = [];
-		let all_data_form       = this.filterRawData(data);
-		let element             = null;
-		let form_labels         = {};
-		let lastKey = '';
+		this.staps = [];
+		this.stap_nav = new Element({ name: "stap" });
+		this.stap_nav_index = 0;
+		this.data_children = {};
+		this.element_rest = [];
+		let all_data_form = this.filterRawData(data);
+		let element = null;
+		let form_labels = {};
+		let lastKey = "";
 		this.id = id;
 
 		if (!all_data_form) return;
@@ -95,21 +96,24 @@ export class ManageStap {
 		all_data_form.forEach((key) => {
 			let form_data = data[key]["data"];
 			form_labels = data[key]["labelS"];
+			let data_condition = form_labels["_condition"];
 
 			//insert input by label
 			this.setEvent(form_data, form_labels);
-
 			let element = this.createElement(key);
-			
+
 			element = this.setElementData(form_data, form_labels, element);
-			  //set data from last element rest
+
+			if (data_condition)
+				this.setElementConditionalTrigger(element, data_condition);
+
+			//set data from last element rest
 			if (this.element_rest.length > 0) {
-				let [ form_data, form_labels ] = this.element_rest;
-				
+				let [form_data, form_labels] = this.element_rest;
+
 				this.setElementData(form_data, form_labels, element);
 				this.element_rest = [];
 			}
-
 		});
 
 		// if (this.element_rest.length > 0) {
@@ -196,7 +200,7 @@ export class ManageStap {
 
 			if (required_next_step) {
 				if (inputs_length - 1 <= index + 3) {
-					this.element_rest.push(form_data.slice(index+1));
+					this.element_rest.push(form_data.slice(index + 1));
 					this.element_rest.push(form_labels);
 					return element;
 				}
@@ -360,9 +364,9 @@ export class ManageStap {
 	}
 
 	setEvent(form_data, form_labels) {
-		if (!form_labels["event"]) return;
+		if (!form_labels["_event"]) return;
 
-		let data = form_labels["event"];
+		let data = form_labels["_event"];
 
 		data.forEach((form_full) => {
 			form_labels[form_full["COLUMN_NAME"]] = form_full["label"];
@@ -427,5 +431,28 @@ export class ManageStap {
 		);
 
 		this.setButton(el, true);
+	}
+
+	setElementConditionalTrigger(element, data) {
+		let [inputName, elTriggerName] = data["conditioner"].split(".");
+		let elementWithTrigger = element.search_child(elTriggerName);
+		let conditional = data["conditioned"];
+		if (!conditional) return;
+
+		// criar um gatilho
+
+		//set data for form_data with conditional
+	}
+
+	eventElementConditional(input, value) {
+		// get elemet conditined
+		// verificar se o valor bate com o esperado
+		//run function to create elements
+	}
+	// cria os elementos de fato
+	createElementConditional(form_data, form_labels) {
+		if (!form_labels["_conditional"]) return;
+
+		let data = form_labels["_conditional"];
 	}
 }

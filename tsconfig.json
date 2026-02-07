@@ -14,11 +14,11 @@
     "extendedDiagnostics": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution"          : "bundler",
     "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "jsx": "preserve",
+    "resolveJsonModule"         : true,
+    "noEmit"                    : true,
+    "jsx"                       : "preserve",
 
     /* Vue TypeScript Support */
     "baseUrl": ".",

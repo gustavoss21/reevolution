@@ -135,3 +135,14 @@ O que poderia ter feito para melhorar seu desempenho?
 
 Como você avalia seu desempenho neste evento
 
+
+## Scripts disponíveis - dev: 
+
+npm run dev - Inicia servidor de desenvolvimento
+npm run build - Build para produção
+npm run type-check - Verifica tipos TypeScript
+Próximos passos:
+Abra TYPESCRIPT_SETUP.md para guia completo de uso
+Utilize o <script setup lang="ts"> nos seus componentes
+Use o alias @/ para importar do diretório static
+Execute npm run type-check para validar tipos antes de fazer build
