@@ -26,21 +26,21 @@ Sua aplicação agora está configurada para usar Vue 3 com TypeScript!
 
 ```vue
 <template>
-  <div>
-    <h1>{{ title }}</h1>
-    <button @click="handleClick">Clique</button>
-  </div>
+	<div>
+		<h1>{{ title }}</h1>
+		<button @click="handleClick">Clique</button>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+	import { ref } from "vue";
 
-const title = ref<string>('Olá TypeScript!')
-const count = ref<number>(0)
+	const title = ref<string>("Olá TypeScript!");
+	const count = ref<number>(0);
 
-const handleClick = (): void => {
-  count.value++
-}
+	const handleClick = (): void => {
+		count.value++;
+	};
 </script>
 ```
 
@@ -106,40 +106,40 @@ export default defineComponent({
 
 ```typescript
 interface Props {
-  title: string
-  count?: number
-  items: string[]
+	title: string;
+	count?: number;
+	items: string[];
 }
 
 interface Emits {
-  (e: 'update:count', value: number): void
-  (e: 'delete', id: string): void
+	(e: "update:count", value: number): void;
+	(e: "delete", id: string): void;
 }
 
-defineProps<Props>()
-const emit = defineEmits<Emits>()
+defineProps<Props>();
+const emit = defineEmits<Emits>();
 ```
 
 #### 2. **Composables Tipados**
 
 ```typescript
 // composables/useCounter.ts
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue";
 
 export function useCounter(initialValue: number = 0) {
-  const count = ref(initialValue)
-  
-  const increment = (): void => {
-    count.value++
-  }
-  
-  const decrement = (): void => {
-    count.value--
-  }
-  
-  const doubled = computed(() => count.value * 2)
-  
-  return { count, increment, decrement, doubled }
+	const count = ref(initialValue);
+
+	const increment = (): void => {
+		count.value++;
+	};
+
+	const decrement = (): void => {
+		count.value--;
+	};
+
+	const doubled = computed(() => count.value * 2);
+
+	return { count, increment, decrement, doubled };
 }
 ```
 
@@ -157,10 +157,10 @@ Você pode usar o alias `@` para imports:
 
 ```typescript
 // Em vez de:
-import Component from '../../../components/MyComponent.vue'
+import Component from "../../../components/MyComponent.vue";
 
 // Use:
-import Component from '@/components/MyComponent.vue'
+import Component from "@/components/MyComponent.vue";
 ```
 
 ### Próximos Passos

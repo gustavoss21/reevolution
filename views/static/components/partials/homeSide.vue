@@ -39,6 +39,7 @@
     </div>
 </template>
 <script>
+    import "https://cdn.jsdelivr.net/npm/chart.js"
     import ChartsComponent  from "./chartsComponent.vue";
     export default {
         props: ['data'],

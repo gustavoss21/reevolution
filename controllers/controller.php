@@ -11,17 +11,25 @@ class Controller
     use \Config\Response;
     use GenerateColumn;
 
+
     // Common functionalities for all controllers can be added here
-    protected function respond($data, $status = 200)
+    protected function respond($data, $message='', $status = 200, $error = [])
     {
         http_response_code($status);
-        $this->json($data);
+        $response = [
+            'status'    => $status,
+            'data'      => $data,
+            'timestamp' => date('Y-m-d H:i:s'),
+            'message'   => $message,
+            'error' => $error
+        ];
+        $this->json($response);
         exit;
     }
 
-    protected function handleError($message, $status = 400)
+    protected function ResponseError($message, $errors = [], $status = 500)
     {
-        $this->respond(['error' => $message], $status);
+        $this->respond(null, $message, $status, $errors);
     }
 
     protected function getJsonInput()
@@ -98,24 +106,10 @@ class Controller
         $this->respond($response);
     }
 
-    protected function handleRequest($method, $handlers)
-    {
-        if (isset($handlers[$method]) && is_callable($handlers[$method])) {
-            try {
-                $handlers[$method]();
-            } catch (\Exception $e) {
-                $this->handleError($e->getMessage(), $e->getCode() ?: 400);
-            }
-        } else {
-            $this->handleError("Method not allowed", 405);
-        }
-    }
-
     protected function view($template, $data = [])
     {
         extract([$data, 'template'=>$template]);
         include __DIR__ . '/../views/ConstruitView.php';
     }
-
 
 }

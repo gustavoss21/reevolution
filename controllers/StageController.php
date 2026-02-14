@@ -3,9 +3,7 @@
 namespace Controllers;
 
 use Models\StageModel;
-use Models\TopicModel;
 use Controllers\Controller;
-use Models\ColumnEnum as Col;
 use Services\ConsultService;
 
 class StageController extends Controller

@@ -1,15 +1,16 @@
-import { Element } from "./Element.js";
-import dataType from "./dataType.js";
+import {Element} from "./Element.ts";
+import {DataType} from "./dataType.ts";
 import translation from "./transletion.js";
+import {DataAll, FormCore} from "@/utils/TypeElement.ts";
 export class ManageStap {
-	stap_index = null;
-	element = null;
-	element_parent = new Element({ name: "parent" });
-	stap = null;
+	stap_index: number = 0;
+	element?: Element;
+	element_parent = new Element({name: "parent"});
+	stap?: Element;
 	staps = [];
-	stap_nav = new Element({ name: "stap" });
+	stap_nav = new Element({name: "stap"});
 	stap_nav_index = 0;
-	data_children = {};
+	data_children: Record<string, DataAll> = {};
 	element_rest = [];
 	id = "";
 	static elements_conditional = [];
@@ -36,14 +37,15 @@ export class ManageStap {
 		this.navigate_to_stap(index, false);
 	}
 
-	jump_stap(index) {
+	jump_stap(index: number) {
 		this.navigate_to_stap(index, false);
 	}
 
-	setNav(newIndex, oldIndex, start = true) {
+	setNav(newIndex: number, oldIndex: number, start = true) {
 		this.stap_nav
 			.get_child("main", newIndex)
 			.set_class("nav-item-modal active-modal");
+
 		this.stap = this.stap_nav.get_child("main", newIndex);
 
 		if (oldIndex == newIndex && start) return;
@@ -67,7 +69,7 @@ export class ManageStap {
 		let index = this.stap_nav_index;
 		this.stap_nav_index += 1;
 		this.stap_nav
-			.set_child()
+			.create_child()
 			.set_name("stap")
 			.set_class("nav-item-modal")
 			.set_id(index)
@@ -75,19 +77,19 @@ export class ManageStap {
 			.input_error(this.stap_nav);
 	}
 
-	generateElement(data, id) {
+	generateElement(data: Record<string, DataAll>, id: string) {
 		this.element_parent = new Element({
 			name: "parent",
 			id: id.replace("add-", ""),
 		});
 		this.staps = [];
-		this.stap_nav = new Element({ name: "stap" });
+		this.stap_nav = new Element({name: "stap"});
 		this.stap_nav_index = 0;
 		this.data_children = {};
 		this.element_rest = [];
 		let all_data_form = this.filterRawData(data);
 		let element = null;
-		let form_labels = {};
+		let form_labels: Record<string, string>;
 		let lastKey = "";
 		this.id = id;
 
@@ -126,8 +128,9 @@ export class ManageStap {
 		this.navigate_to_stap();
 	}
 
-	filterRawData(data = []) {
+	filterRawData(data: Record<string, DataAll>) {
 		let data_keys = Object.keys(data);
+
 		return data_keys.filter((k) => {
 			let index = k.search("_child");
 
@@ -147,9 +150,14 @@ export class ManageStap {
 	 * @param {boolean} pagination -> template with pagination
 	 * @returns {Element} element is formated
 	 */
-	setElementData(form_data, form_labels, element, pagination = true) {
+	setElementData(
+		form_data: FormCore[],
+		form_labels: Record<string, string>,
+		element: Element,
+		pagination = true,
+	) {
 		let key_label_list = Object.keys(form_labels);
-		let inputs_length = form_data.length;
+		let inputs_length = form_data.length; // nao deveria ter um -1
 		let pathern_id = /.*_id$/;
 		let pathern_r = /.+_op_.+/;
 		let columns_radio = key_label_list.filter((val_d) => {
@@ -163,7 +171,7 @@ export class ManageStap {
 			let el = form_data[index];
 			let column_name = el.COLUMN_NAME;
 			let column_label = form_labels[column_name];
-			let column_type = dataType[el.DATA_TYPE];
+			let column_type = DataType[el.DATA_TYPE] ;
 			let pathern_radio = new RegExp(`${column_name}.+`);
 			let column_radio_filted = columns_radio.filter((v) =>
 				pathern_radio.test(v),
@@ -172,13 +180,13 @@ export class ManageStap {
 			if (!column_label) continue;
 
 			let element_c = element
-				.set_child()
+				.create_child()
 				.set_label(column_label)
 				.set_name(column_name)
 				.set_id(column_name)
 				.set_type(column_type)
 				.set_value(el.COLUMN_DEFAULT)
-				.set_parent_name(element.name)
+				.set_parent_name(element.name || "")
 				.set_require(el.IS_NULLABLE);
 			element_c.tag = column_name;
 
@@ -191,7 +199,7 @@ export class ManageStap {
 				this.elementSearch(element_c, form_labels, column_name);
 			}
 
-			let element_child_legth = element.get_child().length;
+			let element_child_legth = element.get_all_child().length;
 			let required_next_step =
 				pagination &&
 				element_child_legth >= 4 &&
@@ -200,41 +208,46 @@ export class ManageStap {
 
 			if (required_next_step) {
 				if (inputs_length - 1 <= index + 3) {
-					this.element_rest.push(form_data.slice(index + 1));
-					this.element_rest.push(form_labels);
+					this.element_rest.push(form_data.slice(index + 1) as never);
+					this.element_rest.push(form_labels as never);
 					return element;
 				}
-				element = this.createElement(element.name);
+				element = this.createElement(element.name as string);
 			}
 		}
 
 		return element;
 	}
-	createElement(el_name, is_active = false, button_submit = null, data = {}) {
+	createElement(
+		el_name: string,
+		is_active = false,
+		button_submit = undefined,
+		data = {},
+	) {
 		let element = this.element_parent
-			.set_child("main", data)
+			.create_child("main", data)
 			.set_id(this.id)
 			.set_action("create")
-			.set_parent_name(this.element_parent.id);
+			.set_parent_name(this.element_parent.id as string);
 
-		this.staps.push(element);
+		this.staps.push(element as never);
 		this.setButton(element, button_submit);
 		this.createStpas(is_active);
 		element.set_name(el_name);
 		return element;
 	}
-	setButton(element, submit = false) {
+	setButton(element: Element, submit = false) {
 		let button = element.get_child("btn_main", 1);
 		if (!button) {
 			let btn_closed = element
-				.set_child("btn_main")
+				.create_child("btn_main")
 				.set_label("Fechar")
 				.set_type("button")
 				.set_class("btn btn-secondary")
 				.set_action("close");
 
 			button = element
-				.set_child("btn_main")
+				.create_child("btn_main")
 				.set_label("Próximo")
 				.set_type("submit")
 				.set_name("submit")
@@ -244,7 +257,7 @@ export class ManageStap {
 		}
 
 		if (submit) {
-			let children = element.get_child("btn_main");
+			let children = element.get_all_child("btn_main");
 			element.for_children(children, "set_dismiss", true);
 			button.set_label("Criar").set_action("criar");
 		}
@@ -262,11 +275,11 @@ export class ManageStap {
 		this.setElement();
 
 		if (!this.stap_nav.has_error_child(1)) {
-			this.setButton(this.element, true);
+			this.setButton(this.element as Element, true);
 		}
 	}
 
-	re_index_description(data, index) {
+	re_index_description(data: FormCore[], index: number) {
 		if (!data[index] || !(data[index].DATA_TYPE === "text")) return data;
 		let index_ele = index + 1;
 		let division_result = index_ele / 4;
@@ -278,7 +291,7 @@ export class ManageStap {
 
 		if (Number.isInteger(division_result)) return data;
 
-		let division_int = Number.parseInt(division_result);
+		let division_int = Number.parseInt(String(division_result));
 		let division_rest = index_ele % 4;
 		let division_rest_for_int = 4 - division_rest;
 		let new_index =
@@ -287,7 +300,7 @@ export class ManageStap {
 		return this.re_index_data(data, new_index, index);
 	}
 
-	re_index_data(data, new_i, old_id) {
+	re_index_data(data: FormCore[], new_i: number, old_id: number) {
 		if (!data[new_i]) return data;
 		if (new_i == old_id) return data;
 
@@ -298,7 +311,7 @@ export class ManageStap {
 		return data;
 	}
 
-	re_index_title(data) {
+	re_index_title(data: FormCore[]) {
 		let index = data.findIndex((column) => column.COLUMN_NAME === "name");
 		if (index == -1) return data;
 
@@ -306,12 +319,12 @@ export class ManageStap {
 	}
 
 	is_invalid() {
-		let element_data = this.element;
-		let children = element_data.get_child();
+		let element_data = this.element as Element;
+		let children = element_data.get_all_child();
 		let is_invalid = false;
 		children.forEach((child) => {
 			let value = child.value;
-			let name = child.name;
+			let name = <string>child.name;
 
 			if (!value && child.require) {
 				child.input_error(element_data);
@@ -329,21 +342,21 @@ export class ManageStap {
 
 	set_data_form() {
 		this.element_parent.child["form_data"] = [];
-		let children = this.element_parent.get_child();
+		let children = this.element_parent.get_all_child();
 
 		children.forEach((parent) => {
 			let search_parent = this.element_parent.search_child(
-				parent.name,
+				parent.name as string,
 				"form_data",
 			);
 
 			if (!search_parent) {
 				search_parent = this.element_parent
-					.set_child("form_data")
-					.set_name(parent.name);
+					.create_child("form_data")
+					.set_name(parent.name as string);
 			}
 
-			let children = parent.get_child();
+			let children = parent.get_all_child();
 
 			children.forEach((element) => {
 				this.set_input_data_form(search_parent, element);
@@ -351,45 +364,45 @@ export class ManageStap {
 		});
 	}
 
-	set_input_data_form(parent, element) {
-		let child = parent.set_child("main", element);
+	set_input_data_form(parent: Element, element: Element) {
+		let child = parent.create_child("main", element);
 
 		if (element.type == "request") {
 			let new_child = element.get_child("id_hidden", 0);
 			child.set_value(new_child.value);
-			child.set_id(new_child.id);
+			child.set_id(new_child.id as string);
 		}
 
 		return child;
 	}
 
-	setEvent(form_data, form_labels) {
+	setEvent(form_data: FormCore[], form_labels: Record<string, Object>) {
 		if (!form_labels["_event"]) return;
 
-		let data = form_labels["_event"];
+		let data = form_labels["_event"] as FormCore[];
 
 		data.forEach((form_full) => {
 			form_labels[form_full["COLUMN_NAME"]] = form_full["label"];
-			delete form_full["label"];
+			form_full["label"] = '';
 			form_full["tag"] = true;
 			form_data.push(form_full);
 		});
 	}
 
-	elementRadio(element_c, columns_radio, form_labels) {
+	elementRadio(element_c:Element, columns_radio:string[], form_labels: Record<string, string>) {
 		element_c.set_type("radio");
 
 		for (let label_key of columns_radio) {
 			element_c
-				.set_child()
+				.create_child()
 				.set_label(form_labels[label_key])
 				.set_value(label_key)
 				.set_id(label_key)
 				.set_name(label_key)
-				.set_parent_name(element_c.parent_name);
+				.set_parent_name(element_c.parent_name as string);
 		}
 	}
-	elementSearch(element_c, form_labels, column_name) {
+	elementSearch(element_c: Element, form_labels: Record<string, string>, column_name: string) {
 		let name_base = column_name.replace(/(.+)_id$/, "$1");
 		let data_child = this.data_children[column_name];
 
@@ -401,7 +414,7 @@ export class ManageStap {
 			.set_placeholder("escreva e selecione o ...")
 			.set_type("request")
 
-			.set_child("id_hidden")
+			.create_child("id_hidden")
 			.set_name(column_name)
 			.set_id(column_name)
 			.set_parameter("hidden")
@@ -417,7 +430,7 @@ export class ManageStap {
 
 		let title = "criar " + form_labels[column_name];
 		let form_event_create = element_c
-			.set_child()
+			.create_child()
 			.set_label(title)
 			.set_action("create")
 			// .set_type("collapse")
@@ -433,7 +446,7 @@ export class ManageStap {
 		this.setButton(el, true);
 	}
 
-	setElementConditionalTrigger(element, data) {
+	setElementConditionalTrigger(element: Element, data: any) {
 		let [inputName, elTriggerName] = data["conditioner"].split(".");
 		let elementWithTrigger = element.search_child(elTriggerName);
 		let conditional = data["conditioned"];
@@ -444,13 +457,13 @@ export class ManageStap {
 		//set data for form_data with conditional
 	}
 
-	eventElementConditional(input, value) {
+	eventElementConditional(input: Element, value: any) {
 		// get elemet conditined
 		// verificar se o valor bate com o esperado
 		//run function to create elements
 	}
 	// cria os elementos de fato
-	createElementConditional(form_data, form_labels) {
+	createElementConditional(form_data: FormCore[], form_labels: Record<string, Object>) {
 		if (!form_labels["_conditional"]) return;
 
 		let data = form_labels["_conditional"];

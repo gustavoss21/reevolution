@@ -18,7 +18,7 @@
 
     /<?php echo $content; ?>
 
-    <script type="module" src="http://localhost:5173/views/static/js/main.js"></script>
+    <script type="module" src="http://localhost:5173/views/static/main.ts"></script>
     <?php echo implode('\n', STATIC_LINKS['end']) ?>
 </body>
 

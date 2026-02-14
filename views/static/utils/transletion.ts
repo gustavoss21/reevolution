@@ -1,5 +1,4 @@
 export default {
-  description: "Descrição",
   name: "title",
   actived: "Estar ativo",
   can_explain_op: "Consegue explicar o assunto",
@@ -17,9 +16,6 @@ export default {
   topic:'Topico',
   revision:'Revisão',
   font:'Fonte',
-  priority_op_low: "Baixa",
-  priority_op_low: "Baixa",
-  priority_op_low: "Baixa",
   priority_op_low: "Baixa",
   description:'Em seu dispositivo, ative o digitar por voz e fale sobre o assunto',
 };

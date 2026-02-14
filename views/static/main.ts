@@ -1,6 +1,7 @@
-import { createApp } from 'vue'
-import type { App } from 'vue'
-import ExampleComponent from './components/ExampleComponent.vue'
+import { createApp } from "vue";
+import type { App } from "vue";
+import HomeComponent from "@/components/homeComponent.vue";
 
-const app: App = createApp(ExampleComponent)
-app.mount('#app')
+
+const app: App = createApp(HomeComponent);
+app.mount("#app");

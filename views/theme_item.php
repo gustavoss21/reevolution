@@ -2,19 +2,6 @@
 // include layout file
 $layout = __DIR__ . '/layout/index.php';
 $title = "ANALISE";
-$statics = [
-    'top' => [
-        'style' => [
-            'style.css'
-        ],
-        'external' => ['<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>']
-    ],
-    'end' => [
-        'script' => [
-            'script.js'
-        ]
-    ]
-];
 ?>
 
 <main class="container">
