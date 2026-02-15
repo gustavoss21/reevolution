@@ -6,7 +6,7 @@
 </template>
 <script>
     import "https://cdn.jsdelivr.net/npm/chart.js";
-    import {TypeDataChart} from "@/js/utils/type_data_chart.js";
+    import {TypeDataChart} from "@/utils/type_data_chart.js";
 
     // Chart.register(...registerables);
 

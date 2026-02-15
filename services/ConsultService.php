@@ -140,13 +140,9 @@ class ConsultService
         $last_study_date = $event_without[0]['without_study'];
         $time_without_study = '';
         // calcula diferença entre agora e a data retornada (em dias ou horas)
-        if (empty($last_study_date)) {
-            return 'dados indisponiveis';
-        }
-
         $timestamp = strtotime($last_study_date);
-        if ($timestamp === false) {
-            return 'dados indisponiveis';
+        if ($timestamp === false && empty($last_study_date)) {
+            return 'Vazio';
         }
 
         $now = time();

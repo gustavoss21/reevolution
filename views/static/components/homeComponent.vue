@@ -159,18 +159,24 @@
 				</div>
 			</div>
 
-			<!-- <HomeSide :data="data"></HomeSide> -->
+			<HomeSide :data="data"></HomeSide>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-	// import HomeSide from "./partials/homeSide.vue";
+	import HomeSide from "./partials/homeSide.vue";
 	import AddEventComponent from "./partials/addEventComponent.vue";
 	import {ApiClient} from "@/utils/request.ts";
-	import {EventType, PriorityEvent, WithoutStudyEvent} from "@/interface/EventInterface.ts";
+	import {
+		EventType,
+		PriorityEvent,
+		WithoutStudyEvent,
+	} from "@/interface/EventInterface.ts";
 	import "@/css/style.css";
 	import "@/css/evento.css";
+
+	import {DataStatistic} from "@/utils/HomeType.ts";
 
 	export default {
 		data() {
@@ -179,102 +185,92 @@
 				timeline: [] as EventType[],
 				more_time_without_study_event: [] as WithoutStudyEvent[],
 				more_priority_events: [] as PriorityEvent[],
-				data: {},
+				data: {} as DataStatistic,
 			};
 		},
 		created() {
-		  this.request
-		    .get("/timeline")
-		    .then((response) => {
-		      this.timeline = response.data as EventType[];
-		    })
-		    .catch((error) => {
-		      console.error("Error fetching timeline:", error);
-						});
-					
+			this.request
+				.get("/timeline")
+				.then((response) => {
+					this.timeline = response.data as EventType[];
+				})
+				.catch((error) => {
+					console.error("Error fetching timeline:", error);
+				});
 
-		//   this.request
-		//     .get("/status-averange")
-		//     .then((response) => {
-		//       this.data.media_averange = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching media_averange:", error);
-		//     });
+			this.request
+				.get("/status-averange")
+				.then((response) => {
+					this.data.media_averange = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching media_averange:", error);
+				});
 
-		//   this.request
-		//     .get("/time-without-study")
-		//     .then((response) => {
-		//       this.data.time_without_study = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching time_without_study:", error);
-		//     });
+			this.request
+				.get("/time-without-study")
+				.then((response) => {
+					this.data.time_without_study = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching time_without_study:", error);
+				});
 
-		//   this.request
-		//     .get("/count-events-weekly")
-		//     .then((response) => {
-		//       this.data.count_events_weekly = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching count_events_weekly:", error);
-		//     });
+			this.request
+				.get("/count-events-weekly")
+				.then((response) => {
+					this.data.count_events_weekly = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching count_events_weekly:", error);
+				});
 
-		//   this.request
-		//     .get("/averange-time-without-study")
-		//     .then((response) => {
-		//       this.data.averange_time_without_study = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching averange_time_without_study:", error);
-		//     });
+			this.request
+				.get("/averange-time-without-study")
+				.then((response) => {
+					this.data.averange_time_without_study = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching averange_time_without_study:", error);
+				});
 
-		//   this.request
-		//     .get("/date-time-without-study")
-		//     .then((response) => {
-		//       this.data.more_time_without_study = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching averange_time_without_study:", error);
-		//     });
+			this.request
+				.get("/date-time-without-study")
+				.then((response) => {
+					this.data.more_time_without_study = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching more_time_without_study:", error);
+				});
 
-		//   this.request
-		//     .get("/date-time-without-study")
-		//     .then((response) => {
-		//       this.more_time_without_study = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching more_time_without_study:", error);
-		//     });
+			this.request
+				.get("/more-priority-events")
+				.then((response) => {
+					this.more_priority_events = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching more_priority_events:", error);
+				});
 
-		//   this.request
-		//     .get("/more-priority-events")
-		//     .then((response) => {
-		//       this.more_priority_events = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching more_priority_events:", error);
-		//     });
+			this.request
+				.get("/more-time-without-study-event")
+				.then((response) => {
+					this.more_time_without_study_event = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching more_time_without_study_event:", error);
+				});
 
-		//   this.request
-		//     .get("/more-time-without-study-event")
-		//     .then((response) => {
-		//       this.more_time_without_study_event = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching more_time_without_study_event:", error);
-		//     });
-
-		//   this.request
-		//     .get("/total-quantity-each-tatus")
-		//     .then((response) => {
-		//       this.data.total_quantity_each_tatus = response;
-		//     })
-		//     .catch((error) => {
-		//       console.error("Error fetching total-quantity-each-tatus:", error);
-		//     });
+			this.request
+				.get("/total-quantity-each-tatus")
+				.then((response) => {
+					this.data.total_quantity_each_tatus = response.data;
+				})
+				.catch((error) => {
+					console.error("Error fetching total-quantity-each-tatus:", error);
+				});
 		},
 
-		components: { AddEventComponent }//HomeSide, 
-	}
+		components: {AddEventComponent, HomeSide}, //
+	};
 </script>

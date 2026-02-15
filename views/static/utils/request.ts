@@ -1,4 +1,4 @@
-import {ResponseDataType} from "@/utils/RequestType.ts";
+import {ResponseDataType} from "@/utils/HomeType";
 
 export class ApiClient {
 	baseURL: string;
@@ -25,7 +25,6 @@ export class ApiClient {
 
 		try {
 			const response = await fetch(`${this.baseURL}${endpoint}`, options);
-			console.error(response);
 			if (!response.ok) {
 				throw new Error(`Erro ${response.status}: ${response.statusText}`);
 			}
