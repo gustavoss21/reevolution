@@ -39,6 +39,7 @@
 	import {Element} from "@/utils/Element.ts";
 	import {ApiClient} from "@/utils/request.js";
 	import {DataAll, FormCore} from "@/utils/TypeElement.ts";
+	import {ResponseDataType} from "@/utils/HomeType.ts";
 
 	type AllowedMethods = "nextStap" | "create";
 
@@ -125,9 +126,9 @@
 				// Agora o DOM está atualizado
 				await this.request
 					.get(url)
-					.then((response: any) => {
+					.then((response: ResponseDataType) => {
 						let children = data.for_data(
-							response,
+							response.data,
 							"create_child",
 							"options_search",
 						);
@@ -155,7 +156,7 @@
 
 				this.request
 					.post("/event", data_v, {accept: "application/json"})
-					.then((response: any) => {
+					.then((response: ResponseDataType) => {
 						if (typeof event !== null) {
 							data_v.forEach((el) => {
 								el.child.main.forEach((input) => {
@@ -172,7 +173,7 @@
 						}
 
 						//set value request input
-						let data = response[0];
+						let data = response.data[0];
 
 						if (typeof data === null) return;
 						if (typeof data.name === null) return;
@@ -194,18 +195,19 @@
 				inst_el.child["options_search"] = [];
 			},
 			get_form(name: string, args: any = null) {
-				if (!this.url_form.hasOwnProperty("name")) return;
+				if (!this.url_form.hasOwnProperty(name)) return;
 
 				let uri = this.url_form[name];
 				let url = uri.search("=") == -1 ? uri : "form?" + uri;
 
-				this.request.get("/" + url).then((response:any ) => {
+				this.request.get("/" + url).then((response:ResponseDataType) => {
 					let name_form = "add-" + name;
 
 					let instance = new ManageStap();
-					instance.generateElement(response as Record<string, DataAll>, name_form);
-					console.log(instance);
+					instance.generateElement(response.data, name_form);
 					this.formInstacesList[name] = instance;
+					console.log(this.formInstacesList)
+
 				});
 			},
 

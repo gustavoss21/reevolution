@@ -119,13 +119,14 @@ export class Element implements ElementInterface {
 
 	create_child(block_name = "main", data: Element|Object ={}) {
 		// this.child = new Element({parent:this});
+		let child: Element = new Element(data);
 
-		if (!Element.hasOwnProperty(block_name)) {
-			this.child[block_name] = [new Element()];
+		if (!Object.hasOwn(this.child, block_name)) {
+			this.child[block_name] = [];
 		}
 
-		let index = this.child[block_name].push(new Element(data)) - 1;
-		let child = this.child[block_name][index];
+		this.child[block_name].push(child);
+
 		return child;
 	}
 
@@ -211,7 +212,6 @@ export class Element implements ElementInterface {
 
 		if (parent_element && this.name) {
 			parent_element._remove_message_parent(this.name);
-
 		}
 		return this;
 	}
@@ -276,8 +276,8 @@ export class Element implements ElementInterface {
 	get_child(block_name = "main", index:number, recorvere = false) {
 		if (recorvere) return Element._child as Element;
 
-		let children      = this.child;
-		let child:Element|undefined = undefined;
+		let children = this.child;
+		let child: Element | undefined = undefined;
 
 		if (!children.hasOwnProperty(block_name)) {
 			Element._child = undefined;
@@ -318,7 +318,6 @@ export class Element implements ElementInterface {
 	 * const cachedChild = element.get_child("main", null, true);
 	 */
 	get_all_child(block_name = "main") {
-
 		let children = this.child;
 
 		if (!children.hasOwnProperty(block_name)) {
@@ -334,7 +333,11 @@ export class Element implements ElementInterface {
 	 * @argument block_name - the block name
 	 * @returns Element:class child
 	 */
-	search_child(value_key:string, block_name = "main", by:keyof Element = "name") {
+	search_child(
+		value_key: string,
+		block_name = "main",
+		by: keyof Element = "name",
+	) {
 		if (!this.child.hasOwnProperty(block_name)) {
 			// this.element_error("Bloco '" + block_name + "' não existe.");
 			Element._child = undefined;
@@ -359,7 +362,11 @@ export class Element implements ElementInterface {
 	 * @param {string} [by="name"] received string, the default is 'name'
 	 * @returns {Element|false}
 	 */
-	hasChild(block_name = "main", value_key = "null", by:keyof Element = "name") {
+	hasChild(
+		block_name = "main",
+		value_key = "null",
+		by: keyof Element = "name",
+	) {
 		if (!this.child.hasOwnProperty(block_name)) {
 			// this.element_error("Bloco '" + block_name + "' não existe.");
 			return false;

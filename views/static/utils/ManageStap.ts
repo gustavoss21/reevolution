@@ -3,7 +3,7 @@ import {DataType} from "./dataType.ts";
 import translation from "./transletion.js";
 import {DataAll, FormCore} from "@/utils/TypeElement.ts";
 export class ManageStap {
-	stap_index: number = 0;
+	stap_index?: number = undefined;
 	element?: Element;
 	element_parent = new Element({name: "parent"});
 	stap?: Element;
@@ -16,7 +16,7 @@ export class ManageStap {
 	static elements_conditional = [];
 
 	getStap() {
-		let element = this.staps[this.stap_index];
+		let element = this.staps[this.stap_index as number];
 
 		if (!element) {
 			console.error("fun:getStap -> Elemento nao definido");
@@ -29,11 +29,11 @@ export class ManageStap {
 	}
 
 	setElement() {
-		this.element = this.staps[this.stap_index];
+		this.element = this.staps[this.stap_index as number];
 	}
 
 	next_stap() {
-		let index = this.stap_index + 1;
+		let index = this.stap_index as number + 1;
 		this.navigate_to_stap(index, false);
 	}
 
@@ -103,7 +103,6 @@ export class ManageStap {
 			//insert input by label
 			this.setEvent(form_data, form_labels);
 			let element = this.createElement(key);
-
 			element = this.setElementData(form_data, form_labels, element);
 
 			if (data_condition)
@@ -117,13 +116,6 @@ export class ManageStap {
 				this.element_rest = [];
 			}
 		});
-
-		// if (this.element_rest.length > 0) {
-		// 	element = element ?? this.createElement(id);
-
-		// 	this.setElementData(this.element_rest, form_labels, element);
-		// 	this.element_rest = [];
-		// }
 
 		this.navigate_to_stap();
 	}
@@ -267,7 +259,7 @@ export class ManageStap {
 		if (index < 0 || index >= this.staps.length) {
 			index = 0;
 		}
-		if (this.stap_index == null) {
+		if (this.stap_index == undefined) {
 			this.stap_index = index;
 		}
 		this.setNav(index, this.stap_index, start);
@@ -322,20 +314,22 @@ export class ManageStap {
 		let element_data = this.element as Element;
 		let children = element_data.get_all_child();
 		let is_invalid = false;
-		children.forEach((child) => {
-			let value = child.value;
-			let name = <string>child.name;
+		children.forEach(	
+			(child) => {
+				let value = child.value;
+				let name = <string>child.name;
 
-			if (!value && child.require) {
-				child.input_error(element_data);
-				is_invalid = true;
+				if(!value && child.require) {
+					child.input_error(element_data);
+					is_invalid = true;
+					this.element_parent._set_message_parent(name);
+					return;
+				}
+
+				child.success(element_data);
 				this.element_parent._set_message_parent(name);
-				return;
 			}
-
-			child.success(element_data);
-			this.element_parent._set_message_parent(name);
-		});
+		);
 
 		return is_invalid;
 	}
