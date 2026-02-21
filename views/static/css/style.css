@@ -1,16 +1,16 @@
 /* Reset some default browser styles */
 :root {
-  --block-header: aliceblue;
-  --background-primary: #55d3ff;
+  --block-header        : aliceblue;
+  --background-primary  : #55d3ff;
   --background-secondary: #ff6300;
-  --background-tree: #75e308;
-  --label: rgb(255, 205, 86);
-  --background-button: #d31313;
-  --background-tree: #b5b0b17a;
-  --font-color-primary: #676262fc;
+  --background-tree     : #75e308;
+  --label               : #ffcd56;
+  --background-button   : #d31313;
+  --background-tree     : #b5b0b17a;
+  --font-color-primary  : #676262fc;
   --font-color-secondary: #ffffff;
-  --font-color-tertiary: #322f69;
-  --background-color: #f9f9f9;
+  --font-color-tertiary : #322f69;
+  --background-color    : #f9f9f9;
 }
 
 body {

@@ -84,6 +84,20 @@ $tC = (new ThemeModel($data))->find($data);
       * evoluçao
       * comparação entre eventos
       * comparação do mesmo evento em relação com o tempo
+
+      - template
+      rigth  center                left
+            |                    |
+      filtro      |                    |
+            |                    |
+            |                    |
+            |                    |
+            |                    |
+            |                    |
+            |                    |
+            |                    |
+            |                    |
+
    ### aprofundamento
       * aprofundamento
       * evento específico(salvo em cache do navegador)
@@ -147,3 +161,21 @@ Abra TYPESCRIPT_SETUP.md para guia completo de uso
 Utilize o <script setup lang="ts"> nos seus componentes
 Use o alias @/ para importar do diretório static
 Execute npm run type-check para validar tipos antes de fazer build
+
+
+
+## healp
+- o que signica isss: 
+93 packages are looking for funding
+  run `npm fund` for details
+
+21 vulnerabilities (3 low, 18 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+**************************

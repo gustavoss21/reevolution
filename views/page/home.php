@@ -1,6 +1,6 @@
 <?php
 // include layout file
-$layout = __DIR__ . '/layout/index.php';
+$layout = dirname(__DIR__, 1) . '/layout/index.php';
 $title = "Home Page";
 
 $urlTimeline = $urlBase . '/timeline';
@@ -15,6 +15,6 @@ $urlTimeline = $urlBase . '/timeline';
 
     <div>
         <div id="app">
-            <HomeComponent></HomeComponent>
+            <home-component></home-component>
         </div>
 </main>
