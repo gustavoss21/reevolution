@@ -317,7 +317,7 @@ export class ManageStap {
 		children.forEach(	
 			(child) => {
 				let value = child.value;
-				let name = <string>child.name;
+				let name  = child.name as string;
 
 				if(!value && child.require) {
 					child.input_error(element_data);

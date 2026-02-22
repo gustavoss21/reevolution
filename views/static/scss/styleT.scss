@@ -1,8 +1,56 @@
 @import './partial/variables';
+@import './modules/header';
+@import'./partial/reset';
+@import './modules/block_collection.scss';
+@import './modules/side_right.scss';
+@import './modules/button.scss';
 
-body {
-    background-color: $background_color;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+.subtitle {
+  font-size  : 1.5em;
+  color      : var($font_color_primary);
+  font-weight: 500;
+}
+.content-blocks {
+  display: flex;
+  gap: 70px;
+  justify-content: space-around;
+  margin-top: 110px;
+}
+
+.block-stage {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  border: 1px solid red;
+}
+
+.block-container {
+  padding: 30px 20px 20px 20px;
+  position: relative;
+  min-height: 225px;
+  margin-bottom: 60px;
+}
+
+.theme-item {
+  padding: 15px;
+  background-color: var(--background-secondary);
+  color: var(--font-color-secondary);
+  border-radius: 13px;
+  box-shadow: 7px 6px 8px 0px #478eb09e;
+  font-size: 0.8em;
+  width: 255px;
+}
+
+.theme-title {
+  font-size: 2em;
+  font-family: cursive;
+  min-width: 350px;
+}
+
+.theme-topic {
+  font-size: 1.5em;
+}
+
+.title-item {
+  font-weight: 900;
 }

@@ -174,9 +174,11 @@
 		WithoutStudyEvent,
 	} from "@/interface/EventInterface.ts";
 
-	  import "@/css/style.css";
-	import "@/css/evento.css";
-
+  import "bootstrap/dist/css/bootstrap.css";
+  import "@/css/styleT.css";
+ // Import Bootstrap and BootstrapVue3 CSS files (order is important)
+           //   import "@/css/style.css";
+ // import "@/css/evento.css";
 	import {DataStatistic} from "@/utils/HomeType.ts";
 
 	export default {

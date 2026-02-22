@@ -1,0 +1,31 @@
+@function mobile($breakpoint: $mobile-breakpoint) {
+ 
+}
+
+@function tablet($breakpoint: $tablet-breakpoint) {
+ 
+}
+
+@function desktop($breakpoint: $desktop-breakpoint) {
+ 
+}
+
+@media screen and (max-width: 1044px) {
+  .side-block {
+    min-width: 85%;
+  }
+}
+
+@media screen and (max-width: 596px) {
+  .block-container {
+    gap: 14px;
+    padding: 41px;
+    min-height: 614px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .content-blocks {
+    flex-wrap: wrap-reverse;
+  }
+}

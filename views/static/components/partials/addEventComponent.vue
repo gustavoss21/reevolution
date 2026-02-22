@@ -41,6 +41,7 @@
 	import {DataAll, FormCore} from "@/utils/TypeElement.ts";
 	import {ResponseDataType} from "@/utils/HomeType.ts";
 
+
 	type AllowedMethods = "nextStap" | "create";
 
 	export default {
