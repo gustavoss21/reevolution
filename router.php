@@ -9,10 +9,10 @@ class Route extends RouterBase
     public $routes = [
         'GET' => [
             //WEB
-            '/'           => 'AppController@home',
-            '/acomp'           => 'AppController@accompaniment',
-            // '/accompaniment'           => 'AppController@accompaniment',
-            '/theme/{id}' => 'AppController@themeItem',
+                 '/'              => 'AppController@home',
+            //'/acomp'         => 'AppController@accompaniment',
+                 '/accompaniment' => 'AppController@accompaniment',
+                 '/theme/{id}'    => 'AppController@themeItem',
 
             //API
             '/temas' => 'ThemeController@getAllThemas',
