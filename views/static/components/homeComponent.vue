@@ -165,8 +165,6 @@
 </template>
 
 <script lang="ts">
-	import HomeSide from "./partials/homeSide.vue";
-	import AddEventComponent from "./partials/addEventComponent.vue";
 	import {ApiClient} from "@/utils/request.ts";
 	import {
 		EventType,
@@ -176,10 +174,7 @@
 
   import "bootstrap/dist/css/bootstrap.css";
   import "@/css/styleT.css";
- // Import Bootstrap and BootstrapVue3 CSS files (order is important)
-           //   import "@/css/style.css";
- // import "@/css/evento.css";
-	import {DataStatistic} from "@/utils/HomeType.ts";
+  import {DataStatistic} from "@/utils/HomeType.ts";
 
 	export default {
 		data() {
@@ -274,6 +269,5 @@
 		// 		});
 		// },
 
-		components: {AddEventComponent, HomeSide}, //
 	};
 </script>

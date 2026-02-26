@@ -1,16 +1,18 @@
 import {handleError, Static} from "vue";
 import {
 	ElementInterface,
-	ElementMethodsInterface,
-	StatusMessage
+	InputTypeAll,
+	StatusMessage,
+	InputTypeComponent,
+	InputTypeButton,
 } from "@/interface/ElementInterface.ts";
 
 export class Element implements ElementInterface {
 	id?: string;
 	class: string = "";
-	name?: string;
+	name: string;
 	value: any;
-	type?: string;
+	type: InputTypeComponent | InputTypeButton | InputTypeAll;
 	label?: string;
 	action?: string;
 	dismiss?: boolean;
@@ -26,7 +28,7 @@ export class Element implements ElementInterface {
 	children_error_messages: string[] = [];
 	static _child?: Element;
 
-	constructor(data?: Element|Object) {
+	constructor(data?: Element | Object) {
 		if (!data) return;
 
 		let ndata = data as Element;
@@ -62,7 +64,7 @@ export class Element implements ElementInterface {
 		return this;
 	}
 
-	set_id(id: string|number) {
+	set_id(id: string | number) {
 		this.id = String(id);
 		return this;
 	}
@@ -81,7 +83,7 @@ export class Element implements ElementInterface {
 		return this;
 	}
 
-	set_type(type: string) {
+	set_type(type: InputTypeComponent | InputTypeButton | InputTypeAll) {
 		this.type = type;
 		return this;
 	}
@@ -117,7 +119,7 @@ export class Element implements ElementInterface {
 		return this;
 	}
 
-	create_child(block_name = "main", data: Element|Object ={}) {
+	create_child(block_name = "main", data: Element | Object = {}) {
 		// this.child = new Element({parent:this});
 		let child: Element = new Element(data);
 
@@ -194,7 +196,7 @@ export class Element implements ElementInterface {
 			'o campo "' + (this.label || this.id) + '" é obrigatório.',
 			StatusMessage.error,
 		);
-		parent_element._set_message_parent(this.name||'');
+		parent_element._set_message_parent(this.name || "");
 		return this;
 	}
 
@@ -232,7 +234,7 @@ export class Element implements ElementInterface {
 	 * @description set child error from parent
 	 * @argument child_key - the element name
 	 */
-	_set_message_parent(child_key:string) {
+	_set_message_parent(child_key: string) {
 		this.children_error_messages.push(child_key);
 	}
 
@@ -273,7 +275,7 @@ export class Element implements ElementInterface {
 	 * // Recover the last retrieved child from cache
 	 * const cachedChild = element.get_child("main", null, true);
 	 */
-	get_child(block_name = "main", index:number, recorvere = false) {
+	get_child(block_name = "main", index: number, recorvere = false) {
 		if (recorvere) return Element._child as Element;
 
 		let children = this.child;
@@ -282,10 +284,10 @@ export class Element implements ElementInterface {
 		if (!children.hasOwnProperty(block_name)) {
 			Element._child = undefined;
 
-			return (new Element()).error();
+			return new Element().error();
 		}
 
-		let children_in_block:Element[] = children[block_name];
+		let children_in_block: Element[] = children[block_name];
 
 		child = children_in_block[index];
 
@@ -293,7 +295,7 @@ export class Element implements ElementInterface {
 		return child;
 	}
 
-		  /**
+	/**
 	 * Retrieves a child element from the children collection by block name and optional index.
 	 *
 	 * @param {string} [block_name="main"] - The name of the child block to retrieve. Defaults to "main".
@@ -324,7 +326,7 @@ export class Element implements ElementInterface {
 			return [];
 		}
 
-		let child:Element[] = children[block_name];
+		let child: Element[] = children[block_name];
 
 		return child;
 	}
@@ -364,7 +366,7 @@ export class Element implements ElementInterface {
 	 */
 	hasChild(
 		block_name = "main",
-		value_key = "null",
+		value_key:string = undefined,
 		by: keyof Element = "name",
 	) {
 		if (!this.child.hasOwnProperty(block_name)) {
@@ -372,7 +374,7 @@ export class Element implements ElementInterface {
 			return false;
 		}
 
-		if (value_key === "null") return true;
+		if (value_key) return true;
 
 		let children = this.child[block_name];
 		return children.some((item) => {
@@ -382,7 +384,7 @@ export class Element implements ElementInterface {
 		});
 	}
 
-	hasClass(className:string) {
+	hasClass(className: string) {
 		return this.class.includes(className);
 	}
 }

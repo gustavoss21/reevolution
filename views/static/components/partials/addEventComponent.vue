@@ -10,37 +10,38 @@
 			{{ value }}
 		</Button>
 	</div>
-	<ModalComponent
-		v-for="[key, instance] in Object.entries(formInstacesList)"
-		@e_function="handleF"
-		:element_data="instance.getStap()">
-		<div class="nav-modal">
-			<template v-for="stap in instance.stap_nav.get_all_child()">
-				<div
-					:class="stap.class"
-					@click="instance.jump_stap(Number(stap.id))">
-					{{ stap.value }}
-				</div>
-			</template>
-		</div>
-		<div class="modal-header">
-			<h1
-				class="modal-title fs-5"
-				id="ModalLabel">
-				{{ labels_form[key] }}
-			</h1>
-		</div>
-	</ModalComponent>
+	<template v-for="[key, instance] in Object.entries(formInstacesList)">
+		<ModalComponent
+			  @e_function = "handleF"
+			  v-if        = "instance.getStap()"
+			:element_data = "instance.element"
+		>
+			
+			<div class="nav-modal">
+				<template v-for="stap in instance.stap_nav.get_all_child()">
+					<div
+						:class="stap.class"
+						@click="instance.jump_stap(Number(stap.id))">
+						{{ stap.value }}
+					</div>
+				</template>
+			</div>
+			<div class="modal-header">
+				<h1
+					class="modal-title fs-5"
+					id="ModalLabel">
+					{{ labels_form[key] }}
+				</h1>
+			</div>
+		</ModalComponent>
+	</template>
 </template>
 <script lang="ts">
-	import ModalComponent from "./modalComponent.vue";
-	import Button from "./Button.vue";
 	import {ManageStap} from "@/utils/ManageStap.ts";
-	import {Element} from "@/utils/Element.ts";
 	import {ApiClient} from "@/utils/request.js";
 	import {DataAll, FormCore} from "@/utils/TypeElement.ts";
 	import {ResponseDataType} from "@/utils/HomeType.ts";
-
+	import {Element} from "@/utils/Element.ts";
 
 	type AllowedMethods = "nextStap" | "create";
 
@@ -200,31 +201,26 @@
 
 				let uri = this.url_form[name];
 				let url = uri.search("=") == -1 ? uri : "form?" + uri;
-
-				this.request.get("/" + url).then((response:ResponseDataType) => {
+				this.request.get('/'+url).then((response: ResponseDataType) => {
 					let name_form = "add-" + name;
 
 					let instance = new ManageStap();
 					instance.generateElement(response.data, name_form);
 					this.formInstacesList[name] = instance;
-					console.log(this.formInstacesList)
-
+					console.log(this.formInstacesList);
 				});
 			},
 
 			requestLTopic(data: Element) {
-				this.request.get(`/themes?id=${data.id}/topics`).then(
-					(response) => {
-						let children = data.for_data(
-							response.data,
-							"create_child",
-							"options_search",
-						);
-						data.for_children(children, "set_action", "setEvent");
+				this.request.get(`themes?id=${data.id}/topics`).then((response) => {
+					let children = data.for_data(
+						response.data,
+						"create_child",
+						"options_search",
+					);
+					data.for_children(children, "set_action", "setEvent");
 				});
 			},
 		},
-
-		components: {ModalComponent, Button},
 	};
 </script>

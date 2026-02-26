@@ -4,7 +4,7 @@ export class ApiClient {
 	baseURL: string;
 
 	constructor(baseURL: string) {
-		this.baseURL = baseURL;
+		this.baseURL = baseURL.replace(/\/$/,'');
 	}
 
 	async request(

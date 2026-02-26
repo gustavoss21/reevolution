@@ -12,4 +12,6 @@ type FormCore = {
 	tag?: boolean;
 };
 
+
+
 export {DataAll, FormCore};

@@ -1,13 +1,17 @@
-@import './partial/variables';
-@import './modules/header';
-@import'./partial/reset';
-@import './modules/block_collection.scss';
-@import './modules/side_right.scss';
-@import './modules/button.scss';
+@use './partial/variables';
+@use './modules/header';
+@use './partial/reset';
+@use './modules/block_collection';
+@use './modules/side_right';
+@use './modules/button';
+@use './modules/event';
+@use './modules/modal';
+
+@debug  nav-modal;
 
 .subtitle {
   font-size  : 1.5em;
-  color      : var($font_color_primary);
+  color      : variables.$font_color_primary;
   font-weight: 500;
 }
 .content-blocks {
@@ -53,4 +57,34 @@
 
 .title-item {
   font-weight: 900;
+}
+// evento
+.flex{
+    display: flex;
+    gap: 10px;
+    text-align: center;
+    flex-direction: column;
+
+}
+
+#amount_averange_id{
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    position: relative;
+}
+
+#amount_averange_id span{
+        position: relative;
+    top: 4px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#point_averange_id{
+    width: 170px;
+    height: 50px;
+    max-width: 80%;
+    border-radius: 10px;
+    position: relative;
 }

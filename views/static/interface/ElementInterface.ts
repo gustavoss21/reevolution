@@ -1,12 +1,52 @@
-export enum StatusMessage {
-	error = 'error',
-	success = 'success'
+import InputSearch from "./InputSearch.vue";
+import InputRadio from "./InputRadio.vue";
+import InputTextarea from "./InputTextarea.vue";
+import InputGeneric from "./InputGeneric.vue";
 
+enum StatusMessage {
+	error = "error",
+	success = "success",
 }
 
-export interface ElementInterface {
+enum InputTypeAll{
+	date = 'date',
+	text = 'text',
+	number = 'number',
+	radio = 'radio',
+	request = 'request',
+	textarea = 'textarea',
+	reset = 'reset',
+	submit = 'submit',
+	button = 'button'
+}
+
+enum InputTypeButton {
+	reset =  'reset',
+	submit = 'submit',
+	button = 'button',
+};
+
+enum InputTypeComponent {
+	date = 'date',
+	text = 'text',
+	number = 'number',
+	radio = 'radio',
+	// request = 'request',
+	textarea = 'textarea'
+};
+
+enum InputTypesEnum {
+	"date",
+	"text",
+	"number",
+	"radio",
+	"request",
+	"textarea",
+};
+
+interface ElementInterface {
 	name?: string;
-	type?: string;
+	type: InputTypeComponent | InputTypeButton | InputTypeAll;
 	placeholder?: string;
 	parameter?: string;
 	id?: string;
@@ -25,7 +65,7 @@ export interface ElementInterface {
 	children_error_messages: string[];
 }
 
-export interface ElementMethodsInterface {
+interface ElementMethodsInterface {
 	set_data(data: ElementInterface): ElementInterface;
 	set_name(name: string): ElementInterface;
 	set_id(id: number): ElementInterface;
@@ -40,5 +80,16 @@ export interface ElementMethodsInterface {
 		value: any,
 	): ElementInterface;
 	add_child(child_name: string, child_data: ElementInterface): ElementInterface;
-	has_error()                                                : boolean;
+	has_error(): boolean;
 }
+
+
+export {
+	ElementMethodsInterface,
+	ElementInterface,
+	StatusMessage,
+	InputTypeComponent,
+	InputTypesEnum,
+	InputTypeButton,
+	InputTypeAll,
+};
