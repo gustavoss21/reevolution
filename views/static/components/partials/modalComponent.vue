@@ -2,47 +2,11 @@
 	<div v-if="element_data.id">
 		<v-b-modal
 			:id               = "element_data.id"
-			class           = "modal fade"
-			tabindex       = "-1"
-			aria-labelledby = "ModalLabel"
-			aria-hidden     = "true"
+			  class           = "modal fade"
+			  tabindex        = "-1"
+			  aria-labelledby = "ModalLabel"
+			  aria-hidden     = "true"
 		>
-			<div class           = "modal-dialog">
-			<div class           = "modal-content">
-					<slot></slot>
-					<div class="modal-body">
-						<form
-							method="POST"
-							ref="form-modal"
-							:id="element_data.name">
-							<div v-for="value in element_data.child['main']">
-								<div class="mb-3">
-									<component
-										v-bind:is="listComponents[value.type as InputTypeComponent]"
-										@e_function="emitFunction"
-										:data="value">
-									</component>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button
-							v-for="btn in element_data.child['btn_main']"
-							:class="btn.class"
-							:data-bs-dismiss="btn.dismiss === false ? null : 'modal'"
-							@click.prevent="
-								emitFunction(
-									element_data.action,
-									element_data,
-									$refs['form-modal'],
-								)
-							">
-							{{ btn.label }}
-						</button>
-					</div>
-				</div>
-			</div>
 		</v-b-modal>
 	</div>
 </template>

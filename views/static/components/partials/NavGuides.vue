@@ -1,25 +1,34 @@
 <template>
-  <ul class = "nav nav-tabs">
-    <li v-for="guide in guides" class = "nav-item">
-        <a :class = "'nav-link' + active==guide?'active':''" aria-current = "page" href = "#">{{ guide }}</a>
-    </li>
-    </ul>
+	<div>
+        
+		<v-b-tabs content-class = "mt-3">
+		<template v-for         = "guide in guides as AccompanimentEnum[]">
+				<v-b-tab v-if="guide == active" active>
+                    <p>Im the first {{ guide }}</p>
+                </v-b-tab
+				>
+				<v-b-tab :title = "guide">
+                    <p>I'm the first {{ guide }}</p>
+                </v-b-tab>
+			</template>
+		</v-b-tabs>
+	</div>
 </template>
-<script>
-export default {
+<script lang="ts">
+	import {AccompanimentEnum} from "@/interface/AccompanimentInterface.ts";
+	import {ref} from "vue";
 
-    props: {
-        guides: {
-            type: Array
-        },
-        active:{
-            type: String
-        }
-    },
-    methods: {
-        handleClick(event) {
-            this.$emit('button-click', this.id_element, event);
-        }
-    }
-} 
+	export default {
+		props: {
+			//['guides','active'],
+			guides: {type: Array, required: true},
+			active: String,
+		},
+		data() {
+			return {active: this.active ?? this.guides[0]};
+		},
+		mounted() {
+			console.log(this.active);
+		},
+	};
 </script>

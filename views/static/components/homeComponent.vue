@@ -1,9 +1,16 @@
+<style scoped src = "@/css/styleT.css"></style>
 <template>
 	<div>
+	<HeaderComponent></HeaderComponent>
+	<div style = "text-align: center; margin-bottom: 50px;">
+        <h1>Analize de Evolução</h1>
+        <p class="subtitle">Rumo à Transformação Digital</p>
+    </div>
+
 		<div>
 			<AddEventComponent></AddEventComponent>
 		</div>
-		<div class="content-blocks">
+		<div :class="'content-blocks'">
 			<div>
 				<div class="block-container block-stage">
 					<h2 class="content-theme">CRONOGRAMA PRINCIPAL</h2>
@@ -173,7 +180,6 @@
 	} from "@/interface/EventInterface.ts";
 
   import "bootstrap/dist/css/bootstrap.css";
-  import "@/css/styleT.css";
   import {DataStatistic} from "@/utils/HomeType.ts";
 
 	export default {

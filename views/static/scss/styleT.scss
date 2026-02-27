@@ -7,8 +7,6 @@
 @use './modules/event';
 @use './modules/modal';
 
-@debug  nav-modal;
-
 .subtitle {
   font-size  : 1.5em;
   color      : variables.$font_color_primary;
