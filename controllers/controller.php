@@ -106,10 +106,9 @@ class Controller
         $this->respond($response);
     }
 
-    protected function view($template, $data = [])
+    protected function view()
     {
-        extract([$data, 'template'=>$template]);
-        include __DIR__ . '/../views/ConstruitView.php';
+        include __DIR__ . '/../views/index.php';
     }
 
 }

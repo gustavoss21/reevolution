@@ -16,7 +16,7 @@
 <body>
     <?php echo $content; ?>
     
-    <script type="module" data-component="<?php echo strtolower($title); ?>" src="http://localhost:5173/views/static/main.ts"></script>
+    <script type="module" data-component="<?php echo strtolower($title); ?>" src="http://localhost:5173/views/src/main.ts"></script>
     <!-- <script src="https://dn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script> -->
 </body>
 
