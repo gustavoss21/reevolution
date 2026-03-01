@@ -8,7 +8,7 @@ import {
 	InputTypeAll,
 	InputTypeComponent,
 	InputTypeButton,
-} from "@/interface/ElementInterface.ts";
+} from "views/types/interface/ElementInterface.ts";
 
 export class ManageStap {
 	stap_index?: number = undefined;

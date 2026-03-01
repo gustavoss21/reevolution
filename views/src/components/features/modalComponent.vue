@@ -16,7 +16,7 @@
 	import InputRadio from "./InputRadio.vue";
 	import InputTextarea from "./InputTextarea.vue";
 	import InputGeneric from "./InputGeneric.vue";
-	import {InputTypeComponent} from "@/interface/ElementInterface.ts"
+	import {InputTypeComponent} from "views/types/interface/ElementInterface"
 	import {Element} from "@/utils/Element.ts";
 
 	export default {

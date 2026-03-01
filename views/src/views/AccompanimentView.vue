@@ -23,7 +23,7 @@
 	  // import {ApiClient} from "@/utils/request.ts";
 	
 	import NavGuides from "@/components/partials/NavGuides.vue";
-	import {AccompanimentEnum} from "@/interface/AccompanimentInterface.ts";
+	import {AccompanimentEnum} from "views/types/interface/AccompanimentInterface";
 
 	// import {
 	// 	EventType,

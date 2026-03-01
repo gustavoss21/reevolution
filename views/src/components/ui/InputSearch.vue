@@ -129,7 +129,7 @@
 	import InputTextarea from "./InputTextarea.vue";
 	import InputGeneric from "./InputGeneric.vue";
 	import {Element} from "@/utils/Element.ts";
-  import {InputTypeAll, InputTypeButton, InputTypeComponent} from "@/interface/ElementInterface.ts";
+  import {InputTypeAll, InputTypeButton, InputTypeComponent} from "views/types/interface/ElementInterface";
 	export default {
 		props: {data: {type: Element}},
 		data() {
