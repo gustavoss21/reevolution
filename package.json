@@ -2,7 +2,7 @@
 	"name": "frontend",
 	"private": true,
 	"version": "0.0.0",
-	"type": "commonjs",
+	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
@@ -11,7 +11,8 @@
 	},
 	"dependencies": {
 		"bootstrap": "^5.3.8",
-		"bootstrap-vue-next": "^0.43.7",
+		"bootstrap-vue-next": "^0.43.8",
+		"node-path": "^0.0.3",
 		"vue": "^3.5.28",
 		"vue-router": "^5.0.3"
 	},

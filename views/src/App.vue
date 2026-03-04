@@ -1,7 +1,10 @@
 <template>
-  <DefaultLayout />
+	<BApp>
+		<DefaultLayout />
+	</BApp>
 </template>
 
 <script setup lang="ts">
-import DefaultLayout from "@/layouts/DefaultLayout.vue";
+	import {BApp} from "bootstrap-vue-next";
+	import DefaultLayout from "@/layouts/DefaultLayout.vue";
 </script>

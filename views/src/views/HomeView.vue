@@ -1,14 +1,14 @@
-<style scoped src = "@/css/styleT.css"></style>
+<style scoped lang="sass" src="@/assets/style/scss/styleT.scss"></style>
+
 <template>
 	<div>
-	<HeaderComponent></HeaderComponent>
-	<div style = "text-align: center; margin-bottom: 50px;">
-        <h1>Analize de Evolução</h1>
-        <p class="subtitle">Rumo à Transformação Digital</p>
-    </div>
+		<div style="text-align: center; margin-bottom: 50px">
+			<h1>Analize de Evolução</h1>
+			<p class="subtitle">Rumo à Transformação Digital</p>
+		</div>
 
 		<div>
-			<AddEventComponent></AddEventComponent>
+			<!-- <AddEventComponent></AddEventComponent> -->
 		</div>
 		<div :class="'content-blocks'">
 			<div>
@@ -171,16 +171,16 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang = "ts">
 	import {ApiClient} from "@/utils/request.ts";
 	import {
 		EventType,
 		PriorityEvent,
 		WithoutStudyEvent,
-	} from "views/types/interface/EventInterface";
+	} from "@/types/interface/EventInterface.ts";
 
-  import "bootstrap/dist/css/bootstrap.css";
-  import {DataStatistic} from "@/utils/HomeType.ts";
+	import "bootstrap/dist/css/bootstrap.css";
+	import {DataStatistic} from "@/utils/HomeType.ts";
 
 	export default {
 		data() {
@@ -191,6 +191,9 @@
 				more_priority_events: [] as PriorityEvent[],
 				data: {} as DataStatistic,
 			};
+		},
+		mounted() {
+			console.log("HomeComponent mounted");
 		},
 		// created() {
 		// 	this.request
@@ -274,6 +277,5 @@
 		// 			console.error("Error fetching total-quantity-each-tatus:", error);
 		// 		});
 		// },
-
 	};
 </script>

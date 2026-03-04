@@ -1,4 +1,4 @@
-<style lang = "css" scoped src = "@/css/accompaniement.css"></style>
+<style lang = "css" scoped src = "@/assets/style/scss/accompaniement.scss"></style>
 <template>
 	<div>
 		<HeaderComponent></HeaderComponent>
@@ -23,7 +23,7 @@
 	  // import {ApiClient} from "@/utils/request.ts";
 	
 	import NavGuides from "@/components/partials/NavGuides.vue";
-	import {AccompanimentEnum} from "views/types/interface/AccompanimentInterface";
+	import {AccompanimentEnum} from "@/types/interface/AccompanimentInterface.ts";
 
 	// import {
 	// 	EventType,
