@@ -1,0 +1,20 @@
+.icon-arrow-contract{
+   padding         : 5px;
+   border-radius   : 4px;
+   background-color: #e1e1e1;
+   width           : 30px;
+   height          : 33px;
+}
+
+.content-icon-arrow-left{
+   display: flex;
+   justify-content: flex-end;
+   .icon-arrow{
+   width   : 36px;
+   margin-right: 5px ;
+   &.rotate{
+       transform: rotate(180deg);
+   }
+}
+
+}

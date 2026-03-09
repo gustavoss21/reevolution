@@ -1,0 +1,16 @@
+export type TypeInputType = [
+  'text',
+  'number',
+  'email',
+  'password',
+  'search',
+  'url',
+  'tel',
+  'date',
+  'time',
+  'range',
+  'color',
+  'datetime-local',
+  'month',
+  'week',
+]

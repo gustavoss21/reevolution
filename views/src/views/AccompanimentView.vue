@@ -17,7 +17,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang = "ts">
 	  // import HomeSide from "./partials/homeSide.vue";
 	  // import AddEventComponent from "./partials/addEventComponent.vue";
 	  // import {ApiClient} from "@/utils/request.ts";
