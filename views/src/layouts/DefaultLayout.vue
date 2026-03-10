@@ -2,7 +2,7 @@
   <div>
     <HeaderComponents />
 
-    <main class="container mt-4">
+    <main class="mt-4">
       <router-view />
     </main>
   </div>

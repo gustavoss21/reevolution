@@ -7,8 +7,7 @@
 }
 
 .content-icon-arrow-left{
-   display: flex;
-   justify-content: flex-end;
+   align-self: end;
    .icon-arrow{
    width   : 36px;
    margin-right: 5px ;

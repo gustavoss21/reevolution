@@ -10,17 +10,16 @@
 			<ul>
 				<li>
 					<a
-						:href="pathname = origin"
-						:style="urlActived"
+						:href  = "pathname = origin"
+						:style = "urlActived"
 						>Home
                     </a>
 				</li>
 				<li><a :href="origin + '/cronograma'">Cronograma</a></li>
-				<li><a :href="origin + '/acompanhamento'">Acompanhamento</a></li>
+				<li><a :href="origin + '/accompaniment'">Acompanhamento</a></li>
 				<li><a :href="origin + '/estudo'">estudo</a></li>
 			</ul>
 		</nav>
-		<button @click="() => console.log(pathname)">PATH</button>
 	</header>
 </template>
 

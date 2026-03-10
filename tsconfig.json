@@ -24,16 +24,17 @@
 
 		/* Vue TypeScript Support */
 		"baseUrl": ".",
-		"paths"  : {"@/*": ["views/src/*"]},
-		"types": ["vite/client"],
-		"rootDir": "./views/src"
+		"paths": {"@/*": ["views/src/*"]},
+		"types": ["vite/client", "unplugin-icons/types/vue"],
+		"rootDir": "./views/src",
 	},
 	"include": [
 		"views/**/*.ts",
 		"views/**/*.tsx",
 		"views/**/*.vue",
-		"vite.config.mjs"
+		"vite.config.mjs",
+		"components.d.ts"
 	],
-	"exclude": ["node_modules", "public", "dist"],
+	"exclude"   : ["node_modules", "public", "dist"],
 	"references": [{"path": "./tsconfig.node.json"}]
 }

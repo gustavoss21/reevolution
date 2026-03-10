@@ -1,34 +1,26 @@
+<style lang="css" scoped src="@/assets/style/scss/modules/_nav.scss"></style>
 <template>
-	<div>    
-		<BTabs content-class = "mt-3" pills>
-		<template   v-for         = "guide in guides as AccompanimentEnum[]">
-				<BTabs v-if          = "guide == active" active>
-					{{ guide }}
-                </BTabs>
-				<BTabs v-else :title = "guide">
-					{{ guide }}
-
-                </BTabs>
-			</template>
-		</BTabs>
+	<div class="filter-nav">
+		<template v-for = "guide in guides as AccompanimentEnum[]">
+			<div v-if="guide == active" class="active">
+				{{ guide }}
+			</div>
+			<div v-else class="deactive" @click="active = guide">
+				{{ guide }}
+			</div>
+		</template>
 	</div>
 </template>
-<script lang="ts">
-	import {AccompanimentEnum} from "views/types/interface/AccompanimentInterface";
-	import {ref} from "vue";
-	import "bootstrap/dist/css/bootstrap.css";
+<script setup lang = "ts">
+	import {ref } from "vue";
+	import {AccompanimentEnum} from "@/types/interface/AccompanimentInterface.ts";
 
-	export default {
-		props: {
-			//['guides','active'],
-			guides: {type: Array, required: true},
-			active: String,
-		},
-		data() {
-			return {active: this.active ?? this.guides[0]};
-		},
-		mounted() {
-			console.log(this.active);
-		},
-	};
+	const props = defineProps({
+		guides: {type: Array, required: true},
+		active: String,
+	});
+
+	const active = ref(props.active ?? props.guides[0]);
+		
+		
 </script>
