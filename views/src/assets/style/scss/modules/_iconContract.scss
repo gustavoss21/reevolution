@@ -6,14 +6,10 @@
    height          : 33px;
 }
 
-.content-icon-arrow-left{
-   align-self: end;
+.content-icon-arrow{
    .icon-arrow{
-   width   : 36px;
-   margin-right: 5px ;
-   &.rotate{
-       transform: rotate(180deg);
+      width   : 36px;
+      margin-right: 5px ;
    }
-}
 
 }

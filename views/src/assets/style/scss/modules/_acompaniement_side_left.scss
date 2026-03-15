@@ -1,0 +1,56 @@
+@use '@/assets/style/scss/modules/iconContract';
+@use '@/assets/style/scss/mixins/content_page';
+@use '@/assets/style/scss/modules/title';
+
+
+.block-left{
+    @include content_page.grid_side;
+    background-color: variables.$background_primary;
+    width           : 300px;
+    height          : 90vh;
+    position        : relative;
+    left            : 0;
+    border-radius   : 8px;
+    
+    
+    &.close{
+        flex-basis: 3%;
+        *:not(.content-icon-arrow, .content-icon-arrow *){
+            display: none;
+        }
+    }
+
+    .block-search-filter{
+        max-width: 95%;
+    }
+    input{
+        border-radius: 0 3px 3px 0 !important;
+    }
+    .content-b-form-radio-group{
+        width: 90%;
+    }
+
+    .b-form-radio-group {
+    width           : 100%;
+    background-color: white;
+    border-radius   : 15px;
+    box-shadow      : 0px 1px 8px 0px rgba(26, 35, 126, 0.5019607843);
+    border          : 3px solid #0803df;
+    }
+    .b-form-radio-group > div {
+    display       : flex;
+    flex-direction: column;
+    }
+    .b-form-tag {
+        margin-top: 5px;
+    }
+
+    .content-icon-arrow{
+      align-self: end;
+      .icon-arrow{
+         &.rotate{
+            transform: rotate(180deg);
+         }
+      }
+   }
+}

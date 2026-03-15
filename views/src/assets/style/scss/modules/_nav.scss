@@ -1,16 +1,19 @@
 @use '@/assets/style/scss/mixins/content_page';
+@use '@/assets/style/scss/modules/title';
 
-.filter-nav{
+.content-nav{
+    .filter-nav{
     display        : flex;
     justify-content: space-around;
+
     .nav-item{
-    border: 0.5px solid variables.$border_color;
-    border-radius: 2px;
-    width      : 100%;
-    text-align : center;
-    padding    : 5px;
-    font-size  : 20px;
-    font-family: cursive;
+        border: 0.5px solid variables.$border_color;
+        border-radius: 2px;
+        width      : 100%;
+        text-align : center;
+        padding    : 5px;
+        font-size  : 20px;
+        font-family: cursive;
     }
     .active {
         @extend .nav-item;
@@ -21,6 +24,32 @@
         @extend .nav-item;
         border-width: 0px 0px 0.5px 0px;
         }
+    }
+}
 
-    
+.block-right{
+    .content-nav{
+        @include content_page.grid_side;
+        margin-top: 50px;
+
+        .filter-nav{
+
+            background-color: aliceblue;
+            padding         : 5px;
+            border-radius   : 5px;
+            width           : 80%;
+            margin          : auto;
+            .nav-item{
+                border: 0px ;
+            }
+            .active {
+                    border-bottom: 5px solid variables.$font_color_tertiary;
+                        background-color: initial;
+                }
+
+            .deactive{
+                border-width: 0px;
+            }
+        }
+    }
 }

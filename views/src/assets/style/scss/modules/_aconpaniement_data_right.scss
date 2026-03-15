@@ -1,0 +1,18 @@
+.content-data{
+    width           : 80%;
+    display         : grid;
+    justify-items   : start;
+    padding         : 20px 10px 20px 20px;
+    background-color: white;
+    margin          : 10px auto;
+    gap             : 0px;
+    font-size:1.3em;
+    
+    span.title-data-item {
+        font-weight: 700;
+    }
+
+    p.body-data {
+        display: inline-block;
+    }
+}
