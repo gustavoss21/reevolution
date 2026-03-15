@@ -28,8 +28,8 @@
 	
 	let componentActive = ref(Detail);
 	let nav_list = ref({
-		"detalhes": Detail,
-		"graficos": Graphic,
+		"detalhes"    : Detail,
+		"graficos"    : Graphic,
 		"relacionados": Relationship
 	})
 
