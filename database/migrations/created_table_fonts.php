@@ -6,7 +6,8 @@ use Database\DB;
 
 class CreateTableFonts
 {
-    public function teste(){
+    public function teste()
+    {
         echo "Teste de migração";
     }
 

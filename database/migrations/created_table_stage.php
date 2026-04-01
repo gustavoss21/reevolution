@@ -27,7 +27,7 @@ class CreateTableStage
                 description TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                0 REFERENCES topics(id) ON DELETE CASCADE
+                FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 

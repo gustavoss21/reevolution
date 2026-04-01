@@ -4,17 +4,45 @@ namespace Database;
 
 class MigrationMixins{
 
-    // Executa as migrações no banco de dados
+      // Executa as migrações no banco de dados
     static function exeMigration($configMigration, $migrationMetode = 'up')
     {
         $namespace = 'Database\Migrations\\';
+        $migrationOrdened = self::orderMigration($configMigration);
 
-        foreach ($configMigration as $migration) {
+        foreach ($migrationOrdened as $migration) {
             $filePath = dirname(__DIR__) . '/database/migrations/' . $migration['filename'];
             require_once $filePath;
+              // print_r('file success '. $filePath."\n \n");
             $migrationInstance = new ($namespace . $migration['classname'])();
+              // print_r('instace created');
+              // print_r($migrationInstance);
+
             $migrationInstance->{$migrationMetode}();
+              // print_r('run up '. $filePath."\n \n");
+
         }
+    }
+
+    static function orderMigration(Array $migration){
+        $migrations_order  = require(dirname(__FILE__). '/orderMigration.php');
+        $new_array_ordened = [];
+        
+        foreach($migrations_order as $value){
+            foreach($migration as $key => &$migrate){
+                if(!($migrate['classname'] == $value))continue;
+
+                $new_array_ordened[] = $migrate;
+                unset($migrate);
+                break;
+
+            }
+        }
+
+        $new_array_ordened += $migration;
+
+        return $new_array_ordened;
+
     }
 
     // Verifica se a classe existe no namespace
