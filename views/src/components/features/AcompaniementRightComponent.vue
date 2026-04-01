@@ -1,9 +1,6 @@
 <template>
 	<div :class="'block-right' + ' ' + c_arrow_right">
-		<div class="content-icon-arrow">
-			<IconArrowContract @click="arrowAlterRight"></IconArrowContract>
-		</div>
-		<template v-if = "c_arrow_right != 'close'">
+		<template>
 			<div>
 				<NavGuides
 					@arrowAlter="arrowAlterNav"
@@ -12,7 +9,7 @@
 					:header="'true'">
 				</NavGuides>
 			</div>
-			<component v-if="c_arrow_right != 'close'" :is="componentActive"></component>
+			<component :is="componentActive"></component>
 		</template>
 	</div>
 </template>
@@ -22,9 +19,6 @@
 	import Detail from "@/components/ui/Detail.vue";
 	import Graphic from "@/components/ui/Graphic.vue";
 	import Relationship from "@/components/ui/Relationship.vue";
-
-	//icons
-	import IconArrowContract from "@/components/ui/IconArrowContract.vue";
 	
 	let componentActive = ref(Detail);
 	let nav_list = ref({
@@ -34,12 +28,7 @@
 	})
 
 	let guides_nav_right = ['detalhes','graficos','relacionados']
-	const c_arrow_right = ref("");
-
-	function arrowAlterRight() {
-		c_arrow_right.value = c_arrow_right.value == "close" ? "" : "close";
-
-	}
+	const c_arrow_right = ref("")
 
 	function arrowAlterNav(guide: string) {
 		componentActive.value = nav_list.value[guide as keyof typeof nav_list.value];

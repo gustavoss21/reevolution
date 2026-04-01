@@ -1,4 +1,5 @@
 child mudou a forma vazia de [] para undefined
+
 ## next
 
 apresetar error ou success
@@ -42,7 +43,7 @@ label: qual nivel minimo eu preciso atingir no assunto?
 
 no home mostrar em destaque apenas uma tarefa, em seguida
 mostrar as categorias já definidas talves de forma compactar
-ou do jeito que já está, se compacto definir uma bara de media de pontos quantas atividades dessa categoria foi feito, talvez organizar em um modal bootstrap 
+ou do jeito que já está, se compacto definir uma bara de media de pontos quantas atividades dessa categoria foi feito, talvez organizar em um modal bootstrap
 
 media de status por pontus é inutil
 
@@ -71,8 +72,8 @@ adinar um servidor (ngix|xampper) docker
 estagio de aprendizagem como vai funcionar
 
 APP SEM  ['theme'=> $theme]
-$tC = (new ThemeModel($data))->find($data);
-        $theme = ConsultService::getThemefullData($tC[0]);
+$tC    = (new ThemeModel($data))->find($data);
+$theme = ConsultService::getThemefullData($tC[0]);
 
 
 ## documentatio
@@ -116,21 +117,21 @@ $tC = (new ThemeModel($data))->find($data);
 os flashcard são responsaveis por criar uma descrição
 funcional e dinâmica, pois, podemos criar relacionamento
 entre conteudos de forma objetiva
-EXEMPLO:
+EXEMPLO: 
 lorem lorem #duvida(boas praticas do css)
--> UTILIDADE:
+-> UTILIDADE: 
    - agendar um dia da semana para tirar duvidas especificas
    - aproveitamento do conteudo
 
-EXEMPLO_2:
-//cria um relacionamento entre
+EXEMPLO_2: 
+  //cria um relacionamento entre
 lorem lorem ipsom #relação(css flexbox)
--> UTILIDADE:
+-> UTILIDADE: 
    - gerar relatorios, diagramas, resumos
    - revisão gerais
 
 
-requisitos de estudo completo:
+requisitos de estudo completo: 
 apreder a fazer;
 exercicios concreto;
 pensar e criar abstração com diversidade;
@@ -156,9 +157,9 @@ Como você avalia seu desempenho neste evento
 npm run dev - Inicia servidor de desenvolvimento
 npm run build - Build para produção
 npm run type-check - Verifica tipos TypeScript
-Próximos passos:
+Próximos passos: 
 Abra TYPESCRIPT_SETUP.md para guia completo de uso
-Utilize o <script setup lang="ts"> nos seus componentes
+Utilize o <script setup lang = "ts"> nos seus componentes
 Use o alias @/ para importar do diretório static
 Execute npm run type-check para validar tipos antes de fazer build
 
@@ -171,10 +172,10 @@ Execute npm run type-check para validar tipos antes de fazer build
 
 21 vulnerabilities (3 low, 18 high)
 
-To address issues that do not require attention, run:
+To address issues that do not require attention, run: 
   npm audit fix
 
-To address all issues (including breaking changes), run:
+To address all issues (including breaking changes), run: 
   npm audit fix --force
 
 Run `npm audit` for details.

@@ -1,12 +1,8 @@
 @use './modules/header';
 @use './modules/button';
 @use './modules/iconContract';
+@use './modules/item';
 
-.content-data{
-    position: relative;
-    display : flex;
-        gap: 20px;
-}
 
 .block-center{
     display       : flex;
@@ -23,50 +19,6 @@
         gap             : 27px;
         overflow: auto;
 
-    .data-item{
-        background-color: white;
-        height          : 300px;
-        width           : 300px;
-        border-radius   : 8px;
-        padding         : 15px;
-        box-shadow      : 0px 1px 8px 0px rgba(26, 35, 126, 0.5019607843);
-        display         : grid;
-        gap             : 10px;
-        justify-items: center;
-        
-        .item-title{
-            margin-bottom: 10px;
-        }
-
-        .graphic{
-            display   : block;
-            box-sizing: border-box;
-            width     : 160px;
-        }
-        .icons-state{
-            display        : grid;
-            grid           : auto / auto auto auto;
-            justify-items  : center;
-            align-items    : center;
-            justify-content: center;
-            align-content  : start;
-            gap            : 7px;
-            >svg{
-                height       : 30px;
-                width        : 30px;
-                padding      : 5px;
-                border-radius: 5px;
-                background: aliceblue;
-            }
-        }
-        .btn{
-            padding         : 5px 10px;
-            color           : white;
-            background-color: #ff7f00;
-            border-radius   : 5px;
-            width: 150px;
-        }
-    }
 }
     
 }

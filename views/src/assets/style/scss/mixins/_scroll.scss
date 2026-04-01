@@ -1,0 +1,22 @@
+@mixin scroll($color_bord,$bottom){
+    
+    *:first-child{
+        overflow: auto;
+        scrollbar-width: none;
+    }
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    &::before{
+        content:"";
+        position: absolute;
+        bottom:$bottom;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-image: linear-gradient(to bottom, transparent, $color_bord);
+        z-index: 1;
+    }
+}        
+        

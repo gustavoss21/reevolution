@@ -1,0 +1,22 @@
+@use './item';
+
+.content-data{
+    padding: 5px;
+
+    .data-item{
+        height: 150px;
+        width: 150px;
+        padding: 3px;
+    }
+
+    .data-item .item-title[data-v-d028c90a] {
+    margin-bottom: 2px;
+}
+    .btn{
+        width: 150px;
+        position: relative;
+        right: 3px;
+        border-radius: 0 0 8px 8px;
+
+    }
+}

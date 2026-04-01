@@ -6,7 +6,8 @@
     background-color: white;
     margin          : 10px auto;
     gap             : 0px;
-    font-size:1.3em;
+    font-size       : 1.3em;
+    position        : relative;
     
     span.title-data-item {
         font-weight: 700;
@@ -14,5 +15,18 @@
 
     p.body-data {
         display: inline-block;
+    }
+
+    .graphic-right{
+        display: grid;
+        grid: auto / auto auto;
+        box-sizing: content-box;
+        max-width: 54%;
+
+        .raphic-right-current,.raphic-right-past{
+            width: 370px;
+            height: 370px;
+        }
+        
     }
 }
