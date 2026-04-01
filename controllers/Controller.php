@@ -2,18 +2,18 @@
 
 namespace Controllers;
 
-require dirname(__DIR__) . '/config/response.php';
+require dirname(__DIR__) . '/config/Response.php';
 
 use Models\GenerateColumn;
 
-class Controller 
+class Controller
 {
     use \Config\Response;
     use GenerateColumn;
 
 
     // Common functionalities for all controllers can be added here
-    protected function respond($data, $message='', $status = 200, $error = [])
+    protected function respond($data, $message = '', $status = 200, $error = [])
     {
         http_response_code($status);
         $response = [
@@ -86,7 +86,7 @@ class Controller
             return true;
         });
     }
-    
+
     protected function respondWithPagination($data, $page, $limit)
     {
         $totalItems = count($data);
@@ -110,5 +110,4 @@ class Controller
     {
         include __DIR__ . '/../views/index.php';
     }
-
 }
