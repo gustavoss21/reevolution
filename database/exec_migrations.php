@@ -8,13 +8,13 @@ use Database\MigrationMixins;
 
 $path = dirname(__DIR__) . '/database/migrations/';
 
-$migrationNames  = $argv[1] ? [$argv[1]] : null;                                // obtem o nome da migração a ser executada
-$migrationMetode = !is_null($argv[2]) && $argv[2] == 'down' ? 'down' : 'up';  // verifica se o metodo é down
-$listmigrations  = scandir($path);                                            // obtem a lista de arquivos no diretório de migrações
+$migrationNames = $argv[1] ? [$argv[1]] : null; // obtem o nome da migração a ser executada
+$migrationMetode = !is_null($argv[2]) && $argv[2] == 'down' ? 'down' : 'up'; // verifica se o metodo é down
+$listmigrations = scandir($path); // obtem a lista de arquivos no diretório de migrações
 
 // Função para extrair o nome da classe a partir do arquivo
 $listmigrations = array_filter($listmigrations, function ($file) {
-    return preg_match('/\.php$/', $file);  // filtra apenas arquivos PHP
+    return preg_match('/\.php$/', $file); // filtra apenas arquivos PHP
 });
 
 $optionFormigration = array_map(function ($file) use ($path) {
@@ -33,10 +33,5 @@ if (!empty($migrationNames)) {
         }
     );
 }
-
-  // print_r($optionFormigration);
-  // $p = MigrationMixins::orderMigration($optionFormigration);
-  // print_r($p);
-  // return;
 
 MigrationMixins::exeMigration($optionFormigration, $migrationMetode);

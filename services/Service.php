@@ -4,8 +4,13 @@ namespace Services;
 
 use Models\ModelMixin;
 
-class Service
+abstract class Service
 {
-    public function __construct(public ?ModelMixin $table = null) {}
-    function paginate($offset, $limit) {}
+    public function __construct(public ModelMixin $table) {}
+
+    function paginate($offset, $limit)
+    {
+        // $table->
+        return $this;
+    }
 }

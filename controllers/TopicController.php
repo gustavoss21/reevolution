@@ -19,12 +19,12 @@ class TopicController extends Controller
     }
 
     public function create($data)
-    {   
+    {
         $data_formated = $this->serviceGenerate->formatValueKey($data);
-        return $this->respond($this->serviceGenerate->createEvent($data_formated));   
+        return $this->respond($this->serviceGenerate->createEvent($data_formated));
     }
 
-   
+
 
     public function getAll()
     {
@@ -35,11 +35,12 @@ class TopicController extends Controller
     {
         $table    = $this->topic->table;
         $theme_id = $theme['id'];
-        
-        $result = $this->service->searchForOther('theme', $table,$theme_id)->find();
-        
+
+        $newServiceForTheme = new ConsultService('Models\Theme');
+        $result             = $newServiceForTheme->searchForOther('Models\TopicModel', $table, $theme_id)->find();
+
         if (empty($result)) {
-            return $this->respond('data not found',404);
+            return $this->respond('data not found', 404);
         }
         return $this->respond($result);
     }
@@ -55,10 +56,10 @@ class TopicController extends Controller
 
     public function updateThema($id, $data)
     {
-          // Fetch existing thema
+        // Fetch existing thema
         $existingThema = $this->get($id);
 
-          // Update properties if provided
+        // Update properties if provided
         if (!empty($data['name'])) {
             $this->topic->set('name', htmlspecialchars($data['name']));
         }
@@ -66,17 +67,17 @@ class TopicController extends Controller
             $this->topic->set('description', htmlspecialchars($data['description']));
         }
 
-          // Save updated thema to database
+        // Save updated thema to database
         $this->topic->set('id', $id);
         return $this->topic->update();
     }
 
     public function deleteThema($id)
     {
-          // Ensure thema exists before deletion
+        // Ensure thema exists before deletion
         $this->get($id);
 
-          // Delete thema from database
+        // Delete thema from database
         $this->topic->set('id', $id);
         return $this->topic->delete();
     }
@@ -94,22 +95,23 @@ class TopicController extends Controller
 
     public function matchEvent($event)
     {
-        $statusAverage = (new ConsultService)->getMatchEvent($event,'topics');
+        $statusAverage = (new ConsultService)->getMatchEvent($event, 'topics');
         return $this->respond($statusAverage);
     }
 
     public function matchTopic($topic)
     {
-        $statusAverage = (new ConsultService)->getMatchEvent($topic,'topics');
+        $statusAverage = (new ConsultService)->getMatchEvent($topic, 'topics');
         return $this->respond($statusAverage);
     }
 
-    public function relationTableToCreatetopic($table){
+    public function relationTableToCreatetopic($table)
+    {
         $this->service->getColData($table);
     }
 
     public function form($form)
-    {   
+    {
 
         $form_data = $this->service->getFormRecursive($form['form']);
 

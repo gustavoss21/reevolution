@@ -1,4 +1,39 @@
+/* Cabeçalho (dias da semana) */
 .fc .fc-col-header-cell-cushion {
-    text-decoration: none;
-    color: black;
+  color: black !important;
+}
+
+/* Números dos dias */
+.fc .fc-daygrid-day-number {
+  color: black !important;
+}
+
+a{
+    font-size: 10px;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 0.75em;
+}
+
+button.fc-today-button.fc-button.fc-button-primary {
+    padding: 0 5px;
+}
+
+button.fc-button.fc-button-primary {
+    padding: 0;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0.5em;
+}
+
+.fc-event-main{
+    padding: 3px 0px 0px 0px;
+    font-size: 11px;
+    height: 20px;
+}
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+    min-height: 1em;   
 }

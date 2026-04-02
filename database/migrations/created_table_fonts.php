@@ -18,7 +18,6 @@ class CreateTableFonts
         if (!$pdo) {
             return;
         }
-
         $sql = "
             CREATE TABLE IF NOT EXISTS fonts (
                 id INT AUTO_INCREMENT PRIMARY KEY,

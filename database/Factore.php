@@ -47,7 +47,7 @@ class Factore
         $name     = $faker->name();
         $mT       = (new TopicModel())->columns(self::col('id'))->all();
         $range_id = array_map(fn($data) => $data['id'], $mT);
-        $data     = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(-1, 1), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4)];
+        $data     = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(-1, 1), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean()];
         $stage    = new StageModel($data);
         $stage->insert();
     }
@@ -63,7 +63,12 @@ class Factore
         $font = $faker->{$fakeMethod}();
         $font = $fakeMethod == $fontOptions[1] ? $faker->word() . '.' . $font : $font;
           //get stage_id
-        $mS       = (new StageModel())->all(null, ['id']);
+
+        $mS = (new StageModel())->all();
+        print_r($mS);
+        print_r(PHP_EOL . 'fontes');
+          // print_r($font);
+          // return;
         $range_id = array_map(fn($data) => $data['id'], $mS);
 
         $data  = ['font' => $font, 'stage_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph()];
@@ -99,25 +104,25 @@ class Factore
         print_r($mT);
     }
 }
-        // DROP ALL DATA
-        // (new Factore())->factoreDropAll(new StageModel);
-        // (new Factore())->factoreDropAll(new ThemeModel);
-        // (new Factore())->factoreDropAll(new TopicModel);
-        // (new Factore())->factoreDropAll(new FontModel);
-        // (new Factore())->factoreDropAll(new TagModel);
+  // DROP ALL DATA
+  // (new Factore())->factoreDropAll(new StageModel);
+  // (new Factore())->factoreDropAll(new ThemeModel);
+  // (new Factore())->factoreDropAll(new TopicModel);
+  // (new Factore())->factoreDropAll(new FontModel);
+  // (new Factore())->factoreDropAll(new TagModel);
 
-  for ($x = 0; $x < 20; $x++) {
-     $class = new Factore;
-     $class->factoreStage();
-      $class->factoreTopic();
-      $class->factoreFont();
-      $class->factoreTheme();
-      $class->factoreTag();
+for ($x = 0; $x < 20; $x++) {
+    $class = new Factore;
+      // $class->factoreTheme();
+      // $class->factoreTopic();
 
+      // $class->factoreStage();
+    $class->factoreFont();
+      // $class->factoreTag();
 }
 
-     // for ($x = 0; $x < 20; $x++) {
-     //     (new Factore)->factoreStage();
-     // }
+   // for ($x = 0; $x < 20; $x++) {
+    //     (new Factore)->factoreStage();
+   // }
 
         // (new Factore)->teste();

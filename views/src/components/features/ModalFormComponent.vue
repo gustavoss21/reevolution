@@ -1,5 +1,5 @@
 <template>
-	<div v-if="element_data.id">
+	<div v-if = "element_data.id">
 		<v-b-modal
 			:id               = "element_data.id"
 			  class           = "modal fade"
@@ -11,7 +11,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang = "ts">
 	import InputSearch from "./InputSearch.vue";
 	import InputRadio from "./InputRadio.vue";
 	import InputTextarea from "./InputTextarea.vue";
@@ -24,17 +24,17 @@
 		data() {
 			return {
 				listComponents:{
-					date: InputGeneric,
-					text: InputGeneric,
-					number: InputGeneric,
-					radio: InputRadio,
-					request: InputSearch,
+					date    : InputGeneric,
+					text    : InputGeneric,
+					number  : InputGeneric,
+					radio   : InputRadio,
+					request : InputSearch,
 					textarea: InputTextarea,
 				},
 			};
 		},
 		methods: {
-			/**
+			  /**
 			 * Handle dynamic button clicks.
 			 * - if btn.click is a string and matches a local method, call it
 			 * - else if btn.click is a string, emit event with that name to parent
@@ -45,7 +45,7 @@
 			},
 		},
 
-		// components: INPUT,
+		  // components: INPUT,
 		components: {InputSearch, InputRadio, InputTextarea, InputGeneric},
 	};
 </script>

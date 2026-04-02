@@ -22,7 +22,7 @@
 	
 </template>
 
-<script setup lang="ts">
+<script setup lang = "ts">
 	import AcompaniementRightComponent from "@/components/features/AcompaniementRightComponent.vue";
 
 	import {Element} from "@/utils/Element.ts";
@@ -34,9 +34,9 @@
 	import Relationship from "@/components/ui/Relationship.vue";
 	import { computed, ref } from 'vue'
 
-	let componentActive = ref(Detail);
+	let componentActive  = ref(Detail);
 	let guides_nav_right = ['detalhes','graficos','relacionados']
-	let nav_list = ref({
+	let nav_list         = ref({
 		"detalhes"    : Detail,
 		"graficos"    : Graphic,
 		"relacionados": Relationship

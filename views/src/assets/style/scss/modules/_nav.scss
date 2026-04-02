@@ -7,17 +7,17 @@
     justify-content: space-around;
 
     .nav-item{
-        border: 0.5px solid variables.$border_color;
+        border       : 0.5px solid variables.$border_color;
         border-radius: 2px;
-        width      : 100%;
-        text-align : center;
-        padding    : 5px;
-        font-size  : 20px;
-        font-family: cursive;
+        width        : 100%;
+        text-align   : center;
+        padding      : 5px;
+        font-size    : 20px;
+        font-family  : cursive;
     }
     .active {
         @extend .nav-item;
-        border-bottom: 0px;
+        border-bottom   : 0px;
         background-color: variables.$background_secondary;
     }
     .deactive{
@@ -42,8 +42,8 @@
                 border: 0px ;
             }
             .active {
-                    border-bottom: 5px solid variables.$font_color_tertiary;
-                        background-color: initial;
+                    border-bottom   : 5px solid variables.$font_color_tertiary;
+                    background-color: initial;
                 }
 
             .deactive{

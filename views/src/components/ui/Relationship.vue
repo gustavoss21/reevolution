@@ -1,19 +1,120 @@
 <template>
+    <div class = "f-scroll">
     <div class = "content-data">
-        <h5>Relacionados</h5>
-        <div class = "icons-state">
-            <BiAlarmFill  />
-            <BiMicFill></BiMicFill>
-            <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-            <LaEyeSolid></LaEyeSolid>
-            <LaChevronRight></LaChevronRight>
-            <LaEyeSlashSolid></LaEyeSlashSolid>
+    <div class = "data-item">
+    <h5  class = "item-title">Relacionados</h5>
+    <div class = "icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class = "btn"
+                    type  = "button">
+                    Show
+                </button>
+            </div>
+            <div class = "data-item">
+            <h5  class = "item-title">Relacionados</h5>
+            <div class = "icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class="btn"
+                    type="button">
+                    Show
+                </button>
+            </div>
+            <div class="data-item">
+                <h5 class="item-title">Relacionados</h5>
+                <div class="icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class="btn"
+                    type="button">
+                    Show
+                </button>
+            </div>
+            <div class="data-item">
+                <h5 class="item-title">Relacionados</h5>
+                <div class="icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class="btn"
+                    type="button">
+                    Show
+                </button>
+            </div>
+            <div class="data-item">
+                <h5 class="item-title">Relacionados</h5>
+                <div class="icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class="btn"
+                    type="button">
+                    Show
+                </button>
+            </div>
+            <div class="data-item">
+                <h5 class="item-title">Relacionados</h5>
+                <div class="icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class="btn"
+                    type="button">
+                    Show
+                </button>
+            </div>
+            <div class="data-item">
+                <h5 class="item-title">Relacionados</h5>
+                <div class="icons-state">
+                    <BiAlarmFill  />
+                    <BiMicFill></BiMicFill>
+                    <HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+                    <LaEyeSolid></LaEyeSolid>
+                    <LaChevronRight></LaChevronRight>
+                    <LaEyeSlashSolid></LaEyeSlashSolid>
+                </div>
+                <button
+                    class="btn"
+                    type="button">
+                    Show
+                </button>
+            </div>
         </div>
-        <button
-            class="btn"
-            type="button">
-            Show
-        </button>
+        <!-- <div class="hover-end"> </div> -->
     </div>
 </template>
 <script setup lang="ts">
@@ -26,4 +127,4 @@
 	import LaEyeSlashSolid from "~icons/la/eye-slash-solid";
 
 </script>
-<!-- <style scoped lang = "scss" src="@/assets/style/scss/modules/_item.scss"></style> -->
+<style scoped lang = "scss" src = "@/assets/style/scss/modules/_relationship.scss"></style>

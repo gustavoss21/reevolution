@@ -2,19 +2,22 @@
 @use '@/assets/style/scss/mixins/content_page';
 @use '@/assets/style/scss/modules/title';
 
+  //830px
 
 .block-left{
     @include content_page.grid_side;
     background-color: variables.$background_primary;
     width           : 300px;
-    height          : 100vh;
+    height          : 664px;
     position        : relative;
     left            : 0;
     border-radius   : 8px;
+    padding-bottom  : 30px;
     
     
     &.close{
         flex-basis: 3%;
+        width     : 47px;
         *:not(.content-icon-arrow, .content-icon-arrow *){
             display: none;
         }
@@ -53,8 +56,17 @@
          }
       }
    }
+
 }
 
-label.btn.btn-outline-primary.btn-lg {
-    font-size: 0.8em;
+@media (max-width:830px) {
+    .block-left{
+        position: absolute;
+        z-index: 1;
+        min-width: auto;
+
+        &.close{
+            position: relative;
+        }
+    }
 }

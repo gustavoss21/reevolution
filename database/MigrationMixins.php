@@ -19,7 +19,7 @@ class MigrationMixins{
               // print_r($migrationInstance);
 
             $migrationInstance->{$migrationMetode}();
-              // print_r('run up '. $filePath."\n \n");
+            print_r("\n \n");
 
         }
     }
@@ -45,13 +45,13 @@ class MigrationMixins{
 
     }
 
-    // Verifica se a classe existe no namespace
+      // Verifica se a classe existe no namespace
     static function classExistsInNamespace($className)
     {
         return class_exists($className);
     }
 
-    // obtem o nome da classe a partir do arquivo
+      // obtem o nome da classe a partir do arquivo
     static function getClassNameFromFile($filePath)
     {
 
@@ -62,10 +62,10 @@ class MigrationMixins{
         return null;
     }
 
-    // obtem o path do arquivo a partir do nome da classe
+      // obtem o path do arquivo a partir do nome da classe
     static function getFilePathFromClassName($filePath, $className)
     {
-        $pathern = '/class\s+' . preg_quote($className) . '/';
+        $pathern  = '/class\s+' . preg_quote($className) . '/';
         $contents = file_get_contents($filePath);
         if (preg_match($pathern, $contents, $matches)) {
             return trim($matches[1]);

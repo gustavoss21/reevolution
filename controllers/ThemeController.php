@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Models\ThemeModel;
 use Controllers\Controller;
+use Models\StageModel;
 use Services\ConsultService;
 use Services\ChangeData;
 
@@ -14,15 +15,15 @@ class ThemeController extends Controller
     public function __construct()
     {
         $this->themaModel      = new ThemeModel();
-        $this->service         = new ConsultService();
+        $this->service         = new ConsultService($this->themaModel);
         $this->serviceGenerate = new ChangeData;
     }
 
     public function create($data)
-    {
+    {   
         $data_formated  = $this->serviceGenerate->formatValueKey($data);
         $creationResult = $this->serviceGenerate->createTheme($data_formated);
-        return $this->respond($creationResult);
+        return $this->respond($creationResult);   
     }
 
     public function createEvent($data)
@@ -47,10 +48,10 @@ class ThemeController extends Controller
 
     public function updateThema($id, $data)
     {
-        // Fetch existing thema
+          // Fetch existing thema
         $existingThema = $this->getThemaById($id);
 
-        // Update properties if provided
+          // Update properties if provided
         if (!empty($data['name'])) {
             $this->themaModel->set('name', htmlspecialchars($data['name']));
         }
@@ -58,24 +59,24 @@ class ThemeController extends Controller
             $this->themaModel->set('description', htmlspecialchars($data['description']));
         }
 
-        // Save updated thema to database
+          // Save updated thema to database
         $this->themaModel->set('id', $id);
         return $this->themaModel->update();
     }
 
     public function deleteThema($id)
     {
-        // Ensure thema exists before deletion
+          // Ensure thema exists before deletion
         $this->getThemaById($id);
 
-        // Delete thema from database
+          // Delete thema from database
         $this->themaModel->set('id', $id);
         return $this->themaModel->delete();
     }
 
     public function timeline()
     {
-        return $this->respond((new ConsultService)->timeline());
+        return $this->respond((new ConsultService)->timeline())->find();
     }
 
     public function statusAverage()
@@ -86,26 +87,24 @@ class ThemeController extends Controller
 
     public function matchEvent($event)
     {
-        $statusAverage = (new ConsultService)->getMatchEvent($event, 'themes');
+        $statusAverage = (new ConsultService)->getMatchEvent($event,'themes');
         return $this->respond($statusAverage);
     }
 
     public function matchTopic($topic)
     {
-        $statusAverage = (new ConsultService)->getMatchEvent($topic, 'topics');
+        $statusAverage = (new ConsultService)->getMatchEvent($topic,'topics');
         return $this->respond($statusAverage);
     }
 
-    public function relationTableToCreatetheme($table)
-    {
+    public function relationTableToCreatetheme($table){
         $this->service->getColData($table);
     }
 
-    public function formEvent()
-    {
+    public function formEvent(){
         $topic                  = $this->service->getForm('topics');
         $data['topic']          = $topic;
-        $data['stage']          = $this->service->getForm('stages', ['topic_id']);
+        $data['stage']          = $this->service->getForm('stages',['topic_id']);
         $data['theme_id_child'] = $this->service->getForm('themes');
         $data['tag_id_child']   = $this->service->getForm('tags');
         $data['topic_id_child'] = $topic;
@@ -113,15 +112,20 @@ class ThemeController extends Controller
         return $this->respond($data);
     }
     public function form($form)
-    {
+    {   
 
         $form_data = $this->service->getFormRecursive($form['form']);
 
         return $this->respond($form_data);
     }
 
-    public function accompanimentTimeline()
-    {
-        $timeline = $this->service->timeline(10);
+    public function accompanimentTimeline(){
+        $newServiceTimeline = new ConsultService(new StageModel);
+        $timeline           = $newServiceTimeline->paginate(0, 10)->timeline();
+        $date_current       = date_create();
+        print_r($date_current);
+          // foreach($timeline as $data){
+
+        // }
     }
 }

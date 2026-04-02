@@ -518,11 +518,11 @@
 	let dataChart1 = {
 		type: type_doughnut,
 		data: {
-			labels: ["Red", "Blue", "Yellow"],
+			labels  : ["Red", "Blue", "Yellow"],
 			datasets: [
 				{
-					label: "My First Dataset",
-					data: [300, 50, 100],
+					label          : "My First Dataset",
+					data           : [300, 50, 100],
 					backgroundColor: [
 						"rgb(255, 99, 132)",
 						"rgb(54, 162, 235)",
@@ -533,7 +533,7 @@
 			],
 		},
 	};
-	let   guides_nav    = ["Tema", "Topico", "Categoria", "Estágio"];
+	let guides_nav = ["Tema", "Topico", "Categoria", "Estágio"];
 
 	const nestedModal = (args?:keyof ActionBlock)=>{
 		if(window.innerWidth>= 998 ) {
@@ -567,8 +567,8 @@
 	function blockModal(args?: keyof ActionBlock){
 
 		let actions:ActionBlock = {
-			icon:()=>icon_display.value = !icon_display.value,
-			hidden:()=>{}
+			icon  : ()=>icon_display.value = !icon_display.value,
+			hidden: ()=>{}
 		}
 
 		if(args){
@@ -579,7 +579,7 @@
 	};
 	function blockRigth(){
 		icon_display.value = true;
-		optionBlock.value = OptionBlock.rigth;
+		optionBlock.value  = OptionBlock.rigth;
 		console.log('cheguei')
 		console.log(optionBlock)
 

@@ -1,12 +1,37 @@
 @use './item';
+@use '../mixins/scroll';
 
+.f-scroll{
+    position: relative;
+    margin  : 20px auto;
+    width   : 80%;
+    @include scroll.scroll(variables.$background_primary,-1px,'.content-data');
+
+}
+
+.modal-body .f-scroll{
+    position: relative;
+    margin  : 20px auto;
+    width   : 80%;
+    @include scroll.scroll(#ffffff,-1px,'.content-data');
+
+}
 .content-data{
-    padding: 5px;
+    width    : 100%;
+    flex-wrap: wrap;
+    gap      : 19px 7px;
+    height: 500px;
+    display: relative;
+    padding-bottom: 50px;
+    justify-content: space-between;
+
+
 
     .data-item{
         height: 150px;
         width: 150px;
         padding: 3px;
+            border: 0.3px solid #0000001c;
     }
 
     .data-item .item-title[data-v-d028c90a] {
