@@ -5,7 +5,7 @@ import {
 	StatusMessage,
 	InputTypeComponent,
 	InputTypeButton,
-} from "views/types/interface/ElementInterface";
+} from "@/types/interface/ElementInterface";
 
 export class Element implements ElementInterface {
 	id?: string;

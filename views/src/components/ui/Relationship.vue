@@ -26,4 +26,4 @@
 	import LaEyeSlashSolid from "~icons/la/eye-slash-solid";
 
 </script>
-<style scoped lang = "scss" src="@/assets/style/scss/modules/_item.scss"></style>
+<!-- <style scoped lang = "scss" src="@/assets/style/scss/modules/_item.scss"></style> -->

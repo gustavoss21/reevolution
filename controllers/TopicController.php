@@ -13,8 +13,8 @@ class TopicController extends Controller
 
     public function __construct()
     {
-        $this->topic = new TopicModel();
-        $this->service = new ConsultService();
+        $this->topic           = new TopicModel();
+        $this->service         = new ConsultService();
         $this->serviceGenerate = new ChangeData;
     }
 
@@ -36,7 +36,7 @@ class TopicController extends Controller
         $table    = $this->topic->table;
         $theme_id = $theme['id'];
         
-        $result = $this->service->searchForOther('theme', $table,$theme_id);
+        $result = $this->service->searchForOther('theme', $table,$theme_id)->find();
         
         if (empty($result)) {
             return $this->respond('data not found',404);
@@ -55,10 +55,10 @@ class TopicController extends Controller
 
     public function updateThema($id, $data)
     {
-        // Fetch existing thema
+          // Fetch existing thema
         $existingThema = $this->get($id);
 
-        // Update properties if provided
+          // Update properties if provided
         if (!empty($data['name'])) {
             $this->topic->set('name', htmlspecialchars($data['name']));
         }
@@ -66,17 +66,17 @@ class TopicController extends Controller
             $this->topic->set('description', htmlspecialchars($data['description']));
         }
 
-        // Save updated thema to database
+          // Save updated thema to database
         $this->topic->set('id', $id);
         return $this->topic->update();
     }
 
     public function deleteThema($id)
     {
-        // Ensure thema exists before deletion
+          // Ensure thema exists before deletion
         $this->get($id);
 
-        // Delete thema from database
+          // Delete thema from database
         $this->topic->set('id', $id);
         return $this->topic->delete();
     }

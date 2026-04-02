@@ -2,34 +2,34 @@
 
 namespace Services;
 
-use Composer\Autoload\ClassLoader;
 use DateTime;
 use Models\ThemeModel;
 use Models\StageModel;
 use Models\TopicModel;
 use Models\TagModel;
 use Models\GenerateColumn;
+use Services\Service;
 
-use function Composer\Autoload\includeFile;
 
-class ConsultService
+class ConsultService extends Service
 {
     use GenerateColumn;
 
-    //(prioridade * 1.5) + (ultimaVez dia/ 5) + ((3 - dominio) * 2) + ((2 + status)/2)*3 
-    public $stage = '';
+      //(prioridade * 1.5) + (ultimaVez dia/ 5) + ((3 - dominio) * 2) + ((2 + status)/2)*3 
+    public  $stage  = '';
     private $tables = [
         'themes' => ThemeModel::class,
         'stages' => StageModel::class,
         'topics' => TopicModel::class,
-        'tags' => TagModel::class
+        'tags'   => TagModel::class
     ];
 
-    function searchForOther($byTable,$searchInTable, $byTableId){
+    function searchForOther($byTable, $searchInTable, $byTableId)
+    {
         $columnTableId = $byTable . '_id';
-        $instaceModel = new $this->tables[$searchInTable]([$columnTableId=> $byTableId]);
-        return $instaceModel->where('theme_id')
-               ->find();
+        $instaceModel  = new $this->tables[$searchInTable]([$columnTableId => $byTableId]);
+        $this->table   = $instaceModel->where('theme_id');
+        return $this;
     }
 
     function timeline()
@@ -45,18 +45,17 @@ class ConsultService
                 $this->col('updated_at'),
                 $this->colf(['updated_at_diff', 'partial_score'], self::MORE, 'score')
             )->orderBy('score')
-            ->limit(3)
-            ->find();
+            ->limit($limit = 3);
 
         $themes = [];
 
         foreach ($stages as $stage) {
-            $topic = StageModel::connect_one_to_many_topics($stage['topic_id']);
+            $topic             = StageModel::connect_one_to_many_topics($stage['topic_id']);
             $topic[0]['stage'] = $stage;
 
-            $theme = TopicModel::connect_one_to_many_theme($topic[0]['theme_id']);
+            $theme             = TopicModel::connect_one_to_many_theme($topic[0]['theme_id']);
             $theme[0]['topic'] = $topic[0];
-            $themes[] = $theme[0];
+            $themes[]          = $theme[0];
         }
 
         return $themes;
@@ -66,8 +65,8 @@ class ConsultService
     {
         $topic = new TopicModel();
 
-        foreach($data as $column => $value){
-            $topic->set($column,$value);
+        foreach ($data as $column => $value) {
+            $topic->set($column, $value);
             $topic->where($column);
         }
 
@@ -78,13 +77,13 @@ class ConsultService
     {
 
 
-        $topic = new TopicModel(['theme_id' => $theme['id']]);
+        $topic  = new TopicModel(['theme_id' => $theme['id']]);
         $topics = $topic->where('theme_id')->find();
 
         foreach ($topics as &$topic) {
             $stage = new StageModel(['topic_id' => $topic['id']]);
 
-            $topic['stage'] = $stage->where('topic_id')->find();
+            $topic['stage']        = $stage->where('topic_id')->find();
             $theme['statusLabels'] = StageModel::$STATUS_OPTIONS_LABELS;
         }
 
@@ -112,7 +111,7 @@ class ConsultService
     function GetEventRecommendation()
     {
         $stage = new StageModel(['status' => StageModel::$STATUS_OPTIONS_NOT_STARTED]);
-        // obter recomencao de eventos nao estudados
+          // obter recomencao de eventos nao estudados
         $event_recommendation = $stage->columns(
             self::col('id'),
             self::col('name'),
@@ -131,21 +130,21 @@ class ConsultService
 
     function getTimeWithoutStudy()
     {   //objetivo: obter o tempo sem estudar
-        $stage = new StageModel();
+        $stage         = new StageModel();
         $event_without = $stage->columns(
             self::colf('updated_at', 'MAX', 'without_study'),
             self::col('status'),
         )->find();
 
-        $last_study_date = $event_without[0]['without_study'];
+        $last_study_date    = $event_without[0]['without_study'];
         $time_without_study = '';
-        // calcula diferença entre agora e a data retornada (em dias ou horas)
+          // calcula diferença entre agora e a data retornada (em dias ou horas)
         $timestamp = strtotime($last_study_date);
         if ($timestamp === false && empty($last_study_date)) {
             return 'Vazio';
         }
 
-        $now = time();
+        $now         = time();
         $diffSeconds = $now - $timestamp;
 
         $days = floor($diffSeconds / 86400);
@@ -153,7 +152,7 @@ class ConsultService
         if ($days >= 1) {
             $time_without_study = $days . ' dias';
         } else {
-            $hours = floor($diffSeconds / 3600);
+            $hours              = floor($diffSeconds / 3600);
             $time_without_study = $hours . ' horas';
         }
 
@@ -162,9 +161,9 @@ class ConsultService
 
     function getEventsWeekly()
     {
-        //obtem a data do inicio da semana
-        $start_week = date('Y-m-d', strtotime('monday this week'));
-        $stage = new StageModel(['updated_at' => $start_week]);
+          //obtem a data do inicio da semana
+        $start_week   = date('Y-m-d', strtotime('monday this week'));
+        $stage        = new StageModel(['updated_at' => $start_week]);
         $weekly_study = $stage->where('updated_at', $stage::OPERADORES['GTE'])
             ->columns(
                 $this->colf('*', self::COUNT, 'amount_event_weekly')
@@ -176,26 +175,26 @@ class ConsultService
 
     function getAverangeTimeWithoutStudy()
     {
-        $stage = new StageModel();
+        $stage         = new StageModel();
         $averange_time = '';
-        $average_time = $stage->columns(
+        $average_time  = $stage->columns(
             $this->col('updated_at'),
         )
             ->limit(5)
             ->orderBy('updated_at')
             ->find();
 
-        $data =  new DateTime($average_time[0]['updated_at']);
+        $data = new DateTime($average_time[0]['updated_at']);
         array_shift($average_time);
 
         $h = 0;
         $d = 0;
 
         foreach ($average_time as $item) {
-            // calcular a diferença entre as datas
-            $d += $data->diff((new DateTime($item['updated_at'])))->format('%a');
-            $h += $data->diff((new DateTime($item['updated_at'])))->format('%H');
-            $data = new DateTime($item['updated_at']);
+              // calcular a diferença entre as datas
+            $d    += $data->diff((new DateTime($item['updated_at'])))->format('%a');
+            $h    += $data->diff((new DateTime($item['updated_at'])))->format('%H');
+            $data  = new DateTime($item['updated_at']);
         };
 
         return floor($d / count($average_time)) . ' dias ' . floor($h / count($average_time)) .  ' horas';
@@ -203,7 +202,7 @@ class ConsultService
 
     function getMoreTimeWithoutStudy()
     {
-        $stage = new StageModel();
+        $stage          = new StageModel();
         $more_time_data = $stage->limit(3)
             ->orderBy('updated_at')
             ->find();
@@ -213,7 +212,7 @@ class ConsultService
 
     function getMorePriorityEvents()
     {
-        $stage = new StageModel();
+        $stage              = new StageModel();
         $more_priority_data = $stage->limit(3)
             ->orderBy('priority')
             ->find();
@@ -223,7 +222,7 @@ class ConsultService
 
     function getMoreTimeWithoutStudyEvent()
     {
-        $stage = new StageModel();
+        $stage          = new StageModel();
         $more_time_data = $stage->limit(3)
             ->orderBy('updated_at')
             ->find();
@@ -233,7 +232,7 @@ class ConsultService
 
     function getTotalQuantityEachStatus()
     {
-        $stage = new StageModel();
+        $stage        = new StageModel();
         $total_status = $stage->columns(
             $this->col('status'),
             $this->colf('status', self::COUNT, 'amount_event')
@@ -252,7 +251,7 @@ class ConsultService
 
     function getMatchEvent($event, $table = 'themes')
     {
-        $table = $this->tables[$table];
+        $table        = $this->tables[$table];
         $instaceModel = new $table(['name' => $event['name']]);
 
         return $instaceModel->columns($this->col('id'), $this->col('name'))->where('name', $instaceModel::OPERADORES['LIKE'])->find();
@@ -260,7 +259,7 @@ class ConsultService
 
     function getColData($event)
     {
-        $tables = ['tags' => TagModel::class, 'topics' => TopicModel::class];
+        $tables    = ['tags' => TagModel::class, 'topics' => TopicModel::class];
         $event_key = array_key_first($event);
 
         if (!(array_key_exists($event_key, $tables) && count($event) === 1)) return ['error'];
@@ -272,27 +271,33 @@ class ConsultService
 
     function getForm($table, $without_col = [])
     {
-        $model = $this->tables[$table];
-        $instance = new ($model)();
+        $model        = $this->tables[$table];
+        $instance     = new ($model)();
         $data['data'] = $instance->getForm($without_col);
-        //label
+          //label
         $data['labelS'] = $model::$LABELS;
         return $data;
     }
 
-    function getFormRecursive($form){
-        $table = $form . 's';
-        $data = [];
-        $data[$form] = $this->getForm($table);
-        $columns = $data[$form]['labelS'];
-        $pathern = "/.*_id$/";
+    function getFormRecursive($form)
+    {
+        $table         = $form . 's';
+        $data          = [];
+        $data[$form]   = $this->getForm($table);
+        $columns       = $data[$form]['labelS'];
+        $pathern       = "/.*_id$/";
         $columnsWithId = preg_filter($pathern, '$0', array_keys($columns));
 
         foreach ($columnsWithId as $column) {
-            $tableName = str_replace('_id', 's', $column);
+            $tableName                = str_replace('_id', 's', $column);
             $data[$column . '_child'] = $this->getForm($tableName);
         }
 
         return $data;
+    }
+
+    function find()
+    {
+        return $this->table->find();
     }
 }

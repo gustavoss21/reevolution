@@ -6,14 +6,14 @@ require dirname(__DIR__) . '/config/Response.php';
 
 use Models\GenerateColumn;
 
-class Controller
+class Controller 
 {
     use \Config\Response;
     use GenerateColumn;
 
 
-    // Common functionalities for all controllers can be added here
-    protected function respond($data, $message = '', $status = 200, $error = [])
+      // Common functionalities for all controllers can be added here
+    protected function respond($data, $message='', $status = 200, $error = [])
     {
         http_response_code($status);
         $response = [
@@ -21,7 +21,7 @@ class Controller
             'data'      => $data,
             'timestamp' => date('Y-m-d H:i:s'),
             'message'   => $message,
-            'error' => $error
+            'error'     => $error
         ];
         $this->json($response);
         exit;
@@ -58,8 +58,8 @@ class Controller
 
     protected function logAction($action, $details = [])
     {
-        // Implement logging logic here (e.g., write to a file or database)
-        // Example: error_log("Action: $action, Details: " . json_encode($details));
+          // Implement logging logic here (e.g., write to a file or database)
+          // Example: error_log("Action: $action, Details: " . json_encode($details));
     }
 
     protected function authorize($userRole, $requiredRole)
@@ -86,19 +86,19 @@ class Controller
             return true;
         });
     }
-
+    
     protected function respondWithPagination($data, $page, $limit)
     {
-        $totalItems = count($data);
-        $totalPages = ceil($totalItems / $limit);
+        $totalItems    = count($data);
+        $totalPages    = ceil($totalItems / $limit);
         $paginatedData = $this->paginate($data, $page, $limit);
 
         $response = [
-            'data' => $paginatedData,
+            'data'       => $paginatedData,
             'pagination' => [
-                'current_page' => $page,
-                'total_pages' => $totalPages,
-                'total_items' => $totalItems,
+                'current_page'   => $page,
+                'total_pages'    => $totalPages,
+                'total_items'    => $totalItems,
                 'items_per_page' => $limit
             ]
         ];
@@ -110,4 +110,5 @@ class Controller
     {
         include __DIR__ . '/../views/index.php';
     }
+
 }

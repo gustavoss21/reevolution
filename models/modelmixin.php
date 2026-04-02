@@ -1,4 +1,5 @@
 <?php
+
 namespace Models;
 
 use Database\QueryBuild;
@@ -9,30 +10,30 @@ use Database\DB;
 use Dotenv\Util\Regex;
 use Models\ColumnTrait;
 
-/**
+  /**
  * Mixin class providing getter and setter methods for model properties.
  */
 class ModelMixin
 {
-    use ValidateMixin;    
+    use ValidateMixin;
 
-    protected $table, $assignedColumns , $columns, $columnsWhere;
-    const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
-    const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
-    const DATASEARCH = 'id';
-    private $dbconection = null;
-    private $queryValues = [];
-    private $columnsForQuery = [];
-    protected $columnsRequired = [];
+    protected $table, $assignedColumns, $columns, $columnsWhere;
+    const     OPERADORES         = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    const     OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
+    const     DATASEARCH         = 'id';
+    private   $dbconection       = null;
+    private   $queryValues       = [];
+    private   $columnsForQuery   = [];
+    protected $columnsRequired   = [];
     protected $query;
     static $LABELS;
     public $dbLog;
 
     function __construct($data = [])
     {
-        try{
-            $this->dbconection =  DB::conectarBanco();
-        }catch(ERROR $m){
+        try {
+            $this->dbconection = DB::conectarBanco();
+        } catch (ERROR $m) {
             error_log($m);
         }
 
@@ -40,18 +41,16 @@ class ModelMixin
             $this->set($key, $value);
         }
 
-        if(trait_exists(ColumnTrait::class)){
+        if (trait_exists(ColumnTrait::class)) {
             $option_construct_column = QueryBuild::OPTION_CONSTRUCT_COLUMN['personal'];
-         }else{
+        } else {
             $option_construct_column = QueryBuild::OPTION_CONSTRUCT_COLUMN['defult'];
-         }
+        }
 
         $this->query = new QueryBuild($this->table, $option_construct_column);
     }
 
-    public function setDataDefault()
-    {
-    }
+    public function setDataDefault() {}
 
     function get($paramether)
     {
@@ -63,11 +62,11 @@ class ModelMixin
     function set($paramether, $value)
     {
         if (!property_exists($this, $paramether) || is_null($value)) return;
-        // if($paramether === 'id')return; 
-        $this->assignedColumns[] = $paramether;
-        $this->{$paramether} = $value;
+          // if($paramether === 'id')return; 
+        $this->assignedColumns[]              = $paramether;
+        $this->{$paramether}                  = $value;
         $this->queryValues[':' . $paramether] = $value;
-        $this->columnsForQuery[$paramether] = $paramether;
+        $this->columnsForQuery[$paramether]   = $paramether;
     }
 
     function showAtribuits()
@@ -83,11 +82,11 @@ class ModelMixin
     }
 
     function find()
-    {   
-        $query = $this->query->select($this->columns);
-        $columnsData = $this->filterDataForquery($this->assignedColumns??[]);
-        $whereData = $this->filterDataForquery($this->columnsWhere??[]);
-        $queryData = array_merge($columnsData,$whereData);
+    {
+        $query       = $this->query->select($this->columns);
+        $columnsData = $this->filterDataForquery($this->assignedColumns ?? []);
+        $whereData   = $this->filterDataForquery($this->columnsWhere ?? []);
+        $queryData   = array_merge($columnsData, $whereData);
 
         return $this->executeQuery($query, $queryData);
     }
@@ -100,9 +99,9 @@ class ModelMixin
     }
 
     public function where($where, $operator = self::OPERADORES['EQ'])
-    {        
-        if($operator === self::OPERADORES['LIKE']){
-            $this->set($where, $this->get($where).'%');
+    {
+        if ($operator === self::OPERADORES['LIKE']) {
+            $this->set($where, $this->get($where) . '%');
         }
         $this->columnsWhere[] = $where;
         $this->query->where($where, $operator);
@@ -141,37 +140,37 @@ class ModelMixin
         return $this;
     }
 
-    public function limit(int $limit, int $offset=0)
+    public function limit(int $limit, int $offset = 0)
     {
         $this->query->limit($limit, $offset);
         return $this;
     }
 
 
-    function delete($dataSearch = [self::DATASEARCH],$_dropAll=false)
+    function delete($dataSearch = [self::DATASEARCH], $_dropAll = false)
     {
         $componentQuery = new QueryBuild($this->table);
 
-        if(!$_dropAll) $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
-        
+        if (!$_dropAll) $this->validateRequiredFields($this->columnsRequiredForMethods['delete']);
+
         $query = $componentQuery->delete();
         return $this->executeQuery($query, $this->queryValues);
     }
 
     function update($dataSearch = [self::DATASEARCH])
     {
-        ['columns'=>$whereColumns] = $this->filterDataForquery($dataSearch);
-        $whereData = $this->queryValues;
+        ['columns' => $whereColumns] = $this->filterDataForquery($dataSearch);
+        $whereData                   = $this->queryValues;
         $this->validateRequiredFields($this->columnsRequiredForMethods['update']);
         $componentQuery = new QueryBuild($this->table, $this->assignedColumns, $whereColumns);
-        // $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
+          // $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
         $query = $componentQuery->update();
 
         return $this->executeQuery($query, $whereData);
     }
 
     public function insert()
-    {   
+    {
         $componentQuery = new QueryBuild($this->table);
         $whereData      = $this->filterDataForquery($this->assignedColumns);
         $this->validateRequiredFields($this->columnsRequiredForMethods['create']);
@@ -179,16 +178,17 @@ class ModelMixin
         return $this->executeQuery($query, $whereData);
     }
 
-    public function relationship(ModelMixin $classInstance){
+    public function relationship(ModelMixin $classInstance)
+    {
         $instance_columns = $classInstance
-            ->where('id',self::OPERADORES['EQ'])
+            ->where('id', self::OPERADORES['EQ'])
             ->limit(1)
             ->find();
-        
+
         return $instance_columns;
     }
 
-    /**
+      /**
      * Executa uma consulta SQL usando a conexão do banco
      * @param string $scriptSql Consulta SQL
      * @param array $params Parâmetros para consulta preparada
@@ -203,7 +203,6 @@ class ModelMixin
             $stmt = $this->dbconection->prepare($scriptSql);
             $stmt->execute($params);
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            
         } catch (\PDOException $e) {
             error_log($e->getMessage());
             $this->logErrorDb($e->getMessage());
@@ -211,52 +210,55 @@ class ModelMixin
         }
     }
 
-    /**
+      /**
      * Filtra os dados para a consulta SQL
      * @param array $columns Colunas para filtrar
      * @return array array [dados para consulta, colunas para consulta]
      */
-    public function filterDataForquery(array $columns){
+    public function filterDataForquery(array $columns)
+    {
         $dataQuery = [];
 
-        foreach($columns as $paramether){
-           $data = $this->get($paramether);
+        foreach ($columns as $paramether) {
+            $data = $this->get($paramether);
 
-           if(is_null($data) || !property_exists($this, $paramether) )continue;
+            if (is_null($data) || !property_exists($this, $paramether)) continue;
 
-           $dataQuery[':'.$paramether] = $data;
+            $dataQuery[':' . $paramether] = $data;
         }
 
         return $dataQuery;
     }
 
-    public function slug($string) {
-        // Converte para minúsculas
+    public function slug($string)
+    {
+          // Converte para minúsculas
         $slug = strtolower($string);
 
-        // Remove acentuação
+          // Remove acentuação
         $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug);
 
-        // Troca qualquer coisa que não seja letra/número por hífen
+          // Troca qualquer coisa que não seja letra/número por hífen
         $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
 
-        // Remove hífens extras no começo/fim
+          // Remove hífens extras no começo/fim
         $slug = trim($slug, '-');
 
         return $slug;
     }
 
-    public function getForm($without_columns = []){
+    public function getForm($without_columns = [])
+    {
         $columns_f = "";
-        
-        foreach(static::$LABELS as $key => $_){
-            if(!in_array($key,$this->columns))continue;
-            if(in_array($key, $without_columns))continue;
+
+        foreach (static::$LABELS as $key => $_) {
+            if (!in_array($key, $this->columns)) continue;
+            if (in_array($key, $without_columns)) continue;
 
             $columns_f .= "'$key', ";
         };
         $columns_f = rtrim($columns_f, ', ');
-        $query = "SELECT 
+        $query     = "SELECT 
                     column_name,
                     data_type,
                     character_maximum_length,
@@ -264,7 +266,7 @@ class ModelMixin
                     is_nullable
                   FROM information_schema.columns
                   WHERE table_name = :table and COLUMN_NAME in ($columns_f);";
-        // return $query;
-        return $this->executeQuery($query,[':table'=> $this->table]);
+          // return $query;
+        return $this->executeQuery($query, [':table' => $this->table]);
     }
 }
