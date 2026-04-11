@@ -26,7 +26,8 @@ class ConsultService extends Service
 
     function searchForOther($byTable, $byTableId)
     {
-        $columnTableId = $byTable . '_id';
+        $fomatedTableName = strtolower($byTable);
+        $columnTableId = preg_replace('/_?model/', '', $fomatedTableName) . '_id';
         $this->table->set($columnTableId, $byTableId);
         $this->table   = $this->table->where('theme_id');
         return $this;

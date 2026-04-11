@@ -13,17 +13,14 @@ trait GenerateColumn
     public const AVERANGE = 'averange';
     public const MORE = 'more';
     public const GENERIC = 'generic';
-    private $functions;
-
-    public function __construct() {
-        $this->functions = get_class_methods(FuncColumnInterface::class);
-    }
 
     private function formateOptions($func_name)
     {
         $func_name_formated = strtoupper($func_name);
+        $functions    = get_class_methods(FuncColumnInterface::class);
 
-        foreach ($this->functions as $func) {
+
+        foreach ($functions as $func) {
             if ($func === $func_name_formated) {
                 return $func;
             }

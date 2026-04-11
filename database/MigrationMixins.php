@@ -7,19 +7,17 @@ class MigrationMixins{
       // Executa as migrações no banco de dados
     static function exeMigration($configMigration, $migrationMetode = 'up')
     {
+
         $namespace = 'Database\Migrations\\';
         $migrationOrdened = self::orderMigration($configMigration);
 
         foreach ($migrationOrdened as $migration) {
             $filePath = dirname(__DIR__) . '/database/migrations/' . $migration['filename'];
+
             require_once $filePath;
-              // print_r('file success '. $filePath."\n \n");
             $migrationInstance = new ($namespace . $migration['classname'])();
-              // print_r('instace created');
-              // print_r($migrationInstance);
 
             $migrationInstance->{$migrationMetode}();
-            print_r("\n \n");
 
         }
     }

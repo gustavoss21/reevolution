@@ -8,16 +8,16 @@ use Models\ModelMixin;
 class TagModel extends  ModelMixin
 {
     protected $table = 'tags';
-    public $columns = ['id', 'tag','description'];
-    protected $id, $tag, $description;
+    public $columns = ['id', 'name','description'];
+    protected $id, $name, $description;
 
     static $LABELS = [
-        'tag'=>'O evento é sobre o que',
+        'name'=>'O evento é sobre o que',
         'description'=>'Descrição'
     ];
 
     protected $columnsRequiredForMethods = [
-        'create'=>['tag'],
+        'create'=>['name'],
         'update'=>['id'],
         'delete'=>['id']
     ];

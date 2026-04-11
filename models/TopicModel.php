@@ -113,4 +113,13 @@ class TopicModel extends  ModelMixin
 
         return $theme;
     }
+
+    static function connect_tags(int $topic_id, int $tag_id)
+    {
+        $Instage = new RelationshipTopicAndTag();
+        $Instage->set('tag_id', $tag_id);
+        $Instage->set('topic_id', $topic_id);
+        
+        return $Instage->insert();
+    }
 }

@@ -5,6 +5,7 @@ namespace Controllers;
 use Models\ThemeModel;
 use Controllers\Controller;
 use Models\StageModel;
+use Services\AcompanimentService;
 use Services\ConsultService;
 use Services\ChangeData;
 
@@ -120,12 +121,8 @@ class ThemeController extends Controller
     }
 
     public function accompanimentTimeline(){
-        $newServiceTimeline = new ConsultService(new StageModel);
-        $timeline           = $newServiceTimeline->paginate(0, 10)->timeline();
-        $date_current       = date_create();
-        print_r($date_current);
-          // foreach($timeline as $data){
-
-        // }
+        $newServiceTimeline = new ConsultService('Models\StageModel');
+        $timeline           = $newServiceTimeline->paginate(0,5)->timeline();
+        return $this->respond($timeline);
     }
 }

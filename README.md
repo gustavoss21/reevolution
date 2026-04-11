@@ -59,6 +59,8 @@ aproveitamento;
 
 criar uma obrigatoriedade para ter o primeiro estudo em 24h o segundo em menos de 7 dias e outro antes do 30 dias
 
+1. quando clicar um vez no botao de fitro, ativa, outra vez, desativa. No block left do accompaniment
+
 ### controles
    tratamento de resposta
    tratamento de erros

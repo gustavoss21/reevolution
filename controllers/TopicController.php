@@ -36,8 +36,8 @@ class TopicController extends Controller
         $table    = $this->topic->table;
         $theme_id = $theme['id'];
 
-        $newServiceForTheme = new ConsultService('Models\Theme');
-        $result             = $newServiceForTheme->searchForOther('Models\TopicModel', $table, $theme_id)->find();
+        $newServiceForTheme = new ConsultService('Models\TopicModel');
+        $result             = $newServiceForTheme->searchForOther('theme', $theme_id)->find();
 
         if (empty($result)) {
             return $this->respond('data not found', 404);

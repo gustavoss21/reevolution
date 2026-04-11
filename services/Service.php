@@ -6,11 +6,15 @@ use Models\ModelMixin;
 
 abstract class Service
 {
-    public function __construct(public ModelMixin $table) {}
+    public $table;
+    public function __construct(ModelMixin|string $table = '')
+    {
+        $this->table = new $table;
+    }
 
     function paginate($offset, $limit)
     {
-        // $table->
+        $this->table->limit($limit, $offset);
         return $this;
     }
 }
