@@ -9,7 +9,7 @@ abstract class Service
     public $table;
     public function __construct(ModelMixin|string $table = '')
     {
-        $this->table = new $table;
+        $this->table = $table? new $table: '';
     }
 
     function paginate($offset, $limit)

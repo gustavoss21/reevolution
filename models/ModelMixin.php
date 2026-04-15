@@ -134,9 +134,9 @@ class ModelMixin
         return $this;
     }
 
-    public function orderBy(string $column)
+    public function orderBy(string $column, string $direction = 'DESC')
     {
-        $this->query->orderBy($column);
+        $this->query->orderBy($column, $direction);
         return $this;
     }
 

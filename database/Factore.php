@@ -35,7 +35,7 @@ class Factore
     $name     = $faker->jobTitle();
     $mT       = (new ThemeModel())->all(null, ['id']);
     $range_id = array_map(fn($data) => $data['id'], $mT);
-    $data     = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph()];
+    $data     = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph(), 'end_date' => $faker->dateTimeBetween('2025/08/01', '2026/12/01')->format('Y/m/d h:i:s'), 'lot_to_discuss' => (int)$faker->boolean()];  //, 'can_explain' => (int)$faker->boolean(), 'started_study' => (int)$faker->boolean(), 'study_time' => $faker->numberBetween(1, 12), 'domain_week' => $faker->numberBetween(0, 365), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean(), 'status' => $faker->numberBetween(-1, 1)];
     $stage    = new TopicModel($data);
     $stage->insert();
   }
@@ -108,7 +108,7 @@ class Factore
 
     for ($x = 0; $x < 20; $x++) {
       $topic_id = $range_id_topic[array_rand($range_id_topic)];
-      $tag_id = $range_id_tag[array_rand($range_id_tag)];
+      $tag_id   = $range_id_tag[array_rand($range_id_tag)];
       TopicModel::connect_tags($topic_id, $tag_id);
     }
   }
@@ -116,18 +116,18 @@ class Factore
 // DROP ALL DATA
 // (new Factore())->factoreDropAll(new StageModel);
 // (new Factore())->factoreDropAll(new ThemeModel);
-// (new Factore())->factoreDropAll(new TopicModel);
+(new Factore())->factoreDropAll(new TopicModel);
 // (new Factore())->factoreDropAll(new FontModel);
 // (new Factore())->factoreDropAll(new TagModel);
 
  for ($x = 0; $x < 20; $x++) {
    $class = new Factore;
   //  $class->factoreTheme();
-  //  $class->factoreTopic();
+   $class->factoreTopic();
   //  $class->factoreStage();
   //  $class->factoreFont();
-   $class->factoreTag();
-  $class->factoreRelationshipTagTopic();
+  //  $class->factoreTag();
+  // $class->factoreRelationshipTagTopic();
  }
 
    //criar relacionamento entre tag e topic

@@ -31,9 +31,6 @@ class TopicModel extends  ModelMixin
         'started_study'         => 'Você já começou a estudar esse assunto',
         'started_study_op_no'   => 'Não',
         'started_study_op_yes'  => 'Sim',
-        'started_study'         => 'Você já começou a estudar esse assunto',
-        'started_study_op_no'   => 'Não',
-        'started_study_op_yes'  => 'Sim',
         '_condition' => [
             'conditioned' => [
                 'study_time'         => 'estuda o assunto a quanto tempo',

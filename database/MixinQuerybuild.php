@@ -148,10 +148,10 @@ class MixinQuerybuild
         return $columns_result;
     }
 
-    public function orderBy(string $column=''){
+    public function orderBy(string $column='', string $direction = 'DESC'){
         if(!$column)return $this;
 
-        $this->order_by = "ORDER BY $column DESC";
+        $this->order_by = "ORDER BY $column $direction";
     }
 
     public function groupBy(string $column)
