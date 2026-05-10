@@ -17,15 +17,17 @@ class ModelMixin
 {
     use ValidateMixin;
 
-    protected $table, $assignedColumns, $columns, $columnsWhere;
-    const     OPERADORES         = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
-    const     OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
-    const     DATASEARCH         = 'id';
-    private   $dbconection       = null;
-    private   $queryValues       = [];
-    private   $columnsForQuery   = [];
+    protected $assignedColumns, $columns, $columnsWhere;
+    public $table;
+    const   OPERADORES         = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
+    const   OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
+    const   DATASEARCH         = 'id';
+    private $dbconection       = null;
+    private $queryValues       = [];
+    private $columnsForQuery   = [];
+    protected $untitledColumn = [];
     protected $columnsRequired   = [];
-    protected $query;
+    protected QueryBuild $query;
     static $LABELS;
     public $dbLog;
 
@@ -88,6 +90,8 @@ class ModelMixin
         $whereData   = $this->filterDataForquery($this->columnsWhere ?? []);
         $queryData   = array_merge($columnsData, $whereData);
 
+        if(key($whereData) == 0) $queryData = $whereData;
+
         return $this->executeQuery($query, $queryData);
     }
 
@@ -125,6 +129,17 @@ class ModelMixin
         }
         $this->columnsWhere[] = $where;
         $this->query->where($where, $operator, self::OPERADORES_LOGICOS['OR']);
+        return $this;
+    }
+
+    public function whereIN($where, $operatorLogic = self::OPERADORES_LOGICOS['AND'])
+    {
+        $this->columnsWhere[]            = $where;
+        $this->$where                    = $this->$where;
+        $this->query->valueWhere[$where] = $this->$where;
+        $operator                        = self::OPERADORES['IN'];
+        $this->untitledColumn[]          = $where;
+        $this->query->where($where, $operator, $operatorLogic);
         return $this;
     }
 
@@ -217,15 +232,24 @@ class ModelMixin
      */
     public function filterDataForquery(array $columns)
     {
-        $dataQuery = [];
+        $dataQuery       = [];
+        $dataQueryUntled = [];
+        $doUntliled = false;
 
         foreach ($columns as $paramether) {
             $data = $this->get($paramether);
 
             if (is_null($data) || !property_exists($this, $paramether)) continue;
 
+            if(in_array($paramether,$this->untitledColumn)){
+                $doUntliled = true;
+            }
+
             $dataQuery[':' . $paramether] = $data;
+            $dataQueryUntled[] = is_array($data)?$data:[$data];
         }
+
+        $dataQuery = $doUntliled? array_merge(...$dataQueryUntled): $dataQuery;
 
         return $dataQuery;
     }
@@ -268,5 +292,9 @@ class ModelMixin
                   WHERE table_name = :table and COLUMN_NAME in ($columns_f);";
           // return $query;
         return $this->executeQuery($query, [':table' => $this->table]);
+    }
+
+    public function __clone(){
+        $this->query = clone $this->query;
     }
 }

@@ -17,6 +17,7 @@ class MixinQuerybuild
     protected $limit;
     private $meta;
     protected $order_by, $group_by = '';
+    public $valueWhere=[];
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
     const OPTION_CONSTRUCT_COLUMN = ['defult'=> 'defult','personal'=> 'ColumnTrait'];
@@ -72,9 +73,37 @@ class MixinQuerybuild
         if( count($this->where) < 1) return '';
 
         $whereFormated = 'WHERE ';
+        $count         = 0;
+        $hasInOperator = false;
 
         foreach($this->where as $whereItem){
-            $whereFormated .= $whereItem['column'] . ' ' . $whereItem['operator'] . ' :' . $whereItem['column'] . $whereItem['op_logic'] ?? '';
+            $operator_logic = $whereItem['op_logic'] ?? '';
+            $column         = $whereItem['column'];
+            $value = ':' .  $column;
+
+            $operator_logic = (empty($operator_logic) ? self::OPERADORES_LOGICOS['AND'] : $operator_logic);
+
+            if($count <= 0) {
+                $operator_logic = '';
+            }
+
+            if(!empty($operator_logic)) $operator_logic = ' '. $operator_logic . ' ' ;
+
+            if($whereItem['operator'] == self::OPERADORES['IN']){
+                  // $value              = preg_replace('/\d{2}/','?', $this->valueWhere[$column]);
+                // $countValue = is_array($this->valueWhere[$column])? count($this->valueWhere[$column]) : 1;
+                $value              =  '('. implode(', ',array_fill(0,count($this->valueWhere[$column]),'?')).')';
+                $this->valueWhere[] = $this->valueWhere[$column];
+                unset($this->valueWhere[$column]);
+                $hasInOperator = true;
+            }
+
+
+            $whereFormated .= $operator_logic . $column . ' ' . $whereItem['operator'] .' '. $value;
+            $count++;
+        }
+        if($hasInOperator){
+            $whereFormated = preg_replace('/:\w+/','?',$whereFormated);
         }
         
         return $whereFormated;

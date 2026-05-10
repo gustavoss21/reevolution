@@ -7,6 +7,7 @@ use Models\ModelMixin;
 abstract class Service
 {
     public $table;
+    public $tables;
     public function __construct(ModelMixin|string $table = '')
     {
         $this->table = $table? new $table: '';

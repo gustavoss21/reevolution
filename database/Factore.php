@@ -116,18 +116,18 @@ class Factore
 // DROP ALL DATA
 // (new Factore())->factoreDropAll(new StageModel);
 // (new Factore())->factoreDropAll(new ThemeModel);
-(new Factore())->factoreDropAll(new TopicModel);
+// (new Factore())->factoreDropAll(new TopicModel);
 // (new Factore())->factoreDropAll(new FontModel);
 // (new Factore())->factoreDropAll(new TagModel);
 
  for ($x = 0; $x < 20; $x++) {
    $class = new Factore;
   //  $class->factoreTheme();
-   $class->factoreTopic();
+  //  $class->factoreTopic();
   //  $class->factoreStage();
   //  $class->factoreFont();
   //  $class->factoreTag();
-  // $class->factoreRelationshipTagTopic();
+  $class->factoreRelationshipTagTopic();
  }
 
    //criar relacionamento entre tag e topic

@@ -1,3 +1,8 @@
+# READMED
+
+## alert
+
+foi mudado um recurso da quere where
 child mudou a forma vazia de [] para undefined
 
 ## next

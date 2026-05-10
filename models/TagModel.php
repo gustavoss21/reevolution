@@ -7,7 +7,7 @@ use Models\ModelMixin;
 // 
 class TagModel extends  ModelMixin
 {
-    protected $table = 'tags';
+    public $table = 'tags';
     public $columns = ['id', 'name','description'];
     protected $id, $name, $description;
 

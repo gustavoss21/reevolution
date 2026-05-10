@@ -14,13 +14,13 @@ class QueryBuild extends MixinQuerybuild{
     }
 
     function delete(){
-        $whereWith = $this->formatParamtsForWhere($this->where);
+        $whereWith = $this->formatParamtsForWhere();
         return "DELETE FROM {$this->table} $whereWith";
 
     }
 
     function update(){
-        $whereWith = $this->formatParamtsForWhere($this->where);
+        $whereWith = $this->formatParamtsForWhere();
         $columns = $this->formatParamtsForValue($this->columns, true);
         return "UPDATE {$this->table} SET  $columns $whereWith";
     }

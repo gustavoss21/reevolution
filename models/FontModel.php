@@ -7,7 +7,7 @@ use Models\ModelMixin;
 // 
 class FontModel extends  ModelMixin
 {
-    protected $table = 'fonts';
+    public $table = 'fonts';
     protected $id, $name, $stage_id, $description, $created_at, $updated_at;
 
     protected $columns = ['id', 'name', 'description', 'stage_id', 'created_at', 'updated_at'];

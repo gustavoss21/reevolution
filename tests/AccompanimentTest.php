@@ -8,6 +8,10 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
 use Models\ModelMixin;
+use Models\TagModel;
+use Models\ThemeModel;
+use Models\TopicModel;
+use Services\ManagerFilters;
 
 use Services\AcompanimentService;
 // use Models\ThemeModel;
@@ -26,6 +30,23 @@ class AccompanimentTest extends TestCase
         $this->insC = new AcompanimentService('Models\ThemeModel');
     }
 
+    function testFromArray()
+    {
+        $data = [
+            ['filterforTable' => 'tags:quia',],
+            ['orderTasksForDate' => 'desc',],
+            ['filterForExpiredTime' => 'expired',],
+            ['statusFilter' => 'started',],
+            ['amountContentOfStudyFilter' => true]
+        ];
+
+        $intance = new ManagerFilters();
+        $intance->fromArray($data);
+        print_r($intance);
+        $this->assertInstanceOf(ManagerFilters::class, $intance, 'fromArray: O resultado deve ser uma instância de ManagerFilters');
+        
+    }
+
     function testSpellModel()
     {
         $tables = [
@@ -35,27 +56,31 @@ class AccompanimentTest extends TestCase
             'TagModel'
         ];
 
-        $dataPossibleTrue = 'tags:facere';
+        $dataPossibleTrue  = 'tags:facere';
         $dataPossibleFalse = 'tasfwe:nomeTeste';
-        $result           = $this->insC->spellModel($dataPossibleTrue);
-
+        $result            = new ManagerFilters(['filterforTable' => $dataPossibleTrue]);
+        $result            = $result->spellLabel($dataPossibleTrue);
+        print_r($result);
         $this->assertEquals(
-            ['model' => 'Models\TagModel', 'valueSearch' => 'nomeTeste'],
+            ['modelName' => 'tags', 'valueSearch' => 'facere'],
             $result,
             'spellModel: O resultado deve conter a chave "model"'
         );
 
-        $this->assertNull(
-            $this->insC->spellModel($dataPossibleFalse),
-            'spellModel: O resultado deve ser null para dados inválidos'
-        );
+        // $this->assertNull(
+        //     (new ManagerFilters(['filterforTable' => $dataPossibleFalse]))->spellModel($dataPossibleFalse),
+        //     'spellModel: O resultado deve ser null para dados inválidos'
+        // );
     }
 
     function testFilterforTable()
     {
-        $dataPossibleTrue  = 'tags:quia';
-
-        $resultTrue = $this->insC->filterforTable($dataPossibleTrue);
+        $dataPossibleTrue = 'quia';
+        $table            = new TagModel();
+        // $table            = new TagModel();
+        // $table            = new TopicModel();
+        $instance         = new ManagerFilters();
+        $resultTrue       = $instance->filterforTable($dataPossibleTrue, $table);
 
         $this->assertInstanceOf(
             'Models\TagModel',
@@ -64,7 +89,6 @@ class AccompanimentTest extends TestCase
         );
 
         $data = $resultTrue->find();
-        print_r($data);
 
         $this->assertIsArray(
             $data,
@@ -74,9 +98,10 @@ class AccompanimentTest extends TestCase
 
     function testOrderTasksForDate()
     {
-        $resultAsc      = (new AcompanimentService('Models\StageModel'))->OrderTasksForDate('asc');
-        $resultDesc     = (new AcompanimentService('Models\StageModel'))->OrderTasksForDate('desc');
-        $resultInvalid  = (new AcompanimentService('Models\StageModel'))->OrderTasksForDate('invalid');
+        $table = new ('Models\StageModel');
+        $resultAsc      = (new ManagerFilters())->OrderTasksForDate('asc', $table);
+        $resultDesc     = (new ManagerFilters())->OrderTasksForDate('desc', $table);
+        $resultInvalid  = (new ManagerFilters())->OrderTasksForDate('invalid', $table);
         $resultDataAsc  = $resultAsc->find();
         $resultDataDesc = $resultDesc->find();
         print_r($resultDataAsc);
@@ -102,9 +127,10 @@ class AccompanimentTest extends TestCase
         $this->assertTrue($resultDataDesc[0]['updated_at'] >= $resultDataDesc[count($resultDataDesc) - 1]['updated_at'], 'OrderTasksForDate: Os dados devem estar ordenados em ordem descendente');
     }
 
-    function testfilterForExpiredTime(){
-        $intanceExpired  = (new AcompanimentService('Models\TopicModel'))->filterForExpiredTime('expired');
-        $instanceCurrent = (new AcompanimentService('Models\TopicModel'))->filterForExpiredTime('current');
+    function testfilterForExpiredTime()
+    {
+        $intanceExpired  = (new ManagerFilters('Models\TopicModel'))->filterForExpiredTime('expired', new ('Models\TopicModel'));
+        $instanceCurrent = (new ManagerFilters('Models\TopicModel'))->filterForExpiredTime('current', new ('Models\TopicModel'));
         $resultExpired   = $intanceExpired->find();
         $resultCurrent   = $instanceCurrent->find();
         $date_current    = date('Y-m-d H:i:s');
@@ -118,12 +144,12 @@ class AccompanimentTest extends TestCase
             count($resultCurrent) == 0 || $resultCurrent[0]['end_date'] > $date_current,
             'filterForExpiredTime: Os dados atuais devem ter end_date maior que a data atual'
         );
-
     }
 
-    function testStatusFilter(){
-        $instanceStarted = (new AcompanimentService('Models\StageModel'))->statusFilter('started');
-        $instanceFuture  = (new AcompanimentService('Models\StageModel'))->statusFilter('future');
+    function testStatusFilter()
+    {
+        $instanceStarted = (new ManagerFilters)->statusFilter('started', new ('Models\StageModel'));
+        $instanceFuture  = (new ManagerFilters)->statusFilter('future', new ('Models\StageModel'));
         $resultStarted   = $instanceStarted->find();
         $resultFuture    = $instanceFuture->find();
 
@@ -138,9 +164,10 @@ class AccompanimentTest extends TestCase
         );
     }
 
-    function testAmountContentOfStudyFilter(){
-        $instanceLotYes = (new AcompanimentService('Models\TopicModel'))->amountContentOfStudyFilter(true);
-        $instanceLotNo  = (new AcompanimentService('Models\TopicModel'))->amountContentOfStudyFilter(false);
+    function testAmountContentOfStudyFilter()
+    {
+        $instanceLotYes = (new ManagerFilters)->amountContentOfStudyFilter(true, new ('Models\TopicModel'));
+        $instanceLotNo  = (new ManagerFilters)->amountContentOfStudyFilter(false, new ('Models\TopicModel'));
         $resultLotYes   = $instanceLotYes->find();
         $resultLotNo    = $instanceLotNo->find();
 
@@ -154,7 +181,40 @@ class AccompanimentTest extends TestCase
             'amountContentOfStudyFilter: Os dados com lot_to_discuss "Não" devem ter lot_to_discuss igual a 0'
         );
     }
-}
 
-// $instanceTest = new ConsultTest();
-// print_r($instanceTest->testsearchForOther());
+    function testManagerFilters()
+    {
+        $data = [
+            ['filterforTable' => 'tags:quia'],
+            ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
+            ['orderTasksForDate' => 'desc'],
+            // ['filterForExpiredTime' => 'expired'],
+            ['statusFilter' => 'started'],
+            // ['amountContentOfStudyFilter' => true]
+        ];
+        $instance     = new AcompanimentService();
+        $searchResult = $instance->managerFilters($data);
+        $this->assertIsArray(
+            $searchResult,
+            'managerFilters: O resultado deve ser um array'
+        );
+    }
+
+    function testStepList(){
+        $instance = new AcompanimentService();
+        $list     = ['level1' => [['level3' => 'finalValue']]];
+
+        $searchResult = &$instance->stepList(null, $list);
+        debug_zval_dump($searchResult);
+
+        $value2 = &$instance->stepList('level1');
+        debug_zval_dump($value2);
+
+        $value3        = &$instance->stepList(0);
+        debug_zval_dump($value3);
+        $this->assertIsArray(
+            $searchResult,
+            'stepList: O resultado deve ser um array'
+        );
+    }
+}

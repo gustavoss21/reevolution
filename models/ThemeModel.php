@@ -6,7 +6,7 @@ use Models\ModelMixin;
 // 
 class ThemeModel extends ModelMixin
 {
-    protected $table = 'themes';
+    public $table = 'themes';
     protected $id, $name, $slug, $description, $created_at, $updated_at;
     protected $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
     static $LABELS = [

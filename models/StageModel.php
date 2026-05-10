@@ -11,7 +11,7 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
     use ColumnTrait;
 
     public $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score, $more_advanced;
-    protected $table = 'stages';
+    public $table = 'stages';
     public $columns = [
         'id',
         'name',
