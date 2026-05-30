@@ -3,8 +3,8 @@ import {ResponseDataType} from "@/utils/HomeType";
 export class ApiClient {
 	baseURL: string;
 
-	constructor(baseURL: string) {
-		this.baseURL = baseURL.replace(/\/$/,'');
+	constructor(roteHref: string='') {
+		this.baseURL = roteHref.replace(/\/$/,'');
 	}
 
 	async request(

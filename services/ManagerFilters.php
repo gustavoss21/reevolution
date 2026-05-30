@@ -98,8 +98,8 @@ class ManagerFilters{
     public function fromArray(array $data){
         foreach ($this->methods_order as $table => $dataForSearch) {
             foreach ($data as $functionData) {
-                $functionName = key($functionData);
-                $argumentForFunction = current($functionData);
+                $functionName = @key($functionData);
+                $argumentForFunction = @current($functionData);
 
                 if(in_array($functionName, $dataForSearch['methods'])){
                     if (is_string($argumentForFunction) && str_contains($argumentForFunction, ':')) {
@@ -221,6 +221,8 @@ class ManagerFilters{
         $table->set('lot_to_discuss', $isLot);
         return $table->where('lot_to_discuss', $table::OPERADORES['EQ']);
     }
+
+    function statedStudy(){}
 
    
         

@@ -120,9 +120,10 @@ class ThemeController extends Controller
         return $this->respond($form_data);
     }
 
-    public function accompanimentTimeline(){
-        $newServiceTimeline = new ConsultService('Models\StageModel');
-        $timeline           = $newServiceTimeline->paginate(0,5)->timeline();
+    public function accompanimentTimeline(array $data){
+        $newServiceTimeline = new AcompanimentService();
+        // $dataDecoded        = urldecode($data);
+        $timeline           = $newServiceTimeline->managerFilters(json_decode($data['data']));
         return $this->respond($timeline);
     }
 }

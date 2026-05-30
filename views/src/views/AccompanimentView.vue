@@ -6,7 +6,7 @@
 			<h1>Acompanhamento</h1>
 		</div>
 		<div class = "content-blocks">
-		<div class = "content-data">
+			<div class = "content-data">
 				<AcompaniementLeftComponent></AcompaniementLeftComponent>
 				
 

@@ -17,7 +17,7 @@ class ConsultService extends Service
 
     //(prioridade * 1.5) + (ultimaVez dia/ 5) + ((3 - dominio) * 2) + ((2 + status)/2)*3 
     public $stage = '';
-    private $tables = [
+    public $tables = [
         'themes' => ThemeModel::class,
         'stages' => StageModel::class,
         'topics' => TopicModel::class,

@@ -48,7 +48,7 @@
 	export default {
 		data() {
 			return {
-				request: new ApiClient(location.href),
+				request: new ApiClient(location.origin+'/reevolution'),
 				requestList: {
 					theme_name: "/match-event?name=",
 					event_name: "/match-event?name=",
