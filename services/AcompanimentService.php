@@ -52,43 +52,23 @@ class AcompanimentService extends Service
 
             $instanceTable = $this->setupInstancesTable($methods,$tableName);
 
-            if($this->isBrokenChildren($tableName))continue;
-            if(!($instanceTable instanceof ModelMixin))continue;
+            if($this->isBrokenChildren($tableName) || !($instanceTable instanceof ModelMixin))continue;
 
             [$relationshipTableData, $relationType] = $this->getConectionTable($tableName);
 
-            if(empty($relationshipTableData)){ 
-
+            if(empty($relationshipTableData)){
                 $result = $instanceTable->find();
-
-                if(empty($result)) {
-                    $this->instanceFilters->methods_order[$tableName]['dropChildren'] = true;
-                    continue;
-                }
-
-                $this->setDataSearch($result, $tableName);
+                $this->setDesassociateData($tableName, $result); 
 
                 continue;
             };
 
             foreach ($relationshipTableData as $instaceData) {
-                $instanceTableReuse = clone $instanceTable;
                 $parentTableName    = key($relationshipTableData);
                 $columnName         = key($instaceData);
+                $instanceTableReuse = clone $instanceTable;
                 
-                if(!($relationType === self::RELATION_TYPE['GRANDMOTHER'])){
-                    $instanceTableReuse->set($columnName, $instaceData[$columnName]);
-                    if (is_array($instaceData[$columnName])) {
-                        $instanceTableReuse->whereIN($columnName);
-                    } else {
-                        $instanceTableReuse->where($columnName);
-                        $instaceData[$columnName] = [$instaceData[$columnName]];
-                    }
-                }elseif (!is_array($instaceData[$columnName])) {
-                    $instaceData[$columnName] = [$instaceData[$columnName]];
-                }
-               
-                $data_result = $instanceTableReuse->find();
+                $data_result = $this->getResultDataRelation($relationType, $columnName, $instanceTableReuse, $instaceData);
 
                 if(!$data_result){
                     $this->instanceFilters->methods_order[$tableName]['dropChildren'] = true;
@@ -103,6 +83,34 @@ class AcompanimentService extends Service
                 $data_relation = ['table'=> $parentTableName,'type'=> $relationType];
                 $this->AssociateData($tableName,$instaceData[$columnName],$data_result, $data_relation);
             }
+        }
+
+        $resultList = $this->getDataSearch();
+        while(true){
+            $tablenameCurrentName = key($resultList);
+            $tableNameCurrentData = current($resultList);
+
+            if (!isset($this->instanceFilters->methods_order[$tablenameCurrentName]['relationships'])) break;
+
+            $tableParentName      = key($this->instanceFilters->methods_order[$tablenameCurrentName]['relationships']);
+            $columnRelationName   = current($this->instanceFilters->methods_order[$tablenameCurrentName]['relationships']);
+
+            // $dataRelation = ['table' => $tableParentName, 'type' => self::RELATION_TYPE['PARENT']];
+            $instanceParent = new $this->tables[$tableParentName];
+
+            $dataParent['id'] = array_map(function($item)use($columnRelationName){
+                return $item[$columnRelationName];
+            }, $tableNameCurrentData);
+
+            $parentResultSearch = $this->getResultDataRelation(self::RELATION_TYPE['PARENT'], 'id', $instanceParent, $dataParent);
+            $this->setChildInParent($parentResultSearch, $tableNameCurrentData, $tablenameCurrentName, $columnRelationName);
+
+            $this->dropDataSearch($tablenameCurrentName);
+            $this->setDataSearch($parentResultSearch, $tableParentName);
+
+            $hasNext = next($resultList);
+            if(!$hasNext) $resultList = $this->getDataSearch();
+
         }
 
         return $this->getDataSearch();
@@ -124,7 +132,7 @@ class AcompanimentService extends Service
     function getConectionTable(string $tableName){
         $conectionData  = [];
         $relationType   = '';
-        $tablerelations = $this->instanceFilters->methods_order[$tableName]['relationships'];
+        $tablerelations = $this->instanceFilters->methods_order[$tableName]['relationships']??[];
         
         foreach ($tablerelations as $tableRelated => $foreignKey) {
             $relations = $this->getDataSearch();
@@ -202,28 +210,30 @@ class AcompanimentService extends Service
     }
 
     function AssociateData(string $tableName,array $dataRelation,array $dataTable, array $relationData){
-
-        $resultMatchParent = [];
         ['table'=> $relationTableName,'type'=> $relation] = $relationData;
-        
+        $resultMatchParent                                = [];
+        $dataResultTables                                 = $this->getDataSearch();
+        $dataResult                                       = current($dataResultTables);
+        $dataResultKey                                    = key($dataResultTables);
+        $columnName                                       = $this->getColumnNameForTable($relationTableName);
+        $dataResultIds = array_map(
+            fn($item) => $item[$columnName], $dataResult
+        );
+
+        $dataResultForquery = array_intersect($dataResultIds, $dataRelation);
+
+
         if(self::RELATION_TYPE['BROTHERS'] === $relation){
-            $table             = new $this->tables[$relationTableName](['id'=> $dataRelation]);
+            $table             = new $this->tables[$relationTableName](['id'=> $dataResultForquery]);
             $resultMatchParent = $table->whereIN('id')->find();
             
             if(!$resultMatchParent) return;
 
-            foreach($resultMatchParent as &$dataItem){
+            
+            $this->dropDataSearch($dataResultKey);
 
-                foreach($dataTable as &$dataTableItem){
-                    $columnName = $this->getColumnNameForTable($relationTableName);
-
-                    if ($dataItem['id'] === $dataTableItem[$columnName]) {
-                        $dataItem[$tableName][] = $dataTableItem;
-                    }
-                }
-                    
-            }
-
+            $this->setChildInParent($resultMatchParent, $dataTable, $tableName, $columnName);
+            $this->setChildInParent($resultMatchParent, $dataResult, $dataResultKey, $columnName);
             $this->setDataSearch($resultMatchParent, $relationTableName);
         }
         elseif(self::RELATION_TYPE['GRANDMOTHER'] === $relation){
@@ -352,13 +362,18 @@ class AcompanimentService extends Service
     function getRelationship(string $tableName, string $searchTable){
        $methodOrderTable         = $this->instanceFilters->methods_order[$searchTable];
        $searchTableRelationship  = $methodOrderTable['relationships']??[];
-       $methodOrderCurrentTable  = $this->instanceFilters->methods_order[$tableName];
-       $currentTableRelationship = $methodOrderCurrentTable['relationships']??[];
+       $currentTableRelationship = [];
+       
+       if(isset($this->instanceFilters->methods_order[$tableName])){
+            $methodOrderCurrentTable  = $this->instanceFilters->methods_order[$tableName];
+            $currentTableRelationship = $methodOrderCurrentTable['relationships'];
+       }
+      
 
         // mesma linha - mesmo relacionado
         $intersectionBetweenTables = array_intersect($searchTableRelationship, $currentTableRelationship);
 
-        if($methodOrderTable['childrens'] && isset($methodOrderTable['childrens'][$tableName])){
+        if(isset($methodOrderTable['childrens']) && isset($methodOrderTable['childrens'][$tableName])){
             $relationType = self::RELATION_TYPE['PARENT'];
             $intersectionBetweenTables = $methodOrderTable['childrens'];
         }
@@ -402,10 +417,10 @@ class AcompanimentService extends Service
     function isBrokenChildren(string $tableName)
     {
 
-        $relationTable = $this->instanceFilters->methods_order[$tableName]['relationships'];
+        $relationTable = $this->instanceFilters->methods_order[$tableName];
 
-        if ($relationTable) {
-            $parentTableName     = key($relationTable);
+        if (isset($relationTable['relationships'])) {
+            $parentTableName     = key($relationTable['relationships']);
             $relationParentTable = $this->instanceFilters->methods_order[$parentTableName];
 
             if ($relationParentTable['dropChildren']) {
@@ -435,4 +450,45 @@ class AcompanimentService extends Service
         
         return $controller[$count];
     }
+
+    function setDesassociateData(string $tableName, array $result){
+       
+        $dataOrder = $this->instanceFilters->methods_order[$tableName];
+
+        if (empty($result)) {
+            $dataOrder['dropChildren'] = true;
+            return;
+        }
+
+        $this->setDataSearch($result, $tableName);
+    }
+
+    function getResultDataRelation(string $relationType, string $columnName, ModelMixin $instanceTableReuse,array $instaceData){
+
+        if (!($relationType === self::RELATION_TYPE['GRANDMOTHER'])) {
+            $instanceTableReuse->set($columnName, $instaceData[$columnName]);
+            if (is_array($instaceData[$columnName])) {
+                $instanceTableReuse->whereIN($columnName);
+            } else {
+                $instanceTableReuse->where($columnName);
+                $instaceData[$columnName] = [$instaceData[$columnName]];
+            }
+        } elseif (!is_array($instaceData[$columnName])) {
+            $instaceData[$columnName] = [$instaceData[$columnName]];
+        }
+
+        return $instanceTableReuse->find();
+    }
+
+    function setChildInParent(array &$resultMatchParent, array &$dataTable, string $ParentTableName, string $columnRelationName){
+        foreach ($resultMatchParent as &$dataItem) {
+
+            foreach ($dataTable as &$dataTableItem) {
+
+                if ($dataItem['id'] === $dataTableItem[$columnRelationName]) {
+                    $dataItem[$ParentTableName][] = $dataTableItem;
+                }
+            }
+        }
+}
 }
