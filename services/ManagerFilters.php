@@ -41,10 +41,10 @@ class ManagerFilters{
     ];
 
     public array $tableNamesTransleted = [
-        'temas' => 'themes',
-        'estagios' => 'stages',
-        'topicos' => 'topics',
-        'tags' => 'tags'
+        'Tema' => 'themes',
+        'Estagio' => 'stages',
+        'Topico' => 'topics',
+        'Tag' => 'tags'
     ];
     
     public array $methods_order = [
@@ -97,21 +97,22 @@ class ManagerFilters{
      */
     public function fromArray(array $data){
         foreach ($this->methods_order as $table => $dataForSearch) {
-            foreach ($data as $functionData) {
+            foreach ($data as $index => $functionData) {
                 $functionName = @key($functionData);
                 $argumentForFunction = @current($functionData);
-
                 if(in_array($functionName, $dataForSearch['methods'])){
                     if (is_string($argumentForFunction) && str_contains($argumentForFunction, ':')) {
-                        $tableData = $this->spellLabel($argumentForFunction);
-
+                        $tableData          = $this->spellLabel($argumentForFunction);
+                        
                         if (!$tableData || $tableData['modelName'] !== $table) continue;
 
-                        $this->method_seted[$tableData['modelName']][$functionName] = $tableData['valueSearch'];
+                        $this->method_seted[][$tableData['modelName']][$functionName] = $tableData['valueSearch'];
+                        array_shift($data);
                         continue;
                     }
 
-                    $this->method_seted[$table][$functionName] = $argumentForFunction;
+                    $this->method_seted[][$table][$functionName] = $argumentForFunction;
+                    array_shift($data);
                 }
         }
             
@@ -127,6 +128,7 @@ class ManagerFilters{
     function spellLabel(string $dataPossible)
     {
         [$labelName, $valueSearch] = explode(':', $dataPossible);
+        $labelName = $this->tableNamesTransleted[$labelName]??$labelName;
 
         if (!array_key_exists($labelName, $this->methods_order)) {
             return null;

@@ -47,15 +47,17 @@ class AcompanimentService extends Service
     function managerFilters(array $data){
         
         $this->instanceFilters->fromArray($data);
+        // return [$this->instanceFilters->method_seted];
 
-        foreach ($this->instanceFilters->method_seted as $tableName => $methods) {
+        foreach ($this->instanceFilters->method_seted as $methodSettedData) {
 
+            $tableName = key($methodSettedData);
+            $methods = current($methodSettedData);
             $instanceTable = $this->setupInstancesTable($methods,$tableName);
 
             if($this->isBrokenChildren($tableName) || !($instanceTable instanceof ModelMixin))continue;
 
             [$relationshipTableData, $relationType] = $this->getConectionTable($tableName);
-
             if(empty($relationshipTableData)){
                 $result = $instanceTable->find();
                 $this->setDesassociateData($tableName, $result); 
@@ -258,21 +260,30 @@ class AcompanimentService extends Service
             $instanceParent->set('id', $dataChildForseach);
             $instanceParent->whereIN($tableColumnName)->whereIN('id', 'AND');
             $resultSearch = $instanceParent->find();
+            $this->dropDataSearch($grandmotherTableName);
 
-            foreach($grandmotherData as $parentKey => $item ){
+            foreach($grandmotherData as $parentKey => &$item ){
+                $parentItem = [];
                 foreach($resultSearch as $key => $dataItem){
                     if($dataItem[$tableColumnName] === $item['id']){
-                        // $item[$relationTableName] = $dataItem;
                         
-                        foreach ($dataTable as $childDataItem) {
+                        foreach ($dataTable as $keyChild=>$childDataItem) {
                             if($childDataItem[$childColumnName] === $dataItem['id']){
-                                $item[$relationTableName][$childTableName][] = $childDataItem;
-                                $resultSearch[$key][$childTableName][] = $childDataItem;
+                                array_splice($dataTable, $keyChild,1);
+
+                                if(array_key_exists($dataItem['id'],$parentItem)){
+                                    $parentItem[$dataItem['id']][$childTableName][] = $childDataItem;
+                                    continue;
+                                }
+                                $parentItem[$dataItem['id']] = $dataItem;
+                                $parentItem[$dataItem['id']][$childTableName][] = $childDataItem;
                             }
                         }
                     }
                 }
-                $this->setDataSearch($resultSearch, $parentTableName, $grandmotherTableName, $parentKey);
+                $item[$relationTableName] = $parentItem;
+
+                $this->setDataSearch($item, $grandmotherTableName);
             };
 
             // $this->dropDataSearch($grandmotherTableName);
@@ -320,8 +331,8 @@ class AcompanimentService extends Service
         $parent             = $this->tableIndexed[$parent]?? $parent;
 
           //parent
-        if(!$this->resultSearch){
-            $this->resultSearch[$tableName] = $data;
+        if(!$this->resultSearch || $this->resultSearch[$tableName]){
+            $this->resultSearch[$tableName][] = count($data)>1? $data: $data[0];
             return;
         }
 

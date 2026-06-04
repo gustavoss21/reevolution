@@ -185,11 +185,12 @@ class AccompanimentTest extends TestCase
     function testManagerFilters()
     {
         $data = [
-            ['filterforTable' => 'tags:quia'],
-            // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
+            // ['filterforTable' => 'tags:quia'],
+            ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
+            ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
             // ['orderTasksForDate' => 'desc'],
             // ['filterForExpiredTime' => 'expired'],
-            // ['statusFilter' => 'started'],
+            ['statusFilter' => 'started'],
             // ['amountContentOfStudyFilter' => true]
         ];
         $instance     = new AcompanimentService();
