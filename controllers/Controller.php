@@ -111,4 +111,10 @@ class Controller
         include __DIR__ . '/../views/index.php';
     }
 
+    public function info()
+    {
+        phpinfo();
+        exit;
+    }
+
 }

@@ -7,6 +7,10 @@ child mudou a forma vazia de [] para undefined
 
 ## next
 
+no ManageFilter, na variavel methods_order colocar as variaveis parent e children in relation
+
+se no filtro eu pesquisar apenas temas; topicos, estagios..., nao seram recuperados, tem que recuper tudo abaixo!
+
 apresetar error ou success
 
 se nao comprir com os dias o score aumentar
@@ -14,7 +18,7 @@ e o proveitamento abaixa
 
 tema do topico tem que ser a terceira no form,
 pois, caso contrario pode esquecer qual era o
-topico 
+topico
 
 colocar a opçoa de colocar evento temporario
 

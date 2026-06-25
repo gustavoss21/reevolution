@@ -53,7 +53,7 @@ class ManagerFilters{
                 'filterforTable',
             ],
             'childrens'=>[
-                'topics' => 'topic_id'
+                'topics' => 'theme_id'
             ]
         ],
         'topics'=>[

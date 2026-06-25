@@ -6,7 +6,7 @@ use Dotenv\Util\Regex;
 
 class RouterBase
 {
-    public $routes = [];
+    public $routes = ['/info'=>'AppController@info'];
     public $method = 'GET';
     public $routeBase = '/reevolution';
     public $controller;

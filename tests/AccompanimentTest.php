@@ -186,12 +186,12 @@ class AccompanimentTest extends TestCase
     {
         $data = [
             // ['filterforTable' => 'tags:quia'],
-            ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
-            ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
+            // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
+            // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
             // ['orderTasksForDate' => 'desc'],
             // ['filterForExpiredTime' => 'expired'],
-            ['statusFilter' => 'started'],
-            // ['amountContentOfStudyFilter' => true]
+            // ['statusFilter' => 'started'],
+            ['amountContentOfStudyFilter' => true]
         ];
         $instance     = new AcompanimentService();
         $searchResult = $instance->managerFilters($data);
@@ -216,6 +216,26 @@ class AccompanimentTest extends TestCase
         $this->assertIsArray(
             $searchResult,
             'stepList: O resultado deve ser um array'
+        );
+    }
+
+    function testManagerFiltersOnlyThemes()
+    {
+        $data = [
+            // ['filterforTable' => 'tags:quia'],
+            // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
+            // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
+            // ['orderTasksForDate' => 'desc'],
+            // ['filterForExpiredTime' => 'expired'],
+            // ['statusFilter' => 'started'],
+            ['amountContentOfStudyFilter' => true]
+        ];
+        $instance     = new AcompanimentService();
+        $searchResult = $instance->managerFilters($data);
+        print_r($searchResult);
+        $this->assertIsArray(
+            $searchResult,
+            'managerFilters: O resultado deve ser um array'
         );
     }
 }
