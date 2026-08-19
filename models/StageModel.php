@@ -4,15 +4,14 @@ namespace Models;
 
 use Models\ModelMixin;
 use Models\ColumnTrait;
-use DateTime;
 
 class StageModel extends  ModelMixin implements FuncColumnInterface
 {
     use ColumnTrait;
 
-    public $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score, $more_advanced;
-    public $table = 'stages';
-    public $columns = [
+    public string $id, $name, $topic_id, $slug, $description, $created_at, $updated_at, $summary, $synthesis, $status, $domain_level, $attention, $learning_stage, $priority, $partial_score, $more_advanced;
+    public string $table = 'stages';
+    public array $columns = [
         'id',
         'name',
         'more_advanced',
@@ -38,13 +37,13 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         4 => 'Critica'
     ];
 
-    public static $STATUS_OPTIONS_LABELS = [
+    public static array $STATUS_OPTIONS_LABELS = [
         -1 => 'NÃO INICIADO',
         0 => 'EM ANDAMENTO',
         1 => 'FINALIZADO'
     ];
 
-    public static $LABELS = [
+    public static array $LABELS = [
         'more_advanced'         => 'Deveria estar mais avançado neste evento',
         'more_advanced_op_yes'  => 'Sim',
         'more_advanced_op_no'   => 'Não',
@@ -102,7 +101,7 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         4,
     ];
 
-    protected $columnsRequiredForMethods = [
+    protected array $columnsRequiredForMethods = [
         'create' => ['name', 'slug', 'topic_id', 'status', 'domain_level', 'learning_stage', 'priority', 'partial_score', 'more_advanced'],
         'update' => ['id'],
         'delete' => ['id']
@@ -112,7 +111,7 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
     static $STATUS_OPTIONS_NOT_STARTED = -1;
     static $STATUS_OPTIONS_IN_PROGRESS = 0;
 
-    static function connect_one_to_many_topics($topic_id)
+    static function connect_one_to_many_topics(int $topic_id)
     {
         $topic = new TopicModel();
         $topic->set('id', $topic_id);

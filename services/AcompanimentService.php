@@ -43,119 +43,122 @@ class AcompanimentService extends Service
         $this->instanceFilters = new ManagerFilters();
     }
 
-    //chama os metodos de filtro dinamicamente
-    function managerFilters(array $data)
+    function managerFilters(array $data): array
     {
-
         $this->instanceFilters->fromArray($data);
-        // return [$this->instanceFilters->method_seted];
+        $this->processConfiguredTables();
 
-        foreach ($this->instanceFilters->method_seted as $methodSettedData) {
+        return $this->buildRelationshipTree();
+    }
 
-            $tableName = key($methodSettedData);
-            $methods = current($methodSettedData);
-            $instanceTable = $this->setupInstancesTable($methods, $tableName);
+    private function processConfiguredTables(): void
+    {
+        foreach ($this->instanceFilters->method_seted as $configuredTable) {
+            $tableName     = key($configuredTable);
+            $instanceTable = $this->setupInstancesTable(current($configuredTable), $tableName);
 
-            if ($this->isBrokenChildren($tableName) || !($instanceTable instanceof ModelMixin)) continue;
-
-            [$relationshipTableData, $relationType] = $this->getConectionTable($tableName);
-            if (empty($relationshipTableData)) {
-                $result = $instanceTable->find();
-                $this->setDesassociateData($tableName, $result);
-
+            if ($this->isBrokenChildren($tableName) || !($instanceTable instanceof ModelMixin)) {
                 continue;
-            };
-
-            foreach ($relationshipTableData as $instaceData) {
-                $parentTableName    = key($relationshipTableData);
-                $columnName         = key($instaceData);
-                $instanceTableReuse = clone $instanceTable;
-
-                $data_result = $this->getResultDataRelation($relationType, $columnName, $instanceTableReuse, $instaceData);
-
-                if (!$data_result) {
-                    $this->instanceFilters->methods_order[$tableName]['dropChildren'] = true;
-                    $this->dropDataSearch($parentTableName);
-                    continue;
-                }
-
-                if ($relationType === self::RELATION_TYPE['BROTHERS']) {
-                    $this->filterDataMetch($data_result, $columnName);
-                }
-
-                // $this->setDataSearch(, $tableName );
-                $data_relation = ['table' => $parentTableName, 'type' => $relationType];
-                $this->AssociateData($tableName, $instaceData[$columnName], $data_result, $data_relation);
             }
+
+            [$connections, $relationType] = $this->getConectionTable($tableName);
+            
+            if (!$connections) {
+                $this->setDesassociateData($tableName, $instanceTable->find() ?: []);
+                continue;
+            }
+
+            $this->processConnections($tableName, $instanceTable, $connections, $relationType);
+        }
+    }
+
+    private function processConnections(
+        string $tableName,
+        ModelMixin $instanceTable,
+        array $connections,
+        string $relationType
+    ): void {
+        foreach ($connections as $parentTableName => $connection) {
+            $columnName = key($connection);
+            $data       = $this->getResultDataRelation($relationType, $columnName, clone $instanceTable, $connection);
+
+            if (!$data) {
+                $this->instanceFilters->methods_order[$tableName]['dropChildren'] = true;
+                $this->dropDataSearch($parentTableName);
+                continue;
+            }
+
+            if ($relationType === self::RELATION_TYPE['BROTHERS']) {
+                $this->filterDataMetch($data, $columnName);
+            }
+
+            $this->AssociateData($tableName, $connection[$columnName], $data, [
+                'table' => $parentTableName,
+                'type'  => $relationType
+            ]);
+        }
+    }
+
+    private function buildRelationshipTree(): array
+    {
+        $resultList = $this->getDataSearch();
+        if (!$resultList) {
+            return [];
         }
 
-        $resultList            = $this->getDataSearch();
-        $parentOrchildRelationOptions = [
-            'relationships' => [
-                'column_instance' => 'id',
-                'column_value'    => ''
-            ],
-            'childrens'      => [
-                'column_instance' => '',
-                'column_value'    => 'id'
-            ]
+        $relationOptions = [
+            'relationships' => ['column_instance' => 'id', 'column_value' => ''],
+            'childrens'     => ['column_instance' => '', 'column_value' => 'id']
         ];
-        $parentOrchildRelation = current($parentOrchildRelationOptions);
-        $parentOrchildRelationKey = key($parentOrchildRelationOptions);
+        $relation    = current($relationOptions);
+        $relationKey = key($relationOptions);
 
         while (true) {
-            $tablenameCurrentName                     = key($resultList);
-            $tableNameCurrentData                     = current($resultList);
+            $tableName          = key($resultList);
+            $tableData          = current($resultList);
+            $tableRelations     = $this->instanceFilters->methods_order[$tableName];
+            $configuredRelation = $tableRelations[$relationKey] ?? null;
 
-            $dataRelations = $this->instanceFilters->methods_order[$tablenameCurrentName];
-            
-
-            if (!isset($dataRelations[$parentOrchildRelationKey])) {
-                if (next($parentOrchildRelationOptions)) {
-                    $parentOrchildRelationKey = key($parentOrchildRelationOptions);
-                    $parentOrchildRelation    = current($parentOrchildRelationOptions);
-                    $columnRelationName       = current($this->instanceFilters->methods_order[$tablenameCurrentName][$parentOrchildRelationKey]);
-                    
-                    $parentOrchildRelation['column_instance'] = $columnRelationName;
-                    $parentOrchildRelation['column_value']    = 'id';
-                } else break;
-            }else{
-                $columnRelationName = current($this->instanceFilters->methods_order[$tablenameCurrentName][$parentOrchildRelationKey]);
-
-                $parentOrchildRelation['column_instance'] = 'id';
-                $parentOrchildRelation['column_value']    = $columnRelationName;
+            if (!$configuredRelation) {
+                if (!next($relationOptions)) {
+                    break;
+                }
+                $relationKey        = key($relationOptions);
+                $relation           = current($relationOptions);
+                $configuredRelation = $tableRelations[$relationKey] ?? null;
+                if (!$configuredRelation) {
+                    break;
+                }
+                $columnRelationName          = current($configuredRelation);
+                $relation['column_instance'] = $columnRelationName;
+                $relation['column_value']    = 'id';
+            } else {
+                $columnRelationName          = current($configuredRelation);
+                $relation['column_instance'] = 'id';
+                $relation['column_value']    = $columnRelationName;
             }
 
-            $tableParentName = key($this->instanceFilters->methods_order[$tablenameCurrentName][$parentOrchildRelationKey]);
-            unset($this->instanceFilters->methods_order[$tablenameCurrentName][$parentOrchildRelationKey]);
-            unset($this->instanceFilters->methods_order[$tableParentName][array_diff(array_keys($parentOrchildRelationOptions), [$parentOrchildRelationKey])[0]]);
-            
+            $parentTableName = key($configuredRelation);
+            unset($tableRelations[$relationKey]);
+            $otherRelation = current(array_diff(array_keys($relationOptions), [$relationKey]));
+            unset($this->instanceFilters->methods_order[$parentTableName][$otherRelation]);
 
-            // $dataRelation = ['table' => $tableParentName, 'type' => self::RELATION_TYPE['PARENT']];
-            $instanceParent = new $this->tables[$tableParentName];
+            $key              = $relation['column_instance'];
+            $dataParent[$key] = array_column($tableData, $relation['column_value']);
+            $parent           = new $this->tables[$parentTableName];
+            $parentResult     = $this->getResultDataRelation(self::RELATION_TYPE['PARENT'], $key, $parent, $dataParent);
+            $this->setChildInParent($parentResult, $tableData, $tableName, $columnRelationName);
 
-            $key     = $parentOrchildRelation['column_instance'];
-            $keyData = $parentOrchildRelation['column_value'];
-
-            $dataParent[$key] = array_map(function ($item) use ($keyData) {
-                return $item[$keyData];
-            }, $tableNameCurrentData);
-
-            $parentResultSearch = $this->getResultDataRelation(self::RELATION_TYPE['PARENT'], $key, $instanceParent, $dataParent);
-            $this->setChildInParent($parentResultSearch, $tableNameCurrentData, $tablenameCurrentName, $columnRelationName);
-
-            $dataSet = [$tableParentName, $tablenameCurrentName];
-
-            // dropRelation
-            if($parentOrchildRelationKey == 'relationships'){
-                $this->dropDataSearch($tablenameCurrentName);
-                $dataSet = [$tableParentName];
+            $dataSet = [$parentTableName, $tableName];
+            if ($relationKey === 'relationships') {
+                $this->dropDataSearch($tableName);
+                $dataSet = [$parentTableName];
             }
 
-            $this->setDataSearch($parentResultSearch, ...$dataSet);
-
-            $hasNext = next($resultList);
-            if (!$hasNext) $resultList = $this->getDataSearch();
+            $this->setDataSearch($parentResult, ...$dataSet);
+            if (!next($resultList)) {
+                $resultList = $this->getDataSearch();
+            }
         }
 
         return $this->getDataSearch();
@@ -163,7 +166,7 @@ class AcompanimentService extends Service
 
     function setupInstancesTable(array $methods, string $tableName): ModelMixin|null
     {
-        $table     = new $this->tables[$tableName];
+        $table         = new $this->tables[$tableName];
         $instanceTable = null;
 
         foreach ($methods as $method => $argumentForMethod) {
@@ -433,7 +436,11 @@ class AcompanimentService extends Service
 
         if (isset($this->instanceFilters->methods_order[$tableName])) {
             $methodOrderCurrentTable  = $this->instanceFilters->methods_order[$tableName];
-            $currentTableRelationship = $methodOrderCurrentTable['relationships'];
+            $currentTableRelationship = $methodOrderCurrentTable['relationships'] ?? [];
+        }
+
+        if (!$currentTableRelationship) {
+            return ['relation' => self::RELATION_TYPE['CHILD'], 'data' => []];
         }
 
 
@@ -450,10 +457,16 @@ class AcompanimentService extends Service
             $intersectionBetweenTables[$searchTable] = $methodOrderTable['childrens'][$searchTable];
         } else {
             // dois patamar a abaixo - o relacionado acima tera uma relação acima
-            $relationType              = self::RELATION_TYPE['GRANDMOTHER'];
-            $tableRelatino             = key($currentTableRelationship);
-            $columnName                = current($this->instanceFilters->methods_order[$tableRelatino]['relationships']);
-            $intersectionBetweenTables = $currentTableRelationship;
+            $tableRelatino       = key($currentTableRelationship);
+            $parentRelationships = $this->instanceFilters->methods_order[$tableRelatino]['relationships'] ?? [];
+
+            if (!$tableRelatino || !$parentRelationships) {
+                return ['relation' => self::RELATION_TYPE['CHILD'], 'data' => []];
+            }
+
+            $relationType                              = self::RELATION_TYPE['GRANDMOTHER'];
+            $columnName                                = current($parentRelationships);
+            $intersectionBetweenTables                 = $currentTableRelationship;
             $intersectionBetweenTables[$tableRelatino] = $columnName;
         }
 
@@ -481,16 +494,26 @@ class AcompanimentService extends Service
 
         return $this->stepList();
     }
+          /**
+     * Verifica se uma tabela possui relacionamentos quebrados (com dropChildren ativado)
+     * 
+     * @param string $tableName Nome da tabela a verificar
+     * @return bool Retorna true se o relacionamento pai tem dropChildren ativado, false caso contrário
+     */
     function isBrokenChildren(string $tableName)
     {
-
+              // Obtém a configuração da tabela dos métodos ordenados
         $relationTable = $this->instanceFilters->methods_order[$tableName];
 
+                // Verifica se a tabela possui relacionamentos definidos
         if (isset($relationTable['relationships'])) {
-            $parentTableName     = key($relationTable['relationships']);
+                    // Obtém o nome da tabela pai (primeira chave do array de relacionamentos)
+            $parentTableName = key($relationTable['relationships']);
+                // Obtém a configuração da tabela pai
             $relationParentTable = $this->instanceFilters->methods_order[$parentTableName];
 
-            if ($relationParentTable['dropChildren']) {
+                  // Verifica se a tabela pai está configurada para descartar filhos
+            if ($relationParentTable['dropChildren'] ?? false) {
                 return true;
             }
         }

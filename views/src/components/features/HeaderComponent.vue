@@ -26,7 +26,7 @@
 <script setup lang = "ts">
 import { ref, computed } from 'vue'
 
-let     origin     = window.location.origin + "/reevolution";
+let     origin     = window.location.origin;
 let     urlCurrent = window.location.href;
 let     pathname   = ref("");
 const urlActived = computed(() => { return urlCurrent === origin ? "background-color: aqua;" : ""; });

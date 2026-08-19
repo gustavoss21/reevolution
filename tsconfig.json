@@ -23,9 +23,8 @@
 		"jsx": "preserve",
 
 		/* Vue TypeScript Support */
-		"baseUrl": ".",
-		"paths": {"@/*": ["views/src/*"]},
-		"types": ["vite/client", "unplugin-icons/types/vue"],
+		"paths"  : {"@/*": ["./views/src/*"]},
+		"types"  : ["vite/client", "unplugin-icons/types/vue"],
 		"rootDir": "./views/src",
 	},
 	"include": [

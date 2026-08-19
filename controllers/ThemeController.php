@@ -4,14 +4,15 @@ namespace Controllers;
 
 use Models\ThemeModel;
 use Controllers\Controller;
-use Models\StageModel;
 use Services\AcompanimentService;
 use Services\ConsultService;
 use Services\ChangeData;
 
 class ThemeController extends Controller
 {
-    private $themaModel, $service, $serviceGenerate;
+    private ThemeModel $themaModel;
+    private ConsultService $service;
+    private ChangeData $serviceGenerate;
 
     public function __construct()
     {
@@ -20,14 +21,14 @@ class ThemeController extends Controller
         $this->serviceGenerate = new ChangeData;
     }
 
-    public function create($data)
+    public function create(array $data)
     {   
         $data_formated  = $this->serviceGenerate->formatValueKey($data);
         $creationResult = $this->serviceGenerate->createTheme($data_formated);
         return $this->respond($creationResult);   
     }
 
-    public function createEvent($data)
+    public function createEvent(array $data)
     {
         $creationResult = $this->serviceGenerate->createEvent($data);
         return $this->respond($creationResult);
@@ -38,16 +39,16 @@ class ThemeController extends Controller
         return $this->respond($this->themaModel->all());
     }
 
-    public function getThemaById($id)
+    public function getThemaById(int $id)
     {
-        $result = $this->themaModel->find(['id' => $id]);
+        $result = $this->themaModel->find();
         if (empty($result)) {
             throw new \Exception("Thema not found.");
         }
         return $this->respond($result[0]);
     }
 
-    public function updateThema($id, $data)
+    public function updateThema(int $id, array $data)
     {
           // Fetch existing thema
         $existingThema = $this->getThemaById($id);
@@ -65,7 +66,7 @@ class ThemeController extends Controller
         return $this->themaModel->update();
     }
 
-    public function deleteThema($id)
+    public function deleteThema(int $id)
     {
           // Ensure thema exists before deletion
         $this->getThemaById($id);
@@ -86,19 +87,19 @@ class ThemeController extends Controller
         return $this->respond($statusAverage);
     }
 
-    public function matchEvent($event)
+    public function matchEvent(array $event)
     {
         $statusAverage = (new ConsultService)->getMatchEvent($event,'themes');
         return $this->respond($statusAverage);
     }
 
-    public function matchTopic($topic)
+    public function matchTopic(array $topic)
     {
         $statusAverage = (new ConsultService)->getMatchEvent($topic,'topics');
         return $this->respond($statusAverage);
     }
 
-    public function relationTableToCreatetheme($table){
+    public function relationTableToCreatetheme(array $table){
         $this->service->getColData($table);
     }
 
@@ -112,7 +113,7 @@ class ThemeController extends Controller
 
         return $this->respond($data);
     }
-    public function form($form)
+    public function form(array $form)
     {   
 
         $form_data = $this->service->getFormRecursive($form['form']);

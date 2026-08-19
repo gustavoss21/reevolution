@@ -6,15 +6,16 @@ use Models\ModelMixin;
 // 
 class ThemeModel extends ModelMixin
 {
-    public $table = 'themes';
-    protected $id, $name, $slug, $description, $created_at, $updated_at;
-    protected $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
-    static $LABELS = [
+    public string $table = 'themes';
+    protected string $name, $slug, $description, $created_at, $updated_at;
+    protected int|array $id;
+    public array $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
+    static array $LABELS = [
         'name'=>'Nome',
         'description'=> 'Descrição'
     ];
 
-    protected $columnsRequiredForMethods = [
+    protected array $columnsRequiredForMethods = [
         'create'=>['name','slug'],
         'update'=>['id'],
         'delete'=>['id']

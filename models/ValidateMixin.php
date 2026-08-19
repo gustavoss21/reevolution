@@ -7,7 +7,7 @@ trait ValidateMixin
     public $errors = [];
     public $log = [];
 
-    protected $columnsRequiredForMethods = [
+    protected array $columnsRequiredForMethods = [
         'update' => [],
         'create' => [],
         'delete' => []

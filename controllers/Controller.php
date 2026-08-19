@@ -13,7 +13,7 @@ class Controller
 
 
       // Common functionalities for all controllers can be added here
-    protected function respond($data, $message='', $status = 200, $error = [])
+    protected function respond(array $data, $message='', $status = 200, $error = [])
     {
         http_response_code($status);
         $response = [
@@ -27,9 +27,9 @@ class Controller
         exit;
     }
 
-    protected function ResponseError($message, $errors = [], $status = 500)
+    protected function ResponseError(string $message, array $errors = [], int $status = 500)
     {
-        $this->respond(null, $message, $status, $errors);
+        $this->respond([], $message, $status, $errors);
     }
 
     protected function getJsonInput()
@@ -38,7 +38,7 @@ class Controller
         return json_decode($input, true);
     }
 
-    protected function validateInput($data, $requiredFields)
+    protected function validateInput(array $data, array $requiredFields)
     {
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
@@ -47,7 +47,7 @@ class Controller
         }
     }
 
-    protected function sanitizeInput($data)
+    protected function sanitizeInput(array $data)
     {
         $sanitized = [];
         foreach ($data as $key => $value) {
@@ -56,26 +56,26 @@ class Controller
         return $sanitized;
     }
 
-    protected function logAction($action, $details = [])
+    protected function logAction(string $action, array $details = [])
     {
           // Implement logging logic here (e.g., write to a file or database)
           // Example: error_log("Action: $action, Details: " . json_encode($details));
     }
 
-    protected function authorize($userRole, $requiredRole)
+    protected function authorize(string $userRole, string $requiredRole)
     {
         if ($userRole !== $requiredRole) {
             throw new \Exception("Unauthorized access.", 403);
         }
     }
 
-    protected function paginate($data, $page = 1, $limit = 10)
+    protected function paginate(array $data, int $page = 1, int $limit = 10)
     {
         $offset = ($page - 1) * $limit;
         return array_slice($data, $offset, $limit);
     }
 
-    protected function filterData($data, $criteria)
+    protected function filterData(array $data, array $criteria)
     {
         return array_filter($data, function ($item) use ($criteria) {
             foreach ($criteria as $key => $value) {
@@ -87,7 +87,7 @@ class Controller
         });
     }
     
-    protected function respondWithPagination($data, $page, $limit)
+    protected function respondWithPagination(array $data, int $page, int $limit)
     {
         $totalItems    = count($data);
         $totalPages    = ceil($totalItems / $limit);

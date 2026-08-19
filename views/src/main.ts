@@ -5,10 +5,10 @@ import {createBootstrap, Components, Directives} from "bootstrap-vue-next";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
-// import {Component} from 'bootstrap-vue-next';
-// const APP = createApp(App).use(router).mount("#app");
+  // import {Component} from 'bootstrap-vue-next';
+  // const APP = createApp(App).use(router).mount("#app");
+console.log(router);
 const app = createApp(App).use(router);
-
 app.use(createBootstrap());
 
 for (const name in Components) {

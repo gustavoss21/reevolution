@@ -1,13 +1,9 @@
 <?php
-
 namespace Models;
 
 use Database\QueryBuild;
-use Dotenv\Parser\Value;
-use Error;
 use Models\ValidateMixin;
 use Database\DB;
-use Dotenv\Util\Regex;
 use Models\ColumnTrait;
 
   /**
@@ -17,25 +13,27 @@ class ModelMixin
 {
     use ValidateMixin;
 
-    protected $assignedColumns, $columns, $columnsWhere;
-    public $table;
+    protected array $assignedColumns = [];
+    public array $columns;
+    protected array $columnsWhere    = [];
+    public string $table;
     const   OPERADORES         = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const   OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
     const   DATASEARCH         = 'id';
-    private $dbconection       = null;
-    private $queryValues       = [];
-    private $columnsForQuery   = [];
-    protected $untitledColumn = [];
-    protected $columnsRequired   = [];
+    private \PDO $dbconection;
+    private array $queryValues       = [];
+    private array $columnsForQuery   = [];
+    protected array $untitledColumn = [];
+    protected array $columnsRequired   = [];
     protected QueryBuild $query;
-    static $LABELS;
-    public $dbLog;
+    static array $LABELS;
+    public array $dbLog;
 
     function __construct($data = [])
     {
         try {
             $this->dbconection = DB::conectarBanco();
-        } catch (ERROR $m) {
+        } catch (\Exception $m) {
             error_log($m);
         }
 
@@ -43,25 +41,24 @@ class ModelMixin
             $this->set($key, $value);
         }
 
-        if (trait_exists(ColumnTrait::class)) {
-            $option_construct_column = QueryBuild::OPTION_CONSTRUCT_COLUMN['personal'];
-        } else {
-            $option_construct_column = QueryBuild::OPTION_CONSTRUCT_COLUMN['defult'];
-        }
+        $optionKey = trait_exists(ColumnTrait::class) ? 'personal' : 'defult';
+        $option_construct_column = \Database\MixinQuerybuild::OPTION_CONSTRUCT_COLUMN[$optionKey];
 
         $this->query = new QueryBuild($this->table, $option_construct_column);
     }
 
     public function setDataDefault() {}
 
-    function get($paramether)
+    function get(string $paramether): mixed
     {
         if (property_exists($this, $paramether)) {
             return $this->{$paramether};
         }
+
+        return null;
     }
 
-    function set($paramether, $value)
+    function set(string $paramether, mixed $value): void
     {
         if (!property_exists($this, $paramether) || is_null($value)) return;
           // if($paramether === 'id')return; 
@@ -95,14 +92,14 @@ class ModelMixin
         return $this->executeQuery($query, $queryData);
     }
 
-    public function columns(...$columns)
+    public function columns(array...$columns)
     {
         $this->columns = $this->query->columns($columns);
 
         return $this;
     }
 
-    public function where($where, $operator = self::OPERADORES['EQ'])
+    public function where(string $where,string $operator = self::OPERADORES['EQ'])
     {
         if ($operator === self::OPERADORES['LIKE']) {
             $this->set($where, $this->get($where) . '%');
@@ -112,7 +109,7 @@ class ModelMixin
         return $this;
     }
 
-    public function whereAnd($where, $operator = self::OPERADORES['EQ'])
+    public function whereAnd(string $where, string $operator = self::OPERADORES['EQ'])
     {
         if ($operator === self::OPERADORES['LIKE']) {
             $this->set($where, $this->get($where) . '%');
@@ -122,7 +119,7 @@ class ModelMixin
         return $this;
     }
 
-    public function whereOr($where, $operator = self::OPERADORES['EQ'])
+    public function whereOr(string $where, string $operator = self::OPERADORES['EQ'])
     {
         if ($operator === self::OPERADORES['LIKE']) {
             $this->set($where, $this->get($where) . '%');
@@ -132,7 +129,7 @@ class ModelMixin
         return $this;
     }
 
-    public function whereIN($where, $operatorLogic = self::OPERADORES_LOGICOS['AND'])
+    public function whereIN(string $where, string $operatorLogic = self::OPERADORES_LOGICOS['AND'])
     {
         $this->columnsWhere[]            = $where;
         $this->$where                    = $this->$where;
@@ -177,7 +174,8 @@ class ModelMixin
         ['columns' => $whereColumns] = $this->filterDataForquery($dataSearch);
         $whereData                   = $this->queryValues;
         $this->validateRequiredFields($this->columnsRequiredForMethods['update']);
-        $componentQuery = new QueryBuild($this->table, $this->assignedColumns, $whereColumns);
+        $componentQuery = new QueryBuild($this->table);
+        // $componentQuery = new QueryBuild($this->table, $this->assignedColumns, $whereColumns);
           // $this->set('updated_at', new \DateTime()->format('Y-m-d H:i:s'));
         $query = $componentQuery->update();
 
@@ -254,7 +252,7 @@ class ModelMixin
         return $dataQuery;
     }
 
-    public function slug($string)
+    public function slug(string $string)
     {
           // Converte para minúsculas
         $slug = strtolower($string);

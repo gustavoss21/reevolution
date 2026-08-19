@@ -24,7 +24,7 @@ class ConsultService extends Service
         'tags' => TagModel::class
     ];
 
-    function searchForOther($byTable, $byTableId)
+    function searchForOther(string $byTable , string|int $byTableId)
     {
         $fomatedTableName = strtolower($byTable);
         $columnTableId = preg_replace('/_?model/', '', $fomatedTableName) . '_id';
@@ -61,7 +61,7 @@ class ConsultService extends Service
         return $themes;
     }
 
-    function filterTopic($data)
+    function filterTopic(array $data)
     {
         $topic = new TopicModel();
 
@@ -249,7 +249,7 @@ class ConsultService extends Service
 
     function getRevision() {}
 
-    function getMatchEvent($event, $table = 'themes')
+    function getMatchEvent(array $event, string $table = 'themes')
     {
         $table = $this->tables[$table];
         $instaceModel = new $table(['name' => $event['name']]);
@@ -257,7 +257,7 @@ class ConsultService extends Service
         return $instaceModel->columns($this->col('id'), $this->col('name'))->where('name', $instaceModel::OPERADORES['LIKE'])->find();
     }
 
-    function getColData($event)
+    function getColData(array $event)
     {
         $tables = ['tags' => TagModel::class, 'topics' => TopicModel::class];
         $event_key = array_key_first($event);
@@ -269,7 +269,7 @@ class ConsultService extends Service
         return $tabel_instance->where('id')->find();
     }
 
-    function getForm($table, $without_col = [])
+    function getForm(string $table, array $without_col = [])
     {
         $model = $this->tables[$table];
         $instance = new ($model)();
@@ -279,7 +279,7 @@ class ConsultService extends Service
         return $data;
     }
 
-    function getFormRecursive($form)
+    function getFormRecursive(string $form)
     {
         $table = $form . 's';
         $data = [];

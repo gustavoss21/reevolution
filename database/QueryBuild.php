@@ -7,7 +7,7 @@ use  Database\MixinQuerybuild;
  */
 class QueryBuild extends MixinQuerybuild{
 
-    function select($columns){
+    function select(array $columns){
         $columns = $this->formatParamts($this->columns?? $columns,', ');
         $whereWith = $this->formatParamtsForWhere();
         return "SELECT {$columns} FROM {$this->table} $whereWith {$this->group_by} {$this->order_by} {$this->limit} ";
@@ -25,7 +25,7 @@ class QueryBuild extends MixinQuerybuild{
         return "UPDATE {$this->table} SET  $columns $whereWith";
     }
     
-    function insert($columns){
+    function insert(array $columns){
         $query_columns = $this->formatParamts($columns,', ');
         $query_column_value = $this->formatParamtsForValue($columns);
         return "INSERT INTO {$this->table} ($query_columns) VALUES ($query_column_value)";

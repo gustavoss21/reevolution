@@ -7,10 +7,11 @@ use Models\ModelMixin;
 // 
 class TopicModel extends  ModelMixin
 {
-    public $table = 'topics';
-    public $columns = ['id', 'name', 'slug', 'description', 'theme_id', 'created_at', 'updated_at', 'can_explain', 'times_week_necessary', 'domain_week', 'started_study', 'lot_to_discuss', 'actived', 'end_date', 'study_time'];
-    protected $id, $name, $theme_id, $topic_id, $slug, $description, $created_at, $updated_at, $can_explain, $times_week_necessary, $domain_week, $started_study, $lot_to_discuss, $actived, $end_date, $study_time;
-    static $LABELS = [
+    public string $table = 'topics';
+    public array $columns = ['id', 'name', 'slug', 'description', 'theme_id', 'created_at', 'updated_at', 'can_explain', 'times_week_necessary', 'domain_week', 'started_study', 'lot_to_discuss', 'actived', 'end_date', 'study_time'];
+    protected string $name, $slug, $description, $created_at, $updated_at, $can_explain, $times_week_necessary, $domain_week, $started_study, $lot_to_discuss, $actived, $end_date, $study_time;
+    protected int|array $id, $theme_id, $topic_id;
+    static array $LABELS = [
         'name'              => 'Tópico do Evento',
         'theme_id'          => 'Tema do Evento',
         'domain_week'       => 'quanto tempo é necessário para dominar o assunto',
@@ -90,7 +91,7 @@ class TopicModel extends  ModelMixin
         'lot_to_discuss_op_yes'=>1
     ];
 
-    protected $columnsRequiredForMethods = [
+    protected array $columnsRequiredForMethods = [
         'create' => ['name', 'slug', 'theme_id'],
         'update' => ['id'],
         'delete' => ['id']
@@ -101,7 +102,7 @@ class TopicModel extends  ModelMixin
         $this->set('slug', $this->slug($this->get('name')));
     }
     
-    static function connect_one_to_many_theme($theme_id)
+    static function connect_one_to_many_theme(int $theme_id)
     {
         $Instheme = new ThemeModel();
         $Instheme->set('id', $theme_id);

@@ -2,7 +2,6 @@
 
 namespace Services;
 
-use DateTime;
 use Models\ThemeModel;
 use Models\StageModel;
 use Models\TopicModel;
@@ -26,7 +25,7 @@ class ChangeData
       /**
      * Format data keys by removing table prefixes
      */
-    public function formatValueKey($data){
+    public function formatValueKey( array $data){
         $tables = [
             'theme',
             'stage',
@@ -53,7 +52,7 @@ class ChangeData
         return $new_data;
     }
     
-    public function createTheme($data){
+    public function createTheme(array $data){
         // Validate and sanitize input data
         if (empty($data['name']) || empty($data['description'])) {
             throw new \Exception("Name and description are required.");
@@ -70,7 +69,7 @@ class ChangeData
         return $themaModel->columns($this->col('id'),$this->col('name'))->where('slug')->find();
     }
 
-    public function createEvent($data)
+    public function createEvent(array $data)
     {
         $table = null;
         $status = [];

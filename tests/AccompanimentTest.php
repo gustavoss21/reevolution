@@ -9,8 +9,6 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 use PHPUnit\Framework\TestCase;
 use Models\ModelMixin;
 use Models\TagModel;
-use Models\ThemeModel;
-use Models\TopicModel;
 use Services\ManagerFilters;
 
 use Services\AcompanimentService;
@@ -22,12 +20,12 @@ use Services\AcompanimentService;
 
 class AccompanimentTest extends TestCase
 {
-    public $insC;
+    public AcompanimentService $insC;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->insC = new AcompanimentService('Models\ThemeModel');
+        $this->insC = new AcompanimentService();
     }
 
     function testFromArray()
@@ -58,7 +56,7 @@ class AccompanimentTest extends TestCase
 
         $dataPossibleTrue  = 'tags:facere';
         $dataPossibleFalse = 'tasfwe:nomeTeste';
-        $result            = new ManagerFilters(['filterforTable' => $dataPossibleTrue]);
+        $result            = new ManagerFilters();
         $result            = $result->spellLabel($dataPossibleTrue);
         print_r($result);
         $this->assertEquals(
@@ -129,8 +127,8 @@ class AccompanimentTest extends TestCase
 
     function testfilterForExpiredTime()
     {
-        $intanceExpired  = (new ManagerFilters('Models\TopicModel'))->filterForExpiredTime('expired', new ('Models\TopicModel'));
-        $instanceCurrent = (new ManagerFilters('Models\TopicModel'))->filterForExpiredTime('current', new ('Models\TopicModel'));
+        $intanceExpired  = (new ManagerFilters())->filterForExpiredTime('expired', new ('Models\TopicModel'));
+        $instanceCurrent = (new ManagerFilters())->filterForExpiredTime('current', new ('Models\TopicModel'));
         $resultExpired   = $intanceExpired->find();
         $resultCurrent   = $instanceCurrent->find();
         $date_current    = date('Y-m-d H:i:s');
@@ -222,17 +220,17 @@ class AccompanimentTest extends TestCase
     function testManagerFiltersOnlyThemes()
     {
         $data = [
-            // ['filterforTable' => 'tags:quia'],
-            // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
-            // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-            // ['orderTasksForDate' => 'desc'],
-            // ['filterForExpiredTime' => 'expired'],
-            // ['statusFilter' => 'started'],
-            ['amountContentOfStudyFilter' => true]
+                                      // ['filterforTable' => 'tags:quia'],
+                                      // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
+                                      // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
+            ['orderTasksForDate' => 'desc'],
+                                      // ['filterForExpiredTime' => 'expired'],
+                                      // ['statusFilter' => 'started'],
+                                      // ['amountContentOfStudyFilter' => true]
         ];
+        $teste        = '1';
         $instance     = new AcompanimentService();
         $searchResult = $instance->managerFilters($data);
-        print_r($searchResult);
         $this->assertIsArray(
             $searchResult,
             'managerFilters: O resultado deve ser um array'

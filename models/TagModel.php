@@ -7,16 +7,16 @@ use Models\ModelMixin;
 // 
 class TagModel extends  ModelMixin
 {
-    public $table = 'tags';
-    public $columns = ['id', 'name','description'];
-    protected $id, $name, $description;
+    public string $table = 'tags';
+    public array $columns = ['id', 'name','description'];
+    protected string $id, $name, $description;
 
-    static $LABELS = [
+    public static array $LABELS = [
         'name'=>'O evento é sobre o que',
         'description'=>'Descrição'
     ];
 
-    protected $columnsRequiredForMethods = [
+    protected array $columnsRequiredForMethods = [
         'create'=>['name'],
         'update'=>['id'],
         'delete'=>['id']

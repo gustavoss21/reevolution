@@ -5,15 +5,13 @@ namespace Database;
 require dirname(__FILE__, 2) . '/vendor/autoload.php';
 
 use Models\GenerateColumn;
-use DateTime;
 use Faker\Factory;
 use Models\StageModel;
 use Models\ThemeModel;
 use Models\TopicModel;
 use Models\FontModel;
 use Models\TagModel;
-use Models\ColumnTrait;
-use Services\ConsultService;
+use Models\ModelMixin;
 
 class Factore
 {
@@ -33,7 +31,7 @@ class Factore
 
     $faker    = Factory::create('pt_BR');
     $name     = $faker->jobTitle();
-    $mT       = (new ThemeModel())->all(null, ['id']);
+    $mT       = (new ThemeModel())->all();
     $range_id = array_map(fn($data) => $data['id'], $mT);
     $data     = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph(), 'end_date' => $faker->dateTimeBetween('2025/08/01', '2026/12/01')->format('Y/m/d h:i:s'), 'lot_to_discuss' => (int)$faker->boolean()];  //, 'can_explain' => (int)$faker->boolean(), 'started_study' => (int)$faker->boolean(), 'study_time' => $faker->numberBetween(1, 12), 'domain_week' => $faker->numberBetween(0, 365), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean(), 'status' => $faker->numberBetween(-1, 1)];
     $stage    = new TopicModel($data);
@@ -83,7 +81,7 @@ class Factore
     $tag->insert();
   }
 
-  function factoreDropAll($model)
+  function factoreDropAll(ModelMixin $model)
   {
     $model->delete(false, true);
   }

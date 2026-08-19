@@ -56,5 +56,13 @@ export default defineConfig({
 		outDir     : "../public/static",   // saída do build para o PHP
 		emptyOutDir: true,
 	},
-	server: {origin: "http://localhost:5173", strictPort: true},
+	server: {
+		origin: "http://localhost:5173", strictPort: true,
+		cors: { 
+			origin : 'http://reevolution',
+			methods: ['GET','POST','PUT','DELETE'],
+			allowedHeaders: ['Content-Type', 'Authorization'],
+
+		}
+	},
 });

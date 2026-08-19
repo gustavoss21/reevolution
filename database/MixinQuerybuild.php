@@ -2,8 +2,6 @@
 
 namespace Database;
 
-use BadFunctionCallException;
-use SQLite3Exception;
 use Models\ColumnTrait;
 
 /**
@@ -11,13 +9,15 @@ use Models\ColumnTrait;
  */
 class MixinQuerybuild 
 {
-    use \Models\ColumnTrait;
+    use ColumnTrait;
 
-    protected $columns, $where = [];
-    protected $limit;
-    private $meta;
-    protected $order_by, $group_by = '';
-    public $valueWhere=[];
+    protected array $columns = [];
+    protected array $where   = [];
+    protected ?string $limit = null;
+    private mixed $meta;
+    protected string $order_by = '';
+    protected string $group_by = '';
+    public array $valueWhere = [];
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
     const OPTION_CONSTRUCT_COLUMN = ['defult'=> 'defult','personal'=> 'ColumnTrait'];
@@ -36,7 +36,7 @@ class MixinQuerybuild
     function formatParamts($queryPartition, $separator = ' ')
     {
 
-        if (empty($queryPartition)) return null;
+        if (empty($queryPartition)) return '*';
 
         $lastIndex = count($queryPartition) - 1;
         $result = '';
@@ -112,8 +112,10 @@ class MixinQuerybuild
     /**
      * Filters data based on specified conditions.
      *
-     * @param mixed $data The data to be filtered, typically an array or object containing the conditions.
-     * @return mixed The filtered result based on the provided conditions.
+     * @param mixed $where The conditions to filter by, typically an array or object.
+     * @param string $operator The SQL operator to use for the condition.
+     * @param string|null $op_logic The logical operator to use between conditions.
+     * @return self The instance of the class for method chaining.
      */
     function where($where, $operator, $op_logic=null)
     {
@@ -139,7 +141,7 @@ class MixinQuerybuild
      *
      * @param int $offset O deslocamento inicial dos resultados (padrão é 0).
      * @param int $limit O número máximo de resultados a serem retornados.
-     * @return string A cláusula LIMIT formatada para uso em SQL.
+     * @return self A cláusula LIMIT formatada para uso em SQL.
      */
     public function limit( $limit, $offset=0)
     {
@@ -166,7 +168,7 @@ class MixinQuerybuild
         return $columns_result;
     }
 
-    private function columnsInColumn($columnData){
+    private function columnsInColumn(mixed $columnData){
         $columns_result = $columnData;
 
         while(isset($columnData['column'])) {
