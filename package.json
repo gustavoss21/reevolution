@@ -4,10 +4,12 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview",
-		"type-check": "vue-tsc --noEmit"
+		"dev"       : "vite",
+		"build"     : "vite build",
+		"preview"   : "vite preview",
+		"type-check": "vue-tsc --noEmit",
+		"test"      : "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.cjs",
+		"test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --config jest.config.cjs"
 	},
 	"dependencies": {
 		"@fullcalendar/core": "^6.1.20",
@@ -29,10 +31,11 @@
 		"@iconify-json/la": "^1.2.1",
 		"@iconify-json/mdi": "^1.2.3",
 		"@types/chart.js": "^2.9.41",
+		"@types/jest": "^30.0.0",
 		"@vitejs/plugin-vue": "^6.0.4",
 		"@vue/compiler-sfc": "^3.5.31",
 		"@vue/tsconfig": "^0.8.1",
-		"jest": "^30.2.0",
+		"jest": "^30.4.2",
 		"less": "^4.5.1",
 		"less-loader": "^12.3.1",
 		"sass": "^1.97.3",
@@ -40,6 +43,7 @@
 		"stylus": "^0.64.0",
 		"stylus-loader": "^8.1.3",
 		"sucrase": "^3.35.1",
+		"ts-jest": "^29.4.12",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.3",
 		"unplugin-icons": "^23.0.1",

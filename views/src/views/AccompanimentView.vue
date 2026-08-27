@@ -7,34 +7,34 @@
 		</div>
 		<div class = "content-blocks">
 			<div class = "content-data">
-				<AcompaniementLeftComponent></AcompaniementLeftComponent>
-				
+				<AcompaniementLeftComponent @dataFilter="manageData.setData($event)"></AcompaniementLeftComponent>
 
 				<div class = "block-center">
 					<NavGuides
-						:guides = "guides_nav"
-						:active = "guides_nav[0]">
+					    @arrowAlter="manageData.orderBy($event)"
+						:guides = "manageData.listTitles"
+						:active = "manageData.orderActived">
 					</NavGuides>
-					<div class = "block-main">
-					<div class = "data-item">
-					<h4  class = "item-title">Item Title</h4>
+					<div      class = "block-main">
+					<div v-for = "item in manageData.dataList" class = "data-item">
+					<h4       class = "item-title">{{ item.name }}</h4>
 							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot1"
-											:settingsData = "dataChart" />
+									<div class = "d-flex">
+									<div class = "graphic">
+											<Doughnut
+												:id          = "'graphic_'+item.id"
+												:settingsData = "dataChart" />
+										</div>
+										<div class = "icons-state">
+											<BiAlarmFill  />
+											<BiMicFill></BiMicFill>
+											<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
+											<LaEyeSolid></LaEyeSolid>
+											<!-- <LaEyeSlashSolid></LaEyeSlashSolid> -->
+											<LaChevronRight></LaChevronRight>
+											<MdiAccountEdit></MdiAccountEdit>
+										</div>
 									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<!-- <LaEyeSlashSolid></LaEyeSlashSolid> -->
-										<LaChevronRight></LaChevronRight>
-										<MdiAccountEdit></MdiAccountEdit>
-									</div>
-								</div>
 							</div>
 							<button
 								@click = "setBlockDataItem"
@@ -50,33 +50,7 @@
 								<div class = "d-flex">
 								<div class = "graphic">
 										<Doughnut
-											  id          = "dot2"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<!-- <LaEyeSlashSolid></LaEyeSlashSolid> -->
-										<LaChevronRight></LaChevronRight>
-										<MdiAccountEdit></MdiAccountEdit>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot3"
+												id          = "dot3"
 											:settingsData = "dataChart1" />
 									</div>
 									<div class = "icons-state">
@@ -91,360 +65,12 @@
 							</div>
 							<button
 								class = "btn"
+								@click="funcTeste"
 								type  = "button">
-								Show
+								ativa
 							</button>
 						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot4"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot5"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot6"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot7"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot8"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot10"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot12"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot9"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot11"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot13"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot14"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot15"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot16"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
-						<div class = "data-item">
-						<h4  class = "item-title">Item Title</h4>
-							<div>
-								<div class = "d-flex">
-								<div class = "graphic">
-										<Doughnut
-											  id          = "dot17"
-											:settingsData = "dataChart" />
-									</div>
-									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
-									</div>
-								</div>
-							</div>
-							<button
-								class = "btn"
-								type  = "button">
-								Show
-							</button>
-						</div>
+						
 					</div>
 				</div>
 				<div               v-show = "dataItem" class      = "group-rigth">
@@ -480,16 +106,27 @@
 	import {useTemplateRef} from 'vue'
 	import {ref, computed, reactive} from 'vue'
 	import type {BvTriggerableEvent} from 'bootstrap-vue-next'
+
+	  //utils
+	import {ManageData} from "@/utils/ManageData.ts";
+import { isArray } from "chart.js/helpers";
+	// import * as mix from '@/utils/functionsMixin.ts';
 	
-
-
+	function funcTeste(){
+		console.log(manageData.orderCurrent);
+		console.log(manageData.data);
+	}
 	const dataItem      = reactive(ref(false))
 	const c_arrow_right = ref("");
 	const icon_display  = ref(false);
 	let e: OptionBlock
-	const optionBlock = ref(e);
-	const class_icon  = ref('')
-
+	const optionBlock     = ref(e);
+	const class_icon      = ref('')
+	let   dataFilter: any = ref();
+	// A classe precisa estar dentro de um proxy reativo para que o template
+	// seja atualizado quando orderActived for alterado pelos métodos.
+	const manageData = reactive(new ManageData(dataFilter.value));
+	// let guides_nav_active = ref(manageData.orderActived);
 
 	  // import {type ComponentExposed} from 'vue-component-type-helpers'
 	  // // let doughnutChart =  as HTMLCanvasElement;
@@ -533,7 +170,6 @@
 			],
 		},
 	};
-	let guides_nav = ["Tema", "Topico", "Categoria", "Estágio"];
 
 	const nestedModal = (args?:keyof ActionBlock)=>{
 		if(window.innerWidth>= 998 ) {
@@ -543,6 +179,8 @@
 
 		blockModal(args)
 	}
+
+
 
 	function setBlockDataItem(){
 			dataItem.value = !dataItem.value;
@@ -596,6 +234,7 @@
 		hidden():any
 	}
 
+	
 
 	enum OptionBlock{
 		rigth='rigth',
@@ -605,7 +244,5 @@
 // 	const preventFn = (e: BvTriggerableEvent) => {
 //   if (preventModal.value) e.preventDefault()
 // }
-
-class SetBlock{}
 
 </script>

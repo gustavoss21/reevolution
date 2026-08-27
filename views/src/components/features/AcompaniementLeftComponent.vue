@@ -106,9 +106,12 @@
 import {ref, useTemplateRef} from "vue";
 import {BFormInput} from "bootstrap-vue-next";
 import {ApiClient} from "@/utils/request.js";
+
+const emit = defineEmits(['dataFilter']);
 //icons
 import IconArrow from "@/components/ui/IconArrow.vue";
 
+const props = defineProps(['dataFilter'])
 // v-bind               = "inputAttrs"
 let showlistOptiones = ref<string[]>([]);
 let keyOptions: string[] = [];
@@ -152,7 +155,6 @@ const arrowAlter = () => {
 const optionsForSearch: object[] = []
 
 function makeRequestWhenChange(){
-    console.log(optionsForSearch)
     let   request = new ApiClient(location.origin+'/reevolution')
     const params  = JSON.stringify(optionsForSearch);
       // Transformamos em string e depois codificamos para URL
@@ -162,7 +164,8 @@ function makeRequestWhenChange(){
 
     request.get(url)
     .then((response) => {
-        console.log(response);
+        emit('dataFilter', response.data);
+
     }).catch((error) => {
         console.error(error);
     });
@@ -235,7 +238,6 @@ function setDataFilterSearch(key: string, event: InputEvent) {
     }
     
     optionsForSearch.push({[key]: inputValue})
-    console.log(optionsForSearch);
 
     keyOptions.push(key);
     makeRequestWhenChange()

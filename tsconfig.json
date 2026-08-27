@@ -33,7 +33,7 @@
 		"views/**/*.vue",
 		"vite.config.mjs",
 		"components.d.ts"
-	],
+, "views/src/test/TestManageData.spec.js"	],
 	"exclude"   : ["node_modules", "public", "dist"],
 	"references": [{"path": "./tsconfig.node.json"}]
 }

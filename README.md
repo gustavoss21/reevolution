@@ -191,3 +191,9 @@ To address all issues (including breaking changes), run:
 
 Run `npm audit` for details.
 **************************
+
+## test
+
+### javascript
+npm install -D jest ts-jest @types/jest typescript
+
