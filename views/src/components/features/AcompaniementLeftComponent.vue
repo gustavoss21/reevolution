@@ -61,7 +61,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-          @change        = "(value: InputEvent) => setDataFilterSearch('statusFilter', value)"
+          @click        = "(value: InputEvent) => setDataFilterSearch('statusFilter', value)"
           class          = "b-form-radio-group"
         :options         = "status_options"
           button-variant = "outline-primary"
@@ -71,7 +71,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-          @change        = "(value: InputEvent) => setDataFilterSearch('filterForExpiredTime', value)"
+          @click        = "(value: InputEvent) => setDataFilterSearch('filterForExpiredTime', value)"
           class          = "b-form-radio-group"
         :options         = "validate_options"
           button-variant = "outline-primary"
@@ -82,7 +82,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-        @change = "(value: InputEvent)=>setDataFilterSearch('statedStudy',value)"    
+        @click = "(value: InputEvent)=>setDataFilterSearch('statedStudy',value)"    
         class="b-form-radio-group"
         :options="process_options"
         button-variant="outline-primary"
@@ -92,7 +92,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-        @change = "(value: InputEvent)=>setDataFilterSearch('amountContentOfStudyFilter',value)"
+        @click = "(value: InputEvent)=>setDataFilterSearch('amountContentOfStudyFilter',value)"
         class="b-form-radio-group"
         :options="scope_options"
         button-variant="outline-primary"
@@ -154,6 +154,14 @@ const arrowAlter = () => {
 
 const optionsForSearch: object[] = []
 
+function setParametersForSearch(setting: { title: string; name: string }) {
+    if(!setting || option_dropdown_filter.value === setting){
+        option_dropdown_filter.value = {title: "", name: ""};
+        return;
+    }
+    option_dropdown_filter.value = setting
+}
+
 function makeRequestWhenChange(){
     let   request = new ApiClient(location.origin+'/reevolution')
     const params  = JSON.stringify(optionsForSearch);
@@ -175,7 +183,7 @@ function makeRequestWhenChange(){
 
 function setFilterSearch(addTagFn: (tag: string) => void, event: InputEvent) {
     console.log(event);
-    
+    debugger
     let inputElement = event.target as HTMLInputElement;
     let formatedOption = option_dropdown_filter.value.title+ ":" + inputElement.value
     // showlistOptiones.value.push(
@@ -218,28 +226,41 @@ function dropFilterSearch(dropTagfn: (tag: string)=>void, tag: string) {
 
 function setDataFilterSearch(key: string, event: InputEvent) {
 
-    let inputElement = event.target as HTMLLabelElement & HTMLInputElement;
-    if(!inputElement.value) return;   
-    let inputValue = inputElement.value;
+    let inputElement = event.target as HTMLInputElement & { control?: HTMLInputElement };
+    let inputValue   = inputElement.value;
+
+    if (inputElement.control) {
+       return; // Ignore if the input is part of a form control
+    }
 
     if(keyOptions.includes(key)){
         let droppedOption: object = dropDataFilterSearch(key)[0];
         let keyDropped = key as keyof typeof droppedOption
-        keyOptions.splice(keyOptions.indexOf(key), 1);
+        // keyOptions.splice(keyOptions.indexOf(key), 1);
         
         if(droppedOption[keyDropped] === inputValue){
             droppedOption        = droppedOption;
             setTimeout(() => {
+                const input = (inputElement.control ?? inputElement) as HTMLInputElement;
                 inputElement.checked = false;
             }, 10);
-            return
-            }
+
+            if(optionsForSearch.length < 1)return emit('dataFilter', []);;
+
+            makeRequestWhenChange()
+            return;
+            
+        }
 
     }
-    
-    optionsForSearch.push({[key]: inputValue})
 
-    keyOptions.push(key);
+    if(inputValue && !(inputValue === '')){
+        optionsForSearch.push({[key]: inputValue});
+         keyOptions.push(key);
+    }
+
+    if(optionsForSearch.length < 1)return emit('dataFilter', []);
+
     makeRequestWhenChange()
 }
 

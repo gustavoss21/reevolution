@@ -34,7 +34,7 @@ export default defineConfig({
 			autoInstall: true,
 		}),
 	],
-	css: {
+	css  : {
 		preprocessorOptions: {
 			scss: {
 				additionalData: `
@@ -55,6 +55,7 @@ export default defineConfig({
 	build: {
 		outDir     : "../public/static",   // saída do build para o PHP
 		emptyOutDir: true,
+		 sourcemap: true
 	},
 	server: {
 		origin: "http://localhost:5173", strictPort: true,

@@ -1,11 +1,12 @@
 # READMED
-
+ver o erro do icon e ajustar
 ## alert
 
 foi mudado um recurso da quere where
 child mudou a forma vazia de [] para undefined
 
 ## next
+filtros nao trans valores correnpondentes, exe: quando coloca dois valores diferentes da mesma opção trans o mesmo resultado
 
 no ManageFilter, na variavel methods_order colocar as variaveis parent e children in relation
 

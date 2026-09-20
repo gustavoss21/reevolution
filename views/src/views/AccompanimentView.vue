@@ -22,17 +22,16 @@
 									<div class = "d-flex">
 									<div class = "graphic">
 											<Doughnut
-												:id          = "'graphic_'+item.id"
-												:settingsData = "dataChart" />
+												:id           = "'graphic_'+item.id"
+												:settingsData = "item.chart as ChartConfiguration" />
 										</div>
 										<div class = "icons-state">
-											<BiAlarmFill  />
-											<BiMicFill></BiMicFill>
-											<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-											<LaEyeSolid></LaEyeSolid>
-											<!-- <LaEyeSlashSolid></LaEyeSlashSolid> -->
-											<LaChevronRight></LaChevronRight>
-											<MdiAccountEdit></MdiAccountEdit>
+										<span v-if="item.icon_class['date']" :class="'status ' +(item.icon_class['date']||'status-default')"><BiAlarmFill  /></span>
+										<span v-if="item.icon_class['can_explain']" :class="'status ' +item.icon_class['can_explain']"><BiMicFill></BiMicFill></span>
+										<span v-if="item.icon_class['priority']" :class="'status ' +item.icon_class['priority']"><HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle></span>
+										<span v-if="item.icon_class['Lot_to_discurss']" :class="'status ' +item.icon_class['Lot_to_discurss']"><LaEyeSolid></LaEyeSolid></span>
+										<span v-if="item.icon_class['more_advance']" :class="'status ' +item.icon_class['more_advance']"><LaChevronRight></LaChevronRight></span>
+										<span v-if="item.icon_class['Lot_to_discurss']" :class="'status ' +item.icon_class['Lot_to_discurss']"><LaEyeSlashSolid></LaEyeSlashSolid></span>
 										</div>
 									</div>
 							</div>
@@ -54,12 +53,12 @@
 											:settingsData = "dataChart1" />
 									</div>
 									<div class = "icons-state">
-										<BiAlarmFill  />
-										<BiMicFill></BiMicFill>
-										<HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle>
-										<LaEyeSolid></LaEyeSolid>
-										<LaChevronRight></LaChevronRight>
-										<LaEyeSlashSolid></LaEyeSlashSolid>
+										<span><BiAlarmFill  /></span>
+										<span><BiMicFill></BiMicFill></span>
+										<span><HeroiconsOutlineExclaimationTriangle></HeroiconsOutlineExclaimationTriangle></span>
+										<span><LaEyeSolid></LaEyeSolid></span>
+										<span><LaChevronRight></LaChevronRight></span>
+										<span><LaEyeSlashSolid></LaEyeSlashSolid></span>
 									</div>
 								</div>
 							</div>
@@ -92,7 +91,8 @@
 	import AcompaniementRightComponent from "@/components/features/AcompaniementRightComponent.vue";
 	import AcompaniementLeftComponent from "@/components/features/AcompaniementLeftComponent.vue";
 	import ModalComponent from "@/components/features/ModalComponent.vue";
-	import {ChartTypeRegistry} from "chart.js";
+	import {ChartConfiguration} from "chart.js";
+	
 	  //icons
 	import BiAlarmFill from "~icons/bi/alarm-fill";
 	import BiMicFill from "~icons/bi/mic-fill";
@@ -123,53 +123,33 @@ import { isArray } from "chart.js/helpers";
 	const optionBlock     = ref(e);
 	const class_icon      = ref('')
 	let   dataFilter: any = ref();
-	// A classe precisa estar dentro de um proxy reativo para que o template
-	// seja atualizado quando orderActived for alterado pelos métodos.
-	const manageData = reactive(new ManageData(dataFilter.value));
-	// let guides_nav_active = ref(manageData.orderActived);
+	import {ChartTypeRegistry} from "chart.js";
+	
 
-	  // import {type ComponentExposed} from 'vue-component-type-helpers'
-	  // // let doughnutChart =  as HTMLCanvasElement;
+
+					  // A classe precisa estar dentro de um proxy reativo para que o template
+					  // seja atualizado quando orderActived for alterado pelos métodos.
+	const manageData = reactive(new ManageData());
 	let type_doughnut: keyof ChartTypeRegistry = "doughnut";
-	  // const myModal = useTemplateRef<ComponentExposed<typeof BModal>>('my-modal')
-	  // const show = () => myModal.value?.show()
 
-	let dataChart = {
-		type: type_doughnut,
-		data: {
-			labels  : ["Red", "Blue", "Yellow"],
-			datasets: [
-				{
-					label          : "My First Dataset",
-					data           : [300, 50, 100],
-					backgroundColor: [
-						"rgb(255, 99, 132)",
-						"rgb(54, 162, 235)",
-						"rgb(255, 205, 86)",
-					],
-					hoverOffset: 4,
-				},
-			],
-		},
-	};
-	let dataChart1 = {
-		type: type_doughnut,
-		data: {
-			labels  : ["Red", "Blue", "Yellow"],
-			datasets: [
-				{
-					label          : "My First Dataset",
-					data           : [300, 50, 100],
-					backgroundColor: [
-						"rgb(255, 99, 132)",
-						"rgb(54, 162, 235)",
-						"rgb(255, 205, 86)",
-					],
-					hoverOffset: 4,
-				},
-			],
-		},
-	};
+		let dataChart1 = {
+			type: type_doughnut,
+			data: {
+				labels  : ["Red", "Blue", "Yellow"],
+				datasets: [
+					{
+						label          : "My First Dataset",
+						data           : [300, 50, 100],
+						backgroundColor: [
+							"rgb(255, 99, 132)",
+							"rgb(54, 162, 235)",
+							"rgb(255, 205, 86)",
+						],
+						hoverOffset: 4,
+					},
+				],
+			},
+		};
 
 	const nestedModal = (args?:keyof ActionBlock)=>{
 		if(window.innerWidth>= 998 ) {
@@ -241,8 +221,5 @@ import { isArray } from "chart.js/helpers";
 		modal='modal',
 		nothing='nothing'
 	}
-// 	const preventFn = (e: BvTriggerableEvent) => {
-//   if (preventModal.value) e.preventDefault()
-// }
 
 </script>

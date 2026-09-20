@@ -186,10 +186,10 @@ class AccompanimentTest extends TestCase
             // ['filterforTable' => 'tags:quia'],
             // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
             // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-            // ['orderTasksForDate' => 'desc'],
+            ['orderTasksForDate' => 'desc'],
             // ['filterForExpiredTime' => 'expired'],
             // ['statusFilter' => 'started'],
-            ['amountContentOfStudyFilter' => true]
+            // ['amountContentOfStudyFilter' => true]
         ];
         $instance     = new AcompanimentService();
         $searchResult = $instance->managerFilters($data);

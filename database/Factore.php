@@ -29,11 +29,12 @@ class Factore
   function factoreTopic()
   {
 
-    $faker    = Factory::create('pt_BR');
-    $name     = $faker->jobTitle();
+    $faker = Factory::create('pt_BR');
+    $name  = $faker->jobTitle();
+      $date     = $faker->dateTimeBetween('2026/08/01', '2026/12/01')->format('Y/m/d h:i:s');
     $mT       = (new ThemeModel())->all();
     $range_id = array_map(fn($data) => $data['id'], $mT);
-    $data     = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph(), 'end_date' => $faker->dateTimeBetween('2025/08/01', '2026/12/01')->format('Y/m/d h:i:s'), 'lot_to_discuss' => (int)$faker->boolean()];  //, 'can_explain' => (int)$faker->boolean(), 'started_study' => (int)$faker->boolean(), 'study_time' => $faker->numberBetween(1, 12), 'domain_week' => $faker->numberBetween(0, 365), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean(), 'status' => $faker->numberBetween(-1, 1)];
+    $data     = ['name' => $name, 'slug' => $faker->slug(), 'theme_id' => $range_id[array_rand($range_id)], 'description' => $faker->paragraph(), 'end_date' => $date, 'lot_to_discuss' => (int)$faker->boolean()];  //, 'can_explain' => (int)$faker->boolean(), 'started_study' => (int)$faker->boolean(), 'study_time' => $faker->numberBetween(1, 12), 'domain_week' => $faker->numberBetween(0, 365), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean(), 'status' => $faker->numberBetween(-1, 1)];
     $stage    = new TopicModel($data);
     $stage->insert();
   }
@@ -43,9 +44,10 @@ class Factore
 
     $faker    = Factory::create('pt_BR');
     $name     = $faker->company();
+    $date     = $faker->dateTimeBetween('2026/08/01', '2026/12/01')->format('Y/m/d h:i:s');
     $mT       = (new TopicModel())->columns(self::col('id'))->all();
     $range_id = array_map(fn($data) => $data['id'], $mT);
-    $data     = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(-1, 1), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean()];
+    $data     = ['name' => $name, 'topic_id' =>  $range_id[array_rand($range_id)], 'slug' => $name, 'status' => $faker->numberBetween(-1, 1), 'domain_level' => $faker->numberBetween(0, 2), 'learning_stage' => $faker->numberBetween(1, 4), 'priority' => $faker->numberBetween(1, 4), 'more_advanced' => (int)$faker->boolean(),'updated_at' => $date, 'description' => $faker->paragraph()];
     $stage    = new StageModel($data);
     $stage->insert();
   }

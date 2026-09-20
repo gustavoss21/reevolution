@@ -1,15 +1,8 @@
-<?xml    version                    = "1.0" encoding = "UTF-8"?>
-<phpunit xmlns:xsi                  = "http://www.w3.org/2001/XMLSchema-instance"
-      :noNamespaceSchemaLocation = "vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap                  = "vendor/autoload.php"
-         cacheDirectory             = ".phpunit.cache"
-         colors                     = "true"
-         stopOnFailure              = "false"
->
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="Unit">
-            <directory>tests</directory>
+        <testsuite name="Application Test Suite">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
-   
 </phpunit>

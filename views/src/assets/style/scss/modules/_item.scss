@@ -34,12 +34,18 @@
     justify-content: center;
     align-content  : start;
     gap            : 7px;
-    >svg{
+    >span>svg{
         height       : 30px;
         width        : 30px;
         padding      : 5px;
         border-radius: 5px;
         background: aliceblue;
+    }
+    .status-alert svg{
+        color: orange;
+    }
+    .status-good svg{
+        color: green;
     }
 }
 
