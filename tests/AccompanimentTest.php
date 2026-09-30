@@ -96,10 +96,12 @@ class AccompanimentTest extends TestCase
 
     function testOrderTasksForDate()
     {
-        $table = new ('Models\StageModel');
-        $resultAsc      = (new ManagerFilters())->OrderTasksForDate('asc', $table);
-        $resultDesc     = (new ManagerFilters())->OrderTasksForDate('desc', $table);
-        $resultInvalid  = (new ManagerFilters())->OrderTasksForDate('invalid', $table);
+        $table1          = new ('Models\StageModel');
+        $table2          = new ('Models\StageModel');
+        $table3          = new ('Models\StageModel');
+        $resultAsc      = (new ManagerFilters())->OrderTasksForDate('asc', $table1);
+        $resultDesc     = (new ManagerFilters())->OrderTasksForDate('desc', $table2);
+        $resultInvalid  = (new ManagerFilters())->OrderTasksForDate('invalid', $table3);
         $resultDataAsc  = $resultAsc->find();
         $resultDataDesc = $resultDesc->find();
         print_r($resultDataAsc);
@@ -186,7 +188,7 @@ class AccompanimentTest extends TestCase
             // ['filterforTable' => 'tags:quia'],
             // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
             // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-            ['orderTasksForDate' => 'desc'],
+            // ['orderTasksForDate' => 'desc'],
             // ['filterForExpiredTime' => 'expired'],
             // ['statusFilter' => 'started'],
             // ['amountContentOfStudyFilter' => true]
@@ -220,13 +222,13 @@ class AccompanimentTest extends TestCase
     function testManagerFiltersOnlyThemes()
     {
         $data = [
-                                      // ['filterforTable' => 'tags:quia'],
-                                      // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
-                                      // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-            ['orderTasksForDate' => 'desc'],
-                                      // ['filterForExpiredTime' => 'expired'],
-                                      // ['statusFilter' => 'started'],
-                                      // ['amountContentOfStudyFilter' => true]
+            // ['filterforTable' => 'tags:quia'],
+            ['filterforTable' => 'themes:Alcantara e Rangel'],
+            // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
+            // ['orderTasksForDate' => 'desc'],
+            // ['filterForExpiredTime' => 'expired'],
+            // ['statusFilter' => 'started'],
+            // ['amountContentOfStudyFilter' => true]
         ];
         $teste        = '1';
         $instance     = new AcompanimentService();
@@ -234,6 +236,38 @@ class AccompanimentTest extends TestCase
         $this->assertIsArray(
             $searchResult,
             'managerFilters: O resultado deve ser um array'
+        );
+    }
+
+    function  testsetDataSearch()
+    {
+        $instance = new AcompanimentService();
+        $data     = ['key1' => 'value1', 'key2' => 'value2'];
+        $instance->setDataSearch($data, 'table1', 'table2');
+        $result = $instance->getDataSearch();
+
+        $this->assertArrayHasKey(
+            'table1',
+            $result,
+            'setDataSearch: O resultado deve conter a chave "table1"'
+        );
+
+        $this->assertArrayHasKey(
+            'table2',
+            $result,
+            'setDataSearch: O resultado deve conter a chave "table2"'
+        );
+
+        $this->assertEquals(
+            $data,
+            $result['table1'],
+            'setDataSearch: O resultado da chave "table1" deve ser igual aos dados fornecidos'
+        );
+
+        $this->assertEquals(
+            $data,
+            $result['table2'],
+            'setDataSearch: O resultado da chave "table2" deve ser igual aos dados fornecidos'
         );
     }
 }

@@ -124,11 +124,8 @@ import { isArray } from "chart.js/helpers";
 	const class_icon      = ref('')
 	let   dataFilter: any = ref();
 	import {ChartTypeRegistry} from "chart.js";
-	
-
-
-					  // A classe precisa estar dentro de um proxy reativo para que o template
-					  // seja atualizado quando orderActived for alterado pelos métodos.
+	// A classe precisa estar dentro de um proxy reativo para que o template
+	// seja atualizado quando orderActived for alterado pelos métodos.
 	const manageData = reactive(new ManageData());
 	let type_doughnut: keyof ChartTypeRegistry = "doughnut";
 

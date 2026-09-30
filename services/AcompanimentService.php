@@ -110,6 +110,7 @@ class AcompanimentService extends Service
             'relationships' => ['column_instance' => 'id', 'column_value' => ''],
             'childrens'     => ['column_instance' => '', 'column_value' => 'id']
         ];
+
         $relation    = current($relationOptions);
         $relationKey = key($relationOptions);
 
@@ -123,9 +124,11 @@ class AcompanimentService extends Service
                 if (!next($relationOptions)) {
                     break;
                 }
+                
                 $relationKey        = key($relationOptions);
                 $relation           = current($relationOptions);
                 $configuredRelation = $tableRelations[$relationKey] ?? null;
+
                 if (!$configuredRelation) {
                     break;
                 }
@@ -146,18 +149,23 @@ class AcompanimentService extends Service
             $key              = $relation['column_instance'];
             $dataParent[$key] = array_column($tableData, $relation['column_value']);
             $parent           = new $this->tables[$parentTableName];
-            $parentResult     = $this->getResultDataRelation(self::RELATION_TYPE['PARENT'], $key, $parent, $dataParent);
-            $this->setChildInParent($parentResult, $tableData, $tableName, $columnRelationName);
+            $parentResult     = $this->getResultDataRelation(self::RELATION_TYPE['PARENT'], $key, $parent, $dataParent)??[];
 
-            $dataSet = [$parentTableName, $tableName];
             if ($relationKey === 'relationships') {
+                $this->setChildInParent($parentResult, $parentResult, $tableName, $columnRelationName);
                 $this->dropDataSearch($tableName);
                 $dataSet = [$parentTableName];
+            }else {
+                // $this->setChildInParent($tableData, $parentResult, $parentTableName, $columnRelationName);
+                // $parentResult = $tableData;
+                $dataSet = [$parentTableName, $tableName];
             }
 
             $this->setDataSearch($parentResult, ...$dataSet);
+
             if (!next($resultList)) {
-                $resultList = $this->getDataSearch();
+                  // $resultList = $this->getDataSearch();
+                break;
             }
         }
 
@@ -383,7 +391,7 @@ class AcompanimentService extends Service
 
         //parent
         if (!$this->resultSearch || $this->resultSearch[$tableName]) {
-            $dataForSearch = count($data) > 1 ? $data : $data[0];
+            $dataForSearch = count($data) > 0 ? $data : $data[0]; //acho que devo mudar para: $data[0]['id']
             $dataForResultSearch = $this->resultSearch[$tableName] ?? [];
             $this->resultSearch[$tableName] = array_merge($dataForResultSearch, $dataForSearch);
             
@@ -406,8 +414,9 @@ class AcompanimentService extends Service
 
         if (!$tableName) return false;
 
+        $listCurrent = &$this->dissectParent($parent);
         //brothers | grandmother
-        $this->stepList()[$tableName] = $data;
+        $listCurrent[0][$tableName] = $data;
         return true;
     }
 

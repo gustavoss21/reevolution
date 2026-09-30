@@ -4,5 +4,8 @@ module.exports = {
   transform      : {
     '^.+\\.tsx?$': ['ts-jest', { useESM: true }],
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/views/src/$1',
+  },
   extensionsToTreatAsEsm: ['.ts'],
 };

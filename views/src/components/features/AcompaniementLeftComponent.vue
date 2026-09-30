@@ -23,12 +23,12 @@
                    
                 </BDropdown>
                 <BFormInput
-                id = "tags-basic"
-                ref="inputRef"
+                id                     = "tags-basic"
+                ref                    = "inputRef"
                 list                   = "input-list"
                 placeholder            = "New tag - Press enter to add"
                 class                  = "form-control"
-                @keydown.enter.prevent = "setFilterSearch(addTag, $event)"
+                @keydown.enter.prevent = "mix.setFilterSearch(addTag, $event, option_dropdown_filter)"
                 @keyup.enter.prevent   = "$event.target.value = ''" />
                 <BFormDatalist
                     id="input-list"
@@ -41,7 +41,7 @@
                     :title   = "tag"
                     :variant = "tagVariant"
                       class  = "me-1"
-                      @remove = "dropFilterSearch(removeTag, tag)">
+                      @remove = "mix.dropFilterSearch(removeTag, tag)">
                       
                     {{ tag }}
                 </BFormTag>
@@ -51,7 +51,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-          @click  = "(value: InputEvent) => setDataFilterSearch('orderTasksForDate', value)"
+          @click  = "(value: InputEvent) => mix.setDataFilterSearch('orderTasksForDate', value)"
           class          = "b-form-radio-group"
         :options         = "options_date"
           button-variant = "outline-primary"
@@ -61,7 +61,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-          @click        = "(value: InputEvent) => setDataFilterSearch('statusFilter', value)"
+          @click        = "(value: InputEvent) => mix.setDataFilterSearch('statusFilter', value)"
           class          = "b-form-radio-group"
         :options         = "status_options"
           button-variant = "outline-primary"
@@ -71,7 +71,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-          @click        = "(value: InputEvent) => setDataFilterSearch('filterForExpiredTime', value)"
+          @click        = "(value: InputEvent) => mix.setDataFilterSearch('filterForExpiredTime', value)"
           class          = "b-form-radio-group"
         :options         = "validate_options"
           button-variant = "outline-primary"
@@ -82,7 +82,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-        @click = "(value: InputEvent)=>setDataFilterSearch('statedStudy',value)"    
+        @click = "(value: InputEvent)=>mix.setDataFilterSearch('statedStudy',value)"    
         class="b-form-radio-group"
         :options="process_options"
         button-variant="outline-primary"
@@ -92,7 +92,7 @@
 </div>
 <div class="content-b-form-radio-group">
     <BFormRadioGroup
-        @click = "(value: InputEvent)=>setDataFilterSearch('amountContentOfStudyFilter',value)"
+        @click = "(value: InputEvent)=>mix.setDataFilterSearch('amountContentOfStudyFilter',value)"
         class="b-form-radio-group"
         :options="scope_options"
         button-variant="outline-primary"
@@ -105,16 +105,17 @@
 <script setup lang = "ts">
 import {ref, useTemplateRef} from "vue";
 import {BFormInput} from "bootstrap-vue-next";
-import {ApiClient} from "@/utils/request.js";
+import mix from "@/utils/mixinLeftComponent.ts";
 
-const emit = defineEmits(['dataFilter']);
 //icons
 import IconArrow from "@/components/ui/IconArrow.vue";
 
-const props = defineProps(['dataFilter'])
+var emit = defineEmits(['dataFilter'])
+mix.setEmitFunction(emit);
+
 // v-bind               = "inputAttrs"
 let showlistOptiones = ref<string[]>([]);
-let keyOptions: string[] = [];
+
 let inputSearchSettings = [
     {title: "Tema", name: "thema"},
     {title: "Tópico", name: "topic"},
@@ -152,131 +153,6 @@ const arrowAlter = () => {
     console.log(c_arrow.value);
 };
 
-const optionsForSearch: object[] = []
-
-function setParametersForSearch(setting: { title: string; name: string }) {
-    if(!setting || option_dropdown_filter.value === setting){
-        option_dropdown_filter.value = {title: "", name: ""};
-        return;
-    }
-    option_dropdown_filter.value = setting
-}
-
-function makeRequestWhenChange(){
-    let   request = new ApiClient(location.origin+'/reevolution')
-    const params  = JSON.stringify(optionsForSearch);
-      // Transformamos em string e depois codificamos para URL
-    const dataString = encodeURIComponent(params);
-    const url = `/filters-accompaniment?data=${dataString}`;
-// params vira "status=ativo&pagina=1&limite=10"
-
-    request.get(url)
-    .then((response) => {
-        emit('dataFilter', response.data);
-
-    }).catch((error) => {
-        console.error(error);
-    });
-}
-
-
-
-function setFilterSearch(addTagFn: (tag: string) => void, event: InputEvent) {
-    console.log(event);
-    debugger
-    let inputElement = event.target as HTMLInputElement;
-    let formatedOption = option_dropdown_filter.value.title+ ":" + inputElement.value
-    // showlistOptiones.value.push(
-    //     formatedOption
-    // );
-    
-
-    optionsForSearch.push({'filterforTable': formatedOption})
-    
-    setTimeout(
-        () => {
-            //    inputElement.value = "";
-    addTagFn(formatedOption);
-
-        }
-        , 10
-    );
-    
-    return makeRequestWhenChange()
-}
-
-function dropFilterSearch(dropTagfn: (tag: string)=>void, tag: string) {
-    optionsForSearch.map((option: { filterforTable?: string }, index: number) => {
-        if (option.hasOwnProperty('filterforTable') && option['filterforTable'] === tag) {
-            optionsForSearch.splice(index, 1); // Break the loop
-        }
-    });
-    dropTagfn(tag);
-   
-    setTimeout(
-        () => {
-        let input       = document.getElementById('tags-basic') as HTMLInputElement;
-        input.value = ''
-
-        }
-        , 10
-    );
-    makeRequestWhenChange()
-}
-
-function setDataFilterSearch(key: string, event: InputEvent) {
-
-    let inputElement = event.target as HTMLInputElement & { control?: HTMLInputElement };
-    let inputValue   = inputElement.value;
-
-    if (inputElement.control) {
-       return; // Ignore if the input is part of a form control
-    }
-
-    if(keyOptions.includes(key)){
-        let droppedOption: object = dropDataFilterSearch(key)[0];
-        let keyDropped = key as keyof typeof droppedOption
-        // keyOptions.splice(keyOptions.indexOf(key), 1);
-        
-        if(droppedOption[keyDropped] === inputValue){
-            droppedOption        = droppedOption;
-            setTimeout(() => {
-                const input = (inputElement.control ?? inputElement) as HTMLInputElement;
-                inputElement.checked = false;
-            }, 10);
-
-            if(optionsForSearch.length < 1)return emit('dataFilter', []);;
-
-            makeRequestWhenChange()
-            return;
-            
-        }
-
-    }
-
-    if(inputValue && !(inputValue === '')){
-        optionsForSearch.push({[key]: inputValue});
-         keyOptions.push(key);
-    }
-
-    if(optionsForSearch.length < 1)return emit('dataFilter', []);
-
-    makeRequestWhenChange()
-}
-
-function dropDataFilterSearch(key: string) {
-    let index = optionsForSearch.findIndex((option:object) => {
-        if (option.hasOwnProperty(key)) {
-            return true; // Break the loop
-        }
-        return false;
-    });
-    if (index === -1)return;
-
-    keyOptions.splice(keyOptions.indexOf(key), 1);
-    return optionsForSearch.splice(index, 1);
-     
-}
 
 
 </script>
