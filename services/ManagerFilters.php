@@ -52,8 +52,10 @@ class ManagerFilters{
             'methods' => [
                 'filterforTable',
             ],
-            'childrens'=>[
-                'topics' => 'theme_id'
+            'relationships'=>[
+                'child'=>[
+                    'topics' => 'theme_id'
+                ]
             ]
         ],
         'topics'=>[
@@ -64,12 +66,15 @@ class ManagerFilters{
             ],
             'dropChildren' => false,
             'relationships'=>[
-                'themes' => 'theme_id'
-            ],
-            'childrens' => [
-                'stages',
-                'tags'
+
+                'parent'=>['themes' => 'theme_id'],
+                'child' => [
+                    'stages' => 'topic_id',
+                    'tags'   => 'topic_id'
+                  ],
             ]
+          
+            
 
         ],
 
@@ -79,7 +84,7 @@ class ManagerFilters{
             'statusFilter',
             ],
             'relationships' => [
-                'topics' => 'topic_id'
+                'parent' => ['topics' => 'topic_id']
             ]
         ],
         'tags'=>[
@@ -87,7 +92,7 @@ class ManagerFilters{
                 'filterforTable',
             ],
             'relationships' => [
-                'topics' => 'topic_id'
+                'parent'=>['topics' => 'topic_id']  
             ]
         ]
     ];

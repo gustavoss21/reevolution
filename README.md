@@ -8,6 +8,7 @@ child mudou a forma vazia de [] para undefined
 ## next
 filtros nao trans valores correnpondentes, exe: quando coloca dois valores diferentes da mesma opção trans o mesmo resultado
 
+ao filtrar via tags, observar se a coluna usada na busca é name ou tag que é a correta
 no ManageFilter, na variavel methods_order colocar as variaveis parent e children in relation
 
 se no filtro eu pesquisar apenas temas; topicos, estagios..., nao seram recuperados, tem que recuper tudo abaixo!

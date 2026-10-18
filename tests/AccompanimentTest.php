@@ -9,6 +9,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 use PHPUnit\Framework\TestCase;
 use Models\ModelMixin;
 use Models\TagModel;
+use Models\ThemeModel;
 use Services\ManagerFilters;
 
 use Services\AcompanimentService;
@@ -73,17 +74,18 @@ class AccompanimentTest extends TestCase
 
     function testFilterforTable()
     {
-        $dataPossibleTrue = 'quia';
-        $table            = new TagModel();
+        $dataPossibleTrue = 'Alcantara e Rangel';
+        $table            = new ThemeModel();
+        // $table            = new TagModel();
         // $table            = new TagModel();
         // $table            = new TopicModel();
         $instance         = new ManagerFilters();
         $resultTrue       = $instance->filterforTable($dataPossibleTrue, $table);
 
         $this->assertInstanceOf(
-            'Models\TagModel',
+            'Models\ThemeModel',
             $resultTrue,
-            'filterforTable: O resultado deve ser uma instância de TagModel'
+            'filterforTable: O resultado deve ser uma instância de ThemeModel'
         );
 
         $data = $resultTrue->find();
@@ -96,9 +98,9 @@ class AccompanimentTest extends TestCase
 
     function testOrderTasksForDate()
     {
-        $table1          = new ('Models\StageModel');
-        $table2          = new ('Models\StageModel');
-        $table3          = new ('Models\StageModel');
+        $table1         = new ('Models\StageModel');
+        $table2         = new ('Models\StageModel');
+        $table3         = new ('Models\StageModel');
         $resultAsc      = (new ManagerFilters())->OrderTasksForDate('asc', $table1);
         $resultDesc     = (new ManagerFilters())->OrderTasksForDate('desc', $table2);
         $resultInvalid  = (new ManagerFilters())->OrderTasksForDate('invalid', $table3);
@@ -222,13 +224,13 @@ class AccompanimentTest extends TestCase
     function testManagerFiltersOnlyThemes()
     {
         $data = [
-            // ['filterforTable' => 'tags:quia'],
+                                  // ['filterforTable' => 'tags:quia'],
             ['filterforTable' => 'themes:Alcantara e Rangel'],
-            // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-            // ['orderTasksForDate' => 'desc'],
-            // ['filterForExpiredTime' => 'expired'],
-            // ['statusFilter' => 'started'],
-            // ['amountContentOfStudyFilter' => true]
+                                  // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
+                                  // ['orderTasksForDate' => 'desc'],
+                                  // ['filterForExpiredTime' => 'expired'],
+                                  // ['statusFilter' => 'started'],
+                                  // ['amountContentOfStudyFilter' => true]
         ];
         $teste        = '1';
         $instance     = new AcompanimentService();
@@ -237,7 +239,7 @@ class AccompanimentTest extends TestCase
             $searchResult,
             'managerFilters: O resultado deve ser um array'
         );
-    }
+     }
 
     function  testsetDataSearch()
     {
@@ -252,22 +254,75 @@ class AccompanimentTest extends TestCase
             'setDataSearch: O resultado deve conter a chave "table1"'
         );
 
-        $this->assertArrayHasKey(
-            'table2',
-            $result,
-            'setDataSearch: O resultado deve conter a chave "table2"'
-        );
-
         $this->assertEquals(
             $data,
             $result['table1'],
             'setDataSearch: O resultado da chave "table1" deve ser igual aos dados fornecidos'
         );
+    }
 
-        $this->assertEquals(
-            $data,
-            $result['table2'],
-            'setDataSearch: O resultado da chave "table2" deve ser igual aos dados fornecidos'
+    function testGetConfigRelationUsesCorrectForeignKeys()
+    {
+        $instance = new AcompanimentService();
+        $options = [
+            'relationships' => ['column_instance' => 'id', 'column_value' => ''],
+            'childrens'     => ['column_instance' => '', 'column_value' => 'id']
+        ];
+
+        $relationKey = 'relationships';
+        $relation = current($options);
+        $configuredRelation = null;
+        $stageRows = [['id' => 10, 'topic_id' => 3]];
+        $parentRelation = $instance->getConfigRelation(
+            'stages',
+            $stageRows
+        );
+
+         $this->assertSame('relationships', $relationKey);
+        $this->assertSame('id', $parentRelation['key']);
+        $this->assertSame( [3], $parentRelation['parent']['id']);
+        $this->assertSame('topics', $parentRelation['parentTableName']);
+
+        $relationKey = 'relationships';
+        $relation = current($options);
+        $configuredRelation = null;
+        $themeRows = ['themes' => [['id' => 3]]];
+        $childRelation = $instance->getConfigRelation(
+            'themes',
+            $themeRows
+        );
+
+        $this->assertSame('childrens', $relationKey);
+        $this->assertSame('theme_id', $childRelation['key']);
+        $this->assertSame(['theme_id' => [3]], $childRelation['dataParent']);
+        $this->assertSame('topics', $childRelation['parentTableName']);
+    }
+
+    function testGetRelationship(){
+        $table      = 'themes';
+        // $tableCheck = 'topics';
+        // $tableCheck = 'themes';
+        // $tableCheck = 'tags';
+        $tableCheck = 'stages';
+    
+        $instance = new AcompanimentService();
+        $relationship = $instance->getRelationship($table, $tableCheck);
+
+        $this->assertIsArray(
+            $relationship,
+            'getRelationship: O resultado deve ser um array'
+        );
+
+        $this->assertArrayHasKey(
+            'relation',
+            $relationship,
+            'getRelationship: O resultado deve conter a chave "key"'
+        );
+
+        $this->assertArrayHasKey(
+            'data',
+            $relationship,
+            'getRelationship: O resultado deve conter a chave "dataParent"'
         );
     }
 }
