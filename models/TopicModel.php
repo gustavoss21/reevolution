@@ -9,7 +9,8 @@ class TopicModel extends  ModelMixin
 {
     public string $table = 'topics';
     public array $columns = ['id', 'name', 'slug', 'description', 'theme_id', 'created_at', 'updated_at', 'can_explain', 'times_week_necessary', 'domain_week', 'started_study', 'lot_to_discuss', 'actived', 'end_date', 'study_time'];
-    protected string $name, $slug, $description, $created_at, $updated_at, $can_explain, $times_week_necessary, $domain_week, $started_study, $lot_to_discuss, $actived, $end_date, $study_time;
+    protected string $slug, $description, $created_at, $updated_at, $can_explain, $times_week_necessary, $domain_week, $started_study, $lot_to_discuss, $actived, $end_date, $study_time;
+    protected string|array $name;
     protected int|array $id, $theme_id, $topic_id;
     static array $LABELS = [
         'name'              => 'Tópico do Evento',

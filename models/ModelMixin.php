@@ -13,7 +13,7 @@ class ModelMixin
 {
     use ValidateMixin;
 
-    protected array $assignedColumns = [];
+    public array $assignedColumns = [];
     public array $columns;
     protected array $columnsWhere    = [];
     public string $table;
@@ -294,5 +294,17 @@ class ModelMixin
 
     public function __clone(){
         $this->query = clone $this->query;
+    }
+
+    public function clearQuery($column = null){
+        $this->columnsWhere;
+        foreach($this->query->where as $key => $value){
+            if($column && $value['column'] === $column){
+                // $key = array_search($column, $this->columnsWhere);
+                unset($this->query->where[$key]);
+                unset($this->columnsWhere[$key]);
+                break;
+            }
+        }
     }
 }

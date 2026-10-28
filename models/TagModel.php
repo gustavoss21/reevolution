@@ -9,7 +9,8 @@ class TagModel extends  ModelMixin
 {
     public string $table = 'tags';
     public array $columns = ['id', 'name','description'];
-    protected string $id, $name, $description;
+    protected string $id, $description;
+    protected string|array $name;
 
     public static array $LABELS = [
         'name'=>'O evento é sobre o que',

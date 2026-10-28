@@ -66,22 +66,18 @@ class ManagerFilters{
             ],
             'dropChildren' => false,
             'relationships'=>[
-
                 'parent'=>['themes' => 'theme_id'],
                 'child' => [
                     'stages' => 'topic_id',
                     'tags'   => 'topic_id'
                   ],
             ]
-          
-            
-
         ],
 
         'stages'=>[
             'methods'=>[
-            'orderTasksForDate',
-            'statusFilter',
+                'orderTasksForDate',
+                'statusFilter',
             ],
             'relationships' => [
                 'parent' => ['topics' => 'topic_id']
@@ -97,12 +93,40 @@ class ManagerFilters{
         ]
     ];
 
+     public array $familyOrder = [
+        'themes' => [
+            'relationships'=>[
+                'child'=>[
+                    'topics' => 'theme_id'
+                ]
+            ]
+        ],
+        'topics'=>[
+            'relationships'=>[
+                'parent'=>['themes' => 'theme_id'],
+                'child' => [
+                    'stages' => 'topic_id',
+                    'tags'   => 'topic_id'
+                  ],
+            ]
+        ],
+        'stages'=>[
+            'relationships' => [
+                'parent' => ['topics' => 'topic_id']
+            ]
+        ],
+        'tags'=>[
+            'relationships' => [
+                'parent'=>['topics' => 'topic_id']  
+            ]
+        ]
+    ];
     /**
      * Cria a instância a partir de um array associativo
      */
     public function fromArray(array $data){
         foreach ($this->methods_order as $table => $dataForSearch) {
-            foreach ($data as $index => $functionData) {
+            foreach ($data as $index => &$functionData) {
                 $functionName = @key($functionData);
                 $argumentForFunction = @current($functionData);
                 if(in_array($functionName, $dataForSearch['methods'])){
@@ -111,13 +135,14 @@ class ManagerFilters{
                         
                         if (!$tableData || $tableData['modelName'] !== $table) continue;
 
-                        $this->method_seted[][$tableData['modelName']][$functionName] = $tableData['valueSearch'];
-                        array_shift($data);
+                        $this->method_seted[$tableData['modelName']][$functionName][] = $tableData['valueSearch'];
+                        unset($data[$index]);
                         continue;
                     }
 
-                    $this->method_seted[][$table][$functionName] = $argumentForFunction;
-                    array_shift($data);
+                    $this->method_seted[$table][$functionName] = $argumentForFunction;
+                      // array_shift($data);
+                    unset($data[$index]);
                 }
         }
             
@@ -145,7 +170,7 @@ class ManagerFilters{
         ];
     }
 
-    function filterforTable(string $valueSearch,ModelMixin $instanceModel)
+    function filterforTable(string|array $valueSearch,ModelMixin $instanceModel)
     {
         $instanceModel->set('name', $valueSearch);
         $instanceModel->where('name');

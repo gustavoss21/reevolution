@@ -6,6 +6,9 @@ foi mudado um recurso da quere where
 child mudou a forma vazia de [] para undefined
 
 ## next
+
+corrigir o error do find do ModelMixin, o array_merge é necessario
+
 filtros nao trans valores correnpondentes, exe: quando coloca dois valores diferentes da mesma opção trans o mesmo resultado
 
 ao filtrar via tags, observar se a coluna usada na busca é name ou tag que é a correta

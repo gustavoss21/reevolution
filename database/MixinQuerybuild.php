@@ -12,7 +12,7 @@ class MixinQuerybuild
     use ColumnTrait;
 
     protected array $columns = [];
-    protected array $where   = [];
+    public array $where   = [];
     protected ?string $limit = null;
     private mixed $meta;
     protected string $order_by = '';

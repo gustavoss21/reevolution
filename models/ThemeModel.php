@@ -7,7 +7,8 @@ use Models\ModelMixin;
 class ThemeModel extends ModelMixin
 {
     public string $table = 'themes';
-    protected string $name, $slug, $description, $created_at, $updated_at;
+    protected string $slug, $description, $created_at, $updated_at;
+    protected string|array $name;
     protected int|array $id;
     public array $columns = ['id', 'name', 'slug', 'description', 'created_at', 'updated_at'];
     static array $LABELS = [

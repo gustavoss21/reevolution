@@ -33,10 +33,11 @@ class AccompanimentTest extends TestCase
     {
         $data = [
             ['filterforTable' => 'tags:quia',],
-            ['orderTasksForDate' => 'desc',],
-            ['filterForExpiredTime' => 'expired',],
-            ['statusFilter' => 'started',],
-            ['amountContentOfStudyFilter' => true]
+            ['filterforTable' => 'tags:tesete',],
+            // ['orderTasksForDate' => 'desc',],
+            // ['filterForExpiredTime' => 'expired',],
+            // ['statusFilter' => 'started',],
+            // ['amountContentOfStudyFilter' => true]
         ];
 
         $intance = new ManagerFilters();
@@ -187,13 +188,13 @@ class AccompanimentTest extends TestCase
     function testManagerFilters()
     {
         $data = [
-            // ['filterforTable' => 'tags:quia'],
-            // ['filterforTable' => 'themes:Maia e Balestero e Filhos'],
-            // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-            // ['orderTasksForDate' => 'desc'],
-            // ['filterForExpiredTime' => 'expired'],
-            // ['statusFilter' => 'started'],
-            // ['amountContentOfStudyFilter' => true]
+            ['filterforTable' => 'tags:quia'],//themes
+            ['filterforTable' => 'themes:Alcantara e Rangel'],
+            // ['filterforTable' => 'themes:Santos e Mendonça e Filhos'],
+            ['orderTasksForDate' => 'desc'],//recente(desc)|antigo(asc):stages
+            // ['filterForExpiredTime' => 'expired'],//topics
+            ['statusFilter' => 'started'],//iniciado:stages
+            // ['amountContentOfStudyFilter' => true]//quantidade de conteúdos:topics
         ];
         $instance     = new AcompanimentService();
         $searchResult = $instance->managerFilters($data);
@@ -221,43 +222,30 @@ class AccompanimentTest extends TestCase
         );
     }
 
-    function testManagerFiltersOnlyThemes()
-    {
-        $data = [
-                                  // ['filterforTable' => 'tags:quia'],
-            ['filterforTable' => 'themes:Alcantara e Rangel'],
-                                  // ['filterforTable' => 'themes:Batista e Lourenço e Associados'],
-                                  // ['orderTasksForDate' => 'desc'],
-                                  // ['filterForExpiredTime' => 'expired'],
-                                  // ['statusFilter' => 'started'],
-                                  // ['amountContentOfStudyFilter' => true]
-        ];
-        $teste        = '1';
-        $instance     = new AcompanimentService();
-        $searchResult = $instance->managerFilters($data);
-        $this->assertIsArray(
-            $searchResult,
-            'managerFilters: O resultado deve ser um array'
-        );
-     }
-
-    function  testsetDataSearch()
+    function  testsetRootData()
     {
         $instance = new AcompanimentService();
         $data     = ['key1' => 'value1', 'key2' => 'value2'];
-        $instance->setDataSearch($data, 'table1', 'table2');
+        $instance->setRootData($data, 'table1', 'table2');
         $result = $instance->getDataSearch();
+        $resultForTable = $instance->getDataSearch('table1');
 
         $this->assertArrayHasKey(
             'table1',
             $result,
-            'setDataSearch: O resultado deve conter a chave "table1"'
+            'setRootData: O resultado deve conter a chave "table1"'
+        );
+
+        $this->assertEquals(
+            $data,
+            $resultForTable,
+            'setRootData: O resultado deve conter a chave "table1"'
         );
 
         $this->assertEquals(
             $data,
             $result['table1'],
-            'setDataSearch: O resultado da chave "table1" deve ser igual aos dados fornecidos'
+            'setRootData: O resultado da chave "table1" deve ser igual aos dados fornecidos'
         );
     }
 
@@ -269,33 +257,28 @@ class AccompanimentTest extends TestCase
             'childrens'     => ['column_instance' => '', 'column_value' => 'id']
         ];
 
-        $relationKey = 'relationships';
-        $relation = current($options);
-        $configuredRelation = null;
         $stageRows = [['id' => 10, 'topic_id' => 3]];
         $parentRelation = $instance->getConfigRelation(
             'stages',
             $stageRows
         );
 
-         $this->assertSame('relationships', $relationKey);
         $this->assertSame('id', $parentRelation['key']);
-        $this->assertSame( [3], $parentRelation['parent']['id']);
-        $this->assertSame('topics', $parentRelation['parentTableName']);
+        $this->assertSame( [3], $parentRelation['parent']->get('id'));
+        $this->assertSame('topics', $parentRelation['parent']->table);
 
         $relationKey = 'relationships';
         $relation = current($options);
         $configuredRelation = null;
-        $themeRows = ['themes' => [['id' => 3]]];
+        $themeRows = [['id' => 3]];
         $childRelation = $instance->getConfigRelation(
             'themes',
             $themeRows
         );
 
-        $this->assertSame('childrens', $relationKey);
         $this->assertSame('theme_id', $childRelation['key']);
-        $this->assertSame(['theme_id' => [3]], $childRelation['dataParent']);
-        $this->assertSame('topics', $childRelation['parentTableName']);
+        $this->assertSame([3], $childRelation['parent']->get('theme_id'));
+        $this->assertSame('topics', $childRelation['parent']->table);
     }
 
     function testGetRelationship(){

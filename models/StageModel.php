@@ -30,7 +30,6 @@ class StageModel extends  ModelMixin implements FuncColumnInterface
         'priority',
         'partial_score'
     ];
-
     static $PRIORITE_LABEL = [
         1 => 'Baixa',
         2 => 'Média',
