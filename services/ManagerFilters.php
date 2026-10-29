@@ -41,9 +41,9 @@ class ManagerFilters{
     ];
 
     public array $tableNamesTransleted = [
-        'Tema' => 'themes',
-        'Estagio' => 'stages',
+        'Tema'   => 'themes',
         'Topico' => 'topics',
+        'Estagio' => 'stages',
         'Tag' => 'tags'
     ];
     
@@ -175,7 +175,10 @@ class ManagerFilters{
         $instanceModel->set('name', $valueSearch);
         $instanceModel->where('name');
 
-        if($instanceModel->table === 'tags'){
+        if(in_array($instanceModel->table,['tags','relationship_tags_topics'])){
+            $instanceModel = new TagModel();
+            $instanceModel->set('tag', $valueSearch);
+            $instanceModel->whereIN('tag');
             $tagResult = $instanceModel->find();
             
             if (!$tagResult) {
@@ -185,6 +188,7 @@ class ManagerFilters{
             $relationshipWithTopic = new RelationshipTopicAndTag(['tag_id' => $tagResult[0]['id']]);
             $relationshipWithTopic->where('tag_id');
             $instanceModel = $relationshipWithTopic;
+            $instanceModel->table = 'tags';
 
         }
         

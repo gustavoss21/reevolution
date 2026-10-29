@@ -188,7 +188,7 @@ class AccompanimentTest extends TestCase
     function testManagerFilters()
     {
         $data = [
-            ['filterforTable' => 'tags:quia'],//themes
+            ['filterforTable' => 'tags:testeTag'],//tags
             ['filterforTable' => 'themes:Alcantara e Rangel'],
             // ['filterforTable' => 'themes:Santos e Mendonça e Filhos'],
             ['orderTasksForDate' => 'desc'],//recente(desc)|antigo(asc):stages

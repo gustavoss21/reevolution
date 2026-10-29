@@ -8,12 +8,12 @@ use Models\ModelMixin;
 class TagModel extends  ModelMixin
 {
     public string $table = 'tags';
-    public array $columns = ['id', 'name','description'];
+    public array $columns = ['id', 'tag','description'];
     protected string $id, $description;
-    protected string|array $name;
+    protected string|array $tag;
 
     public static array $LABELS = [
-        'name'=>'O evento é sobre o que',
+        'tag'=>'O evento é sobre o que',
         'description'=>'Descrição'
     ];
 

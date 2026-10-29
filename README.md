@@ -6,7 +6,8 @@ foi mudado um recurso da quere where
 child mudou a forma vazia de [] para undefined
 
 ## next
-
+no model Tag mudar o nome tag por name
+é necessario $this->dropDataSearch????
 corrigir o error do find do ModelMixin, o array_merge é necessario
 
 filtros nao trans valores correnpondentes, exe: quando coloca dois valores diferentes da mesma opção trans o mesmo resultado
