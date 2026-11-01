@@ -88,7 +88,7 @@ class ModelMixin
         $queryData   = array_merge($columnsData, $whereData);
 
         if(key($whereData) == 0) $queryData = $whereData;
-
+        $this->query->querySearch = $query;
         return $this->executeQuery($query, $queryData);
     }
 

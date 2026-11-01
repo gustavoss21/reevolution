@@ -15,9 +15,10 @@ class MixinQuerybuild
     public array $where   = [];
     protected ?string $limit = null;
     private mixed $meta;
-    protected string $order_by = '';
-    protected string $group_by = '';
-    public array $valueWhere = [];
+    protected string $order_by  = '';
+    protected string $group_by  = '';
+    public    array $valueWhere = [];
+    private string $querySearch; 
     const OPERADORES = ['EQ' => '=', 'GT' => '>', 'LT' => '<', 'GTE' => '>=', 'LTE' => '<=', 'NEQ' => '<>', 'LIKE' => 'LIKE', 'IN' => 'IN', 'NOT IN' => 'NOT IN'];
     const OPERADORES_LOGICOS = ['AND' => 'AND', 'OR' => 'OR'];
     const OPTION_CONSTRUCT_COLUMN = ['defult'=> 'defult','personal'=> 'ColumnTrait'];

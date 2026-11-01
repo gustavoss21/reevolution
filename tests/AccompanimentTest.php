@@ -190,7 +190,7 @@ class AccompanimentTest extends TestCase
         $data = [
             ['filterforTable' => 'tags:testeTag'],//tags
             ['filterforTable' => 'themes:Alcantara e Rangel'],
-            // ['filterforTable' => 'themes:Santos e Mendonça e Filhos'],
+            ['filterforTable' => 'themes:Santos e Mendonça e Filhos'],
             ['orderTasksForDate' => 'desc'],//recente(desc)|antigo(asc):stages
             // ['filterForExpiredTime' => 'expired'],//topics
             ['statusFilter' => 'started'],//iniciado:stages

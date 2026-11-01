@@ -66,15 +66,8 @@ class AcompanimentService extends Service
             [$connections, $relationType] = $this->getConectionWithRoot($tableName);
             
             if (!$connections) {
-                $this->preprocessingForWhereIn($instanceTable);
-                $data     = $instanceTable->find();
-                   
-                if( !$data) {
-                    $this->setDesassociateData($tableName);
-                    continue;
-                }
-
-                $this->setRootData($data, $tableName);
+                $this->precessWithout($instanceTable, $tableName);
+            
                 continue;
             }
 
@@ -279,10 +272,11 @@ class AcompanimentService extends Service
         $tablerelations = $this->instanceFilters->methods_order[$tableName]['relationships'] ?? [];
 
         foreach ($tablerelations as $tableRelated => $foreignKey) {
+            $searchTable = key($foreignKey);
             $relations = $this->getDataSearch();
             $relation = $this->getDataSearch(key($foreignKey));
 
-            $searchTable = key($relations) ?? '';
+            $searchTable = $relation?$searchTable: key($relations) ?? '';
 
             if (empty($searchTable)|| $searchTable===$tableName) continue;
 
@@ -351,14 +345,11 @@ class AcompanimentService extends Service
     {
         ['table' => $relationTableName, 'type' => $relation] = $relationData;
         $resultMatchParent                                = [];
-        $dataRoot                                 = $this->getDataSearch();
+        $dataRoot                                 = &$this->getDataSearch();
         $dataResult                                       = current($dataRoot);
         $tableRoot                                    = key($dataRoot);
         $columnName                                       = $this->getColumnNameForTable($relationTableName);
-        $dataResultIds = array_map(
-            fn($item) => $item[$columnName],
-            $dataResult
-        );
+        $dataResultIds = array_column($dataResult,$columnName);
 
         $dataResultForquery = array_intersect($dataResultIds, $dataRelation);
 
@@ -375,54 +366,31 @@ class AcompanimentService extends Service
             $this->setRootData($resultMatchParent, $relationTableName);
 
         } elseif (self::RELATION_TYPE['GRANDMOTHER'] === $relation) {
-            $parentTableName = $relationTableName;
-            $childTableName = $tableName;
+            $parentTableName      = $relationTableName;
             $tableRelationships   = $this->instanceFilters->familyOrder[$parentTableName]['relationships']['parent'];
             $grandmotherTableName = key($tableRelationships);
-            $grandmotherData      = $dataRoot[$tableRoot];
-            $tableColumnName      = current($tableRelationships);
-            $childColumnName      = current($this->instanceFilters->familyOrder[$childTableName]['relationships']['parent']);
+            $grandmotherData    = &$dataRoot[$tableRoot];
+            
+            // $this->dropDataSearch($grandmotherTableName);
+            // $x = count($grandmotherData);
+            // $parentKey = 0;
+            // for($parentKey; $x > $parentKey; $parentKey++) {
+            foreach ($grandmotherData as $parentKey => $dataGrandMother) {
 
-            $dataParentForseach = array_map(function ($item) {
-                return $item['id'];
-            }, $grandmotherData);
+                $parentItem = $this->setMotherAssociateData([$tableName => $dataTable], $relationTableName,$dataGrandMother);
+                if(empty($parentItem)){
 
-            $dataChildForseach = array_map(function ($item) use ($childColumnName) {
-                return $item[$childColumnName];
-            }, $dataTable);
-
-            $instanceParent = new ($this->tables[$relationTableName])();
-            $instanceParent->set($tableColumnName, $dataParentForseach);
-            $instanceParent->set('id', $dataChildForseach);
-            $instanceParent->whereIN($tableColumnName)->whereIN('id', 'AND');
-            $resultSearch = $instanceParent->find();
-            $this->dropDataSearch($grandmotherTableName);
-
-            foreach ($grandmotherData as $parentKey => &$item) {
-                $parentItem = [];
-                foreach ($resultSearch as $key => $dataItem) {
-                    if ($dataItem[$tableColumnName] === $item['id']) {
-
-                        foreach ($dataTable as $keyChild => $childDataItem) {
-                            if ($childDataItem[$childColumnName] === $dataItem['id']) {
-                                array_splice($dataTable, $keyChild, 1);
-
-                                if (array_key_exists($dataItem['id'], $parentItem)) {
-                                    $parentItem[$dataItem['id']][$childTableName][] = $childDataItem;
-                                    continue;
-                                }
-                                $parentItem[$dataItem['id']] = $dataItem;
-                                $parentItem[$dataItem['id']][$childTableName][] = $childDataItem;
-                            }
-                        }
-                    }
+                    $this->dropDataSearch($grandmotherTableName, $parentKey);
+                    continue;
                 }
+                // $parentItem = [];
                 $item[$relationTableName] = $parentItem;
                 unset($this->instanceFilters->methods_order[$tableName]['relationships']['parent']);
                 unset($this->instanceFilters->methods_order[$parentTableName]['relationships']['parent']);
                 unset($this->instanceFilters->methods_order[$parentTableName]['relationships']['child'][$tableName]);
                 unset($this->instanceFilters->methods_order[$tableRoot]['relationships']['child']);
-                $this->setRootData([$item], $grandmotherTableName);
+                $this->setRootData($parentItem,$relationTableName, $grandmotherTableName, $parentKey);
+                next($grandmotherData);
             };
 
             // $this->dropDataSearch($grandmotherTableName);
@@ -503,7 +471,9 @@ class AcompanimentService extends Service
         
             if ($parentKey !== null) {
                 $this->stepList($parentKey);
-                $parent .= ':' . $parentKey;
+
+                if(!is_int($parentKey)) $parent .= ':' . $parentKey;
+                
             }
             $this->tableIndexed[$tableName] = $parent . ':' . $tableName;
             
@@ -514,19 +484,23 @@ class AcompanimentService extends Service
 
         if (!$tableName) return false;
 
-        $listCurrent = &$this->dissectParent($parent);
+        $listCurrent = &$this->stepList();
         //brothers | grandmother
-        $listCurrent[0][$tableName] = $data;
+        $listCurrent[$tableName] = $data;
         return true;
     }
 
-    function dropDataSearch(?string $tableName = null)
+    function dropDataSearch(?string $tableName=null, ?int $index=null)
     {
 
         if (!$tableName) {
             $this->tableIndexed             = [];
             $this->resultSearch = [];
 
+            return;
+        }
+        if(!is_null($index)){
+            unset($this->resultSearch[$tableName][$index]);
             return;
         }
 
@@ -580,13 +554,16 @@ class AcompanimentService extends Service
 
         foreach ($parents as $parentItem) {
             $data = $this->stepList();
+    
+            if (!isset($data[$parentItem]) && is_int(array_key_first($data))) {
+                foreach($data as $key=> $itemModel){
+                    $this->stepList(null, $data);
 
-            if (!isset($data[$parentItem]) && is_int(key($data))) {
-                $this->stepList($index);
+                    if(!$this->stepList($key))break;
+                }
             }
 
             $this->stepList($parentItem);
-
 
             if (!$this->stepList()) return null;
         }
@@ -770,16 +747,20 @@ class AcompanimentService extends Service
     }
 
     function getAncestors(string $table){
-        $tree = $table;
+        $tree = '';
 
         while(true){
             $relation = $this->instanceFilters->familyOrder[$table]['relationships']['parent'];
 
                 if(empty($relation))break;
-                
-                $table = key($relation);
+                if(empty($tree)){
+                    $table = key($relation);
+                    $tree = $table;
+                    continue;
+                }
 
-                $tree = $table.':'.$tree;
+                $table = key($relation);
+                $tree =   $table. ':' . $tree;
         }
 
         return $tree;
@@ -795,19 +776,64 @@ class AcompanimentService extends Service
 
                 if(empty($table))continue;
                 
-                $parents = &$this->dissectParent($this->getAncestors($table));
-                
-                foreach($parents as $parentData){
-                    $column = current($relation);
-                    // $columnOfInstance = 'child' === $typeRelation?'id':$column;
-                    $parentsFormated = new $this->tables[$table]([$column=>$parentData['id']]);
-                    $dataPrecess = $parentsFormated->find();
-                    $this->setChildInParent($parents, $dataPrecess, $table, $column);
-                    unset($relation);
-                    unset($this->instanceFilters->methods_order[$table]['relationships']['parent']);
-                }
+                $parents    = &$this->dissectParent($this->getAncestors($table));
+                $dataSearch = array_column($parents,'id');
+                $column     = current($relation);
+                unset($relation);
+                unset($this->instanceFilters->methods_order[$table]['relationships']['parent']);
+                $parentsFormated = new $this->tables[$table]([$column=>$dataSearch]);
+                $dataPrecess = $parentsFormated->whereIN($column)->find();
+                $this->setChildInParent($parents, $dataPrecess, $table, $column);
+
             }
 
         }
+    }
+
+    function setMotherAssociateData( array $dataTableFull, string $relationTableName, array $grandmotherData){
+        $childTableName = array_key_first($dataTableFull);
+        $dataTable = $dataTableFull[$childTableName];
+        $parentItem                   = [];
+        $childColumnName              = current($this->instanceFilters->familyOrder[$childTableName]['relationships']['parent']);
+        $tableRelationships           = $this->instanceFilters->familyOrder[$relationTableName]['relationships']['parent'];
+        $tableColumnName    = current($tableRelationships);
+        $dataChildForseach  = array_column($dataTable,$childColumnName);
+        $instanceParent     = new ($this->tables[$relationTableName])();
+        $instanceParent->set($tableColumnName, $grandmotherData['id']);
+        $instanceParent->set('id', $dataChildForseach);
+        $instanceParent->where($tableColumnName)->whereIN('id', 'AND');
+        $resultSearch = $instanceParent->find();
+
+        foreach ($resultSearch as $key => $dataItem) {
+            if (!($dataItem[$tableColumnName] === $grandmotherData['id'])) continue;
+
+            foreach ($dataTable as $keyChild => $childDataItem) {
+                if (!($childDataItem[$childColumnName] === $dataItem['id'])) continue;
+                        
+                array_splice($dataTable, $keyChild, 1);
+
+                if (array_key_exists($dataItem['id'], $parentItem)) {
+                    $parentItem[$dataItem['id']][$childTableName][] = $childDataItem;
+                    continue;
+                }
+
+                $dataItem[$childTableName][] = $childDataItem;
+                $parentItem[$dataItem['id']] = $dataItem;
+            }        
+        }
+        
+        return $parentItem; 
+    }
+
+    function precessWithout(ModelMixin $instanceTable, string $tableName){
+        $this->preprocessingForWhereIn($instanceTable);
+        $data = $instanceTable->find();
+            
+        if( !$data) {
+            $this->setDesassociateData($tableName);
+            return;
+        }
+
+        $this->setRootData($data, $tableName);
     }
 }
